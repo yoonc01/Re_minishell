@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/07 16:09:06 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/07 18:47:56 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,14 @@ static char	make_env_list(char **env)
 
 int	main(int ac, char **av, char **env)
 {
-	t_deque	*env_list;
-
-	if (ac != 1)
-		argc_err();
-	env_list = make_env_list(env);
+	ac;
+	av;
+	env;
+	char *input = "hello I am Hyoyoon >> > < << <| | || 'sdf'   ";
+	t_deque	*tokens = tokenize(input);
+	while (tokens != NULL)
+	{
+		printf("%s\n", tokens->front->str);
+		delete_front(tokens);
+	}
 }

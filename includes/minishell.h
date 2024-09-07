@@ -6,15 +6,17 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/07 15:50:26 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/07 18:03:05 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "libft.h"
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdio.h>
 
 typedef struct s_node
 {
@@ -37,5 +39,6 @@ void	delete_front(t_deque *dq);
 void	delete_rear(t_deque *dq);
 void	malloc_fail(void);
 void	argc_err(void);
+t_deque	*tokenize(char *input);
 
 #endif

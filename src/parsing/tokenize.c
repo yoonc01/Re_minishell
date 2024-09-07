@@ -6,7 +6,7 @@
 /*   By: hyoyoon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/07 17:43:37 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/07 18:54:11 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*process_quote(t_deque *tokens, char *start, char quote)
 	char	*idx;
 	char	*tmp;
 
-	idx = start;
+	idx = start + 1;
 	while (*idx != '\0' && *idx != quote)
 		idx++;
 	if (*idx == '\0')
@@ -29,7 +29,8 @@ static char	*process_quote(t_deque *tokens, char *start, char quote)
 		return (0);
 	}
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 2));
-	insert_rear(tokens, ft_strlcpy(tmp, start, idx - start + 1));
+	ft_strlcpy(tmp, start, idx - start + 2);
+	insert_rear(tokens, tmp);
 	return (idx + 1);
 }
 
@@ -45,7 +46,8 @@ static char	*process_operator(t_deque *tokens, char *start)
 	else
 		len = 1;
 	tmp = (char *)malloc(sizeof(char) * (len + 1));
-	insert_rear(tokens, ft_strlcpy(tmp, start, len));
+	ft_strlcpy(tmp, start, len + 1);
+	insert_rear(tokens, tmp);
 	return (start + len);
 }
 
@@ -55,11 +57,12 @@ static char	*process_word(t_deque *tokens, char *start)
 	char	*tmp;
 
 	idx = start;
-	while (*idx != '\0' && !is_space(*idx)
+	while (*idx != '\0' && !ft_isspace(*idx)
 		&& *idx != '|' && *idx != '>' && *idx != '<')
 		idx++;
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
-	insert_rear(tokens, ft_strlcpy(tmp, start, idx - start));
+	ft_strlcpy(tmp, start, idx - start + 1);
+	insert_rear(tokens, tmp);
 	return (idx + 1);
 }
 
@@ -77,9 +80,9 @@ t_deque	*tokenize(char *input)
 		if (*start == '\0')
 			break ;
 		if (*start == '\'')
-			start = process_single_quote(tokens, start, '\'');
+			start = process_quote(tokens, start, '\'');
 		else if (*start == '\"')
-			start = process_single_quote(tokens, start, '\"');
+			start = process_quote(tokens, start, '\"');
 		else if (*start == '|' || *start == '>' || *start == '<')
 			start = process_operator(tokens, start);
 		else
@@ -88,18 +91,4 @@ t_deque	*tokenize(char *input)
 			return (0);
 	}
 	return (tokens);
-}
-
-int	main()
-{
-	char *input = "hello I am Hyoyoon >> > < << <| | || 'sdf'";
-	t_deque	*tokens = tokenize(input);
-	while (tokens != NULL)
-	{
-		printf("%s\n", tokens->str);
-		tokens = tokens->next;
-	}
-}
-
-
 }
