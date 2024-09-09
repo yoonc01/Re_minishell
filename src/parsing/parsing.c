@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/07 16:50:33 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 17:53:47 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 int	parsing(char *input)
 {
 	t_deque	*tokens;
+	int		pipecnt;
 
-	tokens = tokenize(input);
+	pipecnt = 0;
+	tokens = tokenize(input, &pipecnt);
 	if (tokens == 0)
 		return (0);
 }

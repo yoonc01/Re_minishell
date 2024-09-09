@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/09 14:17:18 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 17:55:32 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,6 @@ void	delete_front(t_deque *dq);
 void	delete_rear(t_deque *dq);
 void	malloc_fail(void);
 void	argc_err(void);
-t_deque	*tokenize(char *input);
+t_deque	*tokenize(char *input, int *pipecnt);
 
 #endif
