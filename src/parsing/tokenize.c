@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/09 17:55:01 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/09 18:34:08 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ static char	*process_operator(t_deque *tokens, char *start, int *pipecnt)
 }
 
 static char	*process_word(t_deque *tokens, char *start)
+// TODO 이전 토큰이 heredoc인지 아닌지 검사하기, heredoc인 경우 그대로
+// TODO 이전 토큰이 heredoc아닌데 word 중간에 $나올 경우 환경변수 적용해서 바꿔주기
 {
 	char	*idx;
 	char	*tmp;

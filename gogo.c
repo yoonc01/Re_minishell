@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gogo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/09 14:29:25 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 17:59:26 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,7 @@ t_deque	*tokenize(char *input)
 int	main()
 {
 
-	char *input = "hello I am Hyoyoon >> > < << <| | || 'sdf' \"sdjk\"  ";
+	char *input = "hello I am Hyoyoon >> >out <ss <<dd <| | || 'sdf' \"sdjk\"  ";
 	t_deque	*tokens = tokenize(input);
 	while (tokens->front != NULL)
 	{

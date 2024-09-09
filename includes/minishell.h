@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/09 17:55:32 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/09 18:35:27 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-typedef enum	e_token_type
+typedef enum e_token_type
 {
 	WORD = 0,
 	PIPE,
@@ -27,6 +27,21 @@ typedef enum	e_token_type
 	REDIR_OUT,
 	REDIR_APPEND
 }	t_token_type;
+
+typedef enum e_grammar_status
+{
+	ST_START =0,
+	ST_REDIRECT,
+	ST_WORD
+}t_grammar_status;
+
+typedef struct s_block
+{
+	char			**cmd;
+	char			**redirection;
+	struct s_block	*next;
+}t_block;
+
 
 typedef struct s_node
 {
