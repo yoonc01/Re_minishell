@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/07 18:54:11 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 14:18:33 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,28 @@ static char	*process_quote(t_deque *tokens, char *start, char quote)
 	}
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 2));
 	ft_strlcpy(tmp, start, idx - start + 2);
-	insert_rear(tokens, tmp);
+	insert_rear(tokens, tmp, WORD);
 	return (idx + 1);
 }
 
 static char	*process_operator(t_deque *tokens, char *start)
 {
-	char	*tmp;
-	size_t	len;
+	char			*tmp;
+	size_t			len;
+	t_token_type	token_type;
 
-	if (*start == '>' && *(start + 1) == '>')
-		len = 2;
-	else if (*start == '<' && *(start + 1) == '<')
-		len = 2;
+	if (*start == '>')
+		process_operator_out(*(start + 1), &len, &token_type);
+	else if (*start == '<')
+		process_operator_in(*(start + 1), &len, &token_type);
 	else
+	{
 		len = 1;
+		token_type = PIPE;
+	}
 	tmp = (char *)malloc(sizeof(char) * (len + 1));
 	ft_strlcpy(tmp, start, len + 1);
-	insert_rear(tokens, tmp);
+	insert_rear(tokens, tmp, token_type);
 	return (start + len);
 }
 
@@ -62,7 +66,7 @@ static char	*process_word(t_deque *tokens, char *start)
 		idx++;
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
 	ft_strlcpy(tmp, start, idx - start + 1);
-	insert_rear(tokens, tmp);
+	insert_rear(tokens, tmp, WORD);
 	return (idx + 1);
 }
 

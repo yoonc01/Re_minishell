@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/07 18:54:34 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 14:29:25 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@
 # include <stdlib.h>
 # include <stdio.h>
 
+void	malloc_fail(void)
+{
+	perror("Failed to allocate memory\n");
+	exit(EXIT_FAILURE);
+}
 size_t	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -57,9 +62,20 @@ int	ft_isspace(char c)
 }
 
 
+typedef enum	e_token_type
+{
+	WORD = 0,
+	PIPE,
+	REDIR_IN,
+	HEREDOC,
+	REDIR_OUT,
+	REDIR_APPEND
+}	t_token_type;
+
 typedef struct s_node
 {
 	char			*str;
+	t_token_type	token_type;
 	struct s_node	*next;
 	struct s_node	*prev;
 }	t_node;
@@ -82,14 +98,17 @@ t_deque	*create_deque(void)
 	return (dq);
 }
 
-void	insert_front(t_deque *dq, char *str)
+void	insert_front(t_deque *dq, char *str, t_token_type token_type)
 {
 	t_node	*new;
 
 	new = (t_node *)malloc(sizeof(t_node));
+	if (new == NULL)
+		malloc_fail();
 	new->str = str;
 	new->next = dq->front;
 	new->prev = NULL;
+	new->token_type = token_type;
 	if (dq->front == NULL)
 		dq->rear = new;
 	else
@@ -98,14 +117,17 @@ void	insert_front(t_deque *dq, char *str)
 	dq->size++;
 }
 
-void	insert_rear(t_deque *dq, char *str)
+void	insert_rear(t_deque *dq, char *str, t_token_type token_type)
 {
 	t_node	*new;
 
 	new = (t_node *)malloc(sizeof(t_node));
+	if (new == NULL)
+		malloc_fail();
 	new->str = str;
 	new->next = NULL;
 	new->prev = dq->rear;
+	new->token_type = token_type;
 	if (dq->rear == NULL)
 		dq->front = new;
 	else
@@ -113,7 +135,6 @@ void	insert_rear(t_deque *dq, char *str)
 	dq->rear = new;
 	dq->size++;
 }
-
 void	delete_front(t_deque *dq)
 {
 	t_node	*temp;
@@ -150,6 +171,35 @@ void	delete_rear(t_deque *dq)
 	dq->size--;
 }
 
+
+void	process_operator_out(char c, size_t *len, t_token_type *token_type)
+{
+	if (c == '>')
+	{
+		*len = 2;
+		*token_type = REDIR_APPEND;
+	}
+	else
+	{
+		*len = 1;
+		*token_type = REDIR_OUT;
+	}
+}
+
+void	process_operator_in(char c, size_t *len, t_token_type *token_type)
+{
+	if (c == '<')
+	{
+		*len = 2;
+		*token_type = HEREDOC;
+	}
+	else
+	{
+		*len = 1;
+		*token_type = REDIR_IN;
+	}
+}
+
 static char	*process_quote(t_deque *tokens, char *start, char quote)
 {
 	char	*idx;
@@ -168,24 +218,28 @@ static char	*process_quote(t_deque *tokens, char *start, char quote)
 	}
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 2));
 	ft_strlcpy(tmp, start, idx - start + 2);
-	insert_rear(tokens, tmp);
+	insert_rear(tokens, tmp, WORD);
 	return (idx + 1);
 }
 
 static char	*process_operator(t_deque *tokens, char *start)
 {
-	char	*tmp;
-	size_t	len;
+	char			*tmp;
+	size_t			len;
+	t_token_type	token_type;
 
-	if (*start == '>' && *(start + 1) == '>')
-		len = 2;
-	else if (*start == '<' && *(start + 1) == '<')
-		len = 2;
+	if (*start == '>')
+		process_operator_out(*(start + 1), &len, &token_type);
+	else if (*start == '<')
+		process_operator_in(*(start + 1), &len, &token_type);
 	else
+	{
 		len = 1;
+		token_type = PIPE;
+	}
 	tmp = (char *)malloc(sizeof(char) * (len + 1));
 	ft_strlcpy(tmp, start, len + 1);
-	insert_rear(tokens, tmp);
+	insert_rear(tokens, tmp, token_type);
 	return (start + len);
 }
 
@@ -200,10 +254,9 @@ static char	*process_word(t_deque *tokens, char *start)
 		idx++;
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
 	ft_strlcpy(tmp, start, idx - start + 1);
-	insert_rear(tokens, tmp);
+	insert_rear(tokens, tmp, WORD);
 	return (idx + 1);
 }
-
 t_deque	*tokenize(char *input)
 {
 	t_deque	*tokens;
@@ -238,7 +291,7 @@ int	main()
 	t_deque	*tokens = tokenize(input);
 	while (tokens->front != NULL)
 	{
-		printf("%s\n", tokens->front->str);
+		printf("%s %u\n", tokens->front->str, tokens->front->token_type);
 		delete_front(tokens);
 	}
 }

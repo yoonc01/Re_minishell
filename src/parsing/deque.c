@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:16:52 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/07 16:04:02 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 13:57:44 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_deque	*create_deque(void)
 	return (dq);
 }
 
-void	insert_front(t_deque *dq, char *str)
+void	insert_front(t_deque *dq, char *str, t_token_type token_type)
 {
 	t_node	*new;
 
@@ -35,6 +35,7 @@ void	insert_front(t_deque *dq, char *str)
 	new->str = str;
 	new->next = dq->front;
 	new->prev = NULL;
+	new->token_type = token_type;
 	if (dq->front == NULL)
 		dq->rear = new;
 	else
@@ -43,7 +44,7 @@ void	insert_front(t_deque *dq, char *str)
 	dq->size++;
 }
 
-void	insert_rear(t_deque *dq, char *str)
+void	insert_rear(t_deque *dq, char *str, t_token_type token_type)
 {
 	t_node	*new;
 
@@ -53,6 +54,7 @@ void	insert_rear(t_deque *dq, char *str)
 	new->str = str;
 	new->next = NULL;
 	new->prev = dq->rear;
+	new->token_type = token_type;
 	if (dq->rear == NULL)
 		dq->front = new;
 	else
