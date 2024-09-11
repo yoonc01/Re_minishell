@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/09 14:17:18 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 18:35:27 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-typedef enum	e_token_type
+typedef enum e_token_type
 {
 	WORD = 0,
 	PIPE,
@@ -27,6 +27,21 @@ typedef enum	e_token_type
 	REDIR_OUT,
 	REDIR_APPEND
 }	t_token_type;
+
+typedef enum e_grammar_status
+{
+	ST_START =0,
+	ST_REDIRECT,
+	ST_WORD
+}t_grammar_status;
+
+typedef struct s_block
+{
+	char			**cmd;
+	char			**redirection;
+	struct s_block	*next;
+}t_block;
+
 
 typedef struct s_node
 {
@@ -50,6 +65,6 @@ void	delete_front(t_deque *dq);
 void	delete_rear(t_deque *dq);
 void	malloc_fail(void);
 void	argc_err(void);
-t_deque	*tokenize(char *input);
+t_deque	*tokenize(char *input, int *pipecnt);
 
 #endif

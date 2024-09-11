@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/09 14:18:33 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/09 18:34:08 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*process_quote(t_deque *tokens, char *start, char quote)
 	return (idx + 1);
 }
 
-static char	*process_operator(t_deque *tokens, char *start)
+static char	*process_operator(t_deque *tokens, char *start, int *pipecnt)
 {
 	char			*tmp;
 	size_t			len;
@@ -48,6 +48,7 @@ static char	*process_operator(t_deque *tokens, char *start)
 	{
 		len = 1;
 		token_type = PIPE;
+		(*pipecnt)++;
 	}
 	tmp = (char *)malloc(sizeof(char) * (len + 1));
 	ft_strlcpy(tmp, start, len + 1);
@@ -56,6 +57,8 @@ static char	*process_operator(t_deque *tokens, char *start)
 }
 
 static char	*process_word(t_deque *tokens, char *start)
+// TODO 이전 토큰이 heredoc인지 아닌지 검사하기, heredoc인 경우 그대로
+// TODO 이전 토큰이 heredoc아닌데 word 중간에 $나올 경우 환경변수 적용해서 바꿔주기
 {
 	char	*idx;
 	char	*tmp;
@@ -70,7 +73,7 @@ static char	*process_word(t_deque *tokens, char *start)
 	return (idx + 1);
 }
 
-t_deque	*tokenize(char *input)
+t_deque	*tokenize(char *input, int *pipecnt)
 {
 	t_deque	*tokens;
 	char	*start;
@@ -88,7 +91,7 @@ t_deque	*tokenize(char *input)
 		else if (*start == '\"')
 			start = process_quote(tokens, start, '\"');
 		else if (*start == '|' || *start == '>' || *start == '<')
-			start = process_operator(tokens, start);
+			start = process_operator(tokens, start, pipecnt);
 		else
 			start = process_word(tokens, start);
 		if (start == 0)
