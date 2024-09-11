@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/09 18:35:27 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/11 15:56:58 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,6 @@ typedef enum e_grammar_status
 	ST_WORD
 }t_grammar_status;
 
-typedef struct s_block
-{
-	char			**cmd;
-	char			**redirection;
-	struct s_block	*next;
-}t_block;
-
 
 typedef struct s_node
 {
@@ -57,6 +50,19 @@ typedef struct s_deque
 	t_node	*rear;
 	int		size;
 }	t_deque;
+
+typedef struct s_inner_block
+{
+	char					*str;
+	struct s_inner_block	*next;
+}	t_inner_block;
+
+typedef struct s_block
+{
+	t_inner_block	**cmd;
+	t_inner_block	**redirection;
+	struct s_block	*next;
+}t_block;
 
 t_deque	*create_deque(void);
 void	insert_front(t_deque *dq, char *str, t_token_type token_type);
