@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/11 15:56:58 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/11 16:38:39 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef enum e_grammar_status
 	ST_WORD
 }t_grammar_status;
 
-
 typedef struct s_node
 {
 	char			*str;
@@ -59,9 +58,8 @@ typedef struct s_inner_block
 
 typedef struct s_block
 {
-	t_inner_block	**cmd;
-	t_inner_block	**redirection;
-	struct s_block	*next;
+	t_inner_block	**cmd_list;
+	t_inner_block	**redirection_list;
 }t_block;
 
 t_deque	*create_deque(void);
