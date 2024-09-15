@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/11 19:28:32 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 20:41:28 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 /*   Updated: 2023/11/04 21:57:35 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 size_t	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -49,9 +48,86 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 		dest[i] = 0;
 	return (ft_strlen(src));
 }
+
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	dest_len;
+	size_t	src_len;
+
+	i = 0;
+	if (!dest && !size)
+		return (ft_strlen(src));
+	dest_len = ft_strlen((const char *)dest);
+	src_len = ft_strlen(src);
+	if (dest_len >= size)
+		return (src_len + size);
+	else
+	{
+		while (dest_len + i + 1 < size && src[i])
+		{
+			dest[dest_len + i] = src[i];
+			i++;
+		}
+		dest[dest_len + i] = 0;
+		return (src_len + dest_len);
+	}
+}
+
+int	my_strcmp(char *s1, char *s2)
+{
+	while (*s1 == *s2)
+	{
+		if (*s1 == '\0')
+			return (0);
+		s1++;
+		s2++;
+	}
+	if (*s1 > *s2)
+		return (1);
+	else
+		return (-1);
+}
+char	*my_strndup(char *s, size_t n)
+{
+	char	*result;
+
+	result = (char *) malloc(sizeof(char) * (n + 1));
+	ft_strlcpy(result, s, n + 1);
+	return (result);
+}
+
+int	ft_isalnum(int c)
+{
+	return ((c >= 65 && c <= 90)
+		|| (c >= 97 && c <= 122) || (c >= 48 && c <= 57));
+}
+
+int	ft_isdigit(int c)
+{
+	return (c >= 48 && c <= 57);
+}
+
 int	ft_isspace(char c)
 {
 	return (9 <= c && c <= 13 || c == ' ');
+}
+
+void	*ft_memset(void *ptr, int value, size_t num)
+{
+	size_t			i;
+	unsigned char	*temp_ptr;
+
+	temp_ptr = (unsigned char *)ptr;
+	i = 0;
+	while (num > i)
+		temp_ptr[i++] = (unsigned char)value;
+	return (ptr);
+}
+
+void	ft_bzero(void *ptr, size_t size)
+{
+	ft_memset(ptr, 0, size);
 }
 char	*ft_strdup(const char *s1)
 {
@@ -72,7 +148,20 @@ char	*ft_strdup(const char *s1)
 	s1_cpy[i] = 0;
 	return (s1_cpy);
 }
+void	*ft_calloc(size_t count, size_t size)
+{
+	void		*arr;
+	size_t		mul_size_cnt;
 
+	mul_size_cnt = count * size;
+	if (count != 0 && mul_size_cnt / count != size)
+		return (NULL);
+	arr = malloc(count * size);
+	if (!arr)
+		return (NULL);
+	ft_bzero(arr, count * size);
+	return (arr);
+}
 typedef enum e_token_type
 {
 	WORD = 0,
@@ -117,6 +206,14 @@ typedef struct s_block
 	t_inner_block	**redirection_list;
 }t_block;
 
+
+typedef struct s_env_list
+{
+	char				*env_key;
+	char				*env_value;
+	struct s_env_list	*next;
+}	t_env_list;
+
 t_deque	*create_deque(void);
 void	insert_front(t_deque *dq, char *str, t_token_type token_type);
 void	insert_rear(t_deque *dq, char *str, t_token_type token_type);
@@ -125,6 +222,8 @@ void	delete_rear(t_deque *dq);
 void	malloc_fail(void);
 void	argc_err(void);
 t_deque	*tokenize(char *input, int *pipecnt);
+
+
 
 void	malloc_fail(void)
 {
@@ -306,7 +405,7 @@ static char	*process_word(t_deque *tokens, char *start)
 
 	idx = start;
 	while (*idx != '\0' && !ft_isspace(*idx)
-		&& *idx != '|' && *idx != '>' && *idx != '<')
+		&& *idx != '|' && *idx != '>' && *idx != '<' && *idx != '\'' && *idx != '\"')
 		idx++;
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
 	ft_strlcpy(tmp, start, idx - start + 1);
@@ -372,6 +471,221 @@ void	free_parsed_input(t_block *parsed_input, t_deque *tokens, int block_i)
 		delete_front(tokens);
 }
 
+char	*remove_single_quote(char *str)
+{
+	char	*result;
+	size_t	len;
+
+	len = ft_strlen(str);
+	result = (char *)malloc(sizeof(char) * (len - 1));
+	ft_strlcpy(result, (str + 1), len - 1);
+	free(str);
+	return (result);
+}
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   apply_env.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
+/*   Updated: 2024/09/15 19:23:34 by hyoyoon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int		is_valid_env_key(char c)
+{
+	return (ft_isalnum(c) || c == '_');
+}
+
+char	*get_env_value(char *str, size_t *idx, t_env_list **env_list)
+{
+	t_env_list	*temp;
+	char		*env_key;
+
+	(*idx)++;
+	if (ft_isdigit(str[*idx]))
+		return ("");
+	while (is_valid_env_key(str[*idx]))
+		(*idx)++;
+	env_key = my_strndup(str + 1, *idx - 1);
+	temp = (*env_list);
+	while(temp->next != NULL)
+	{
+		if (my_strcmp(env_key, temp->env_key) == 0)
+			return (temp->env_value);
+		temp = temp->next;
+	}
+	return ("");
+}
+
+char	*ft_strnjoin(char *result, char *str, size_t size)
+{
+	char	*new_result;
+
+	new_result = (char *)malloc(sizeof(char) * (ft_strlen(result) + size + 1));
+	ft_strlcpy(new_result, result, ft_strlen(result) + 1);
+	ft_strlcat(new_result, str, (ft_strlen(result) + size + 1));
+	free(result);
+	return (new_result);
+}
+char	*apply_env(char *str, t_env_list **env_list)
+{
+	size_t	idx;
+	char	*result;
+	char	*env_value;
+
+	result = ft_strdup("");
+	idx = 0;
+	while (1)
+	{
+		if ((str[idx] == '$' && is_valid_env_key(str[idx + 1])) || str[idx] == '\0')
+		{
+			result = ft_strnjoin(result, str, idx);
+			str = str + idx;
+			idx = 0;
+			if (str[idx] == '\0')
+				return (result);
+			env_value = get_env_value(str, &idx, env_list);
+			result = ft_strnjoin(result, env_value, ft_strlen(env_value));
+			str = str + idx;
+			idx = 0;
+		}
+		else
+			idx++;
+	}
+}
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/04 12:32:00 by ycho2             #+#    #+#             */
+/*   Updated: 2024/04/29 16:34:24 by ycho2            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+static int		count_words(char const *s, char c);
+static char		*sep_words(char const *s, int start, int end);
+static int		save_words(char const *s, char c, char **split);
+
+char	**ft_split(char const *s, char c)
+{
+	char	**split;
+
+	split = (char **)malloc(sizeof(char *) * (count_words(s, c) + 1));
+	save_words(s, c, split);
+	return (split);
+}
+
+static int	count_words(char const *s, char c)
+{
+	int	i;
+	int	cnt;
+	int	flag;
+
+	i = 0;
+	cnt = 0;
+	flag = 0;
+	while (s[i])
+	{
+		if (s[i] != c && flag == 0)
+		{
+			flag = 1;
+			cnt++;
+		}
+		else if (s[i] == c && flag == 1)
+			flag = 0;
+		i++;
+	}
+	return (cnt);
+}
+
+static char	*sep_words(char const *s, int start, int end)
+{
+	char	*word;
+	int		i;
+
+	i = 0;
+	word = (char *)malloc(sizeof(char) * (end - start + 1));
+	if (!word)
+		return (0);
+	while (i < end - start)
+	{
+		word[i] = s[i + start];
+		i++;
+	}
+	word[i] = 0;
+	return (word);
+}
+
+static int	save_words(char const *s, char c, char **split)
+{
+	size_t		i;
+	long long	start;
+	size_t		nth_word;
+
+	start = -1;
+	nth_word = 0;
+	i = 0;
+	while (i <= ft_strlen(s))
+	{
+		if (s[i] != c && start == -1)
+			start = i;
+		else if ((s[i] == c || i == ft_strlen(s)) && start != -1)
+		{
+			split[nth_word] = sep_words(s, start, i);
+			if (!split[nth_word])
+				return (0);
+			start = -1;
+			nth_word++;
+		}
+		i++;
+	}
+	split[nth_word] = 0;
+	return (1);
+}
+
+void	split_free(char **split)
+{
+	size_t	i;
+
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}
+
+
+			// temp = ft_calloc((ft_strlen(str) + ft_strlen(env_value) + 1), sizeof(char));
+			// ft_strlcpy(temp, result, idx + 1);
+			// ft_strlcat(temp, env_value, ft_strlen(env_value) + 1);
+			// free(result);
+			// result = temp;
+			// idx = idx + ft_strlen(env_value);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
+/*   Updated: 2024/09/15 19:28:57 by hyoyoon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 void add_inner_block(t_inner_block **lst, t_inner_block *new_node)
 {
 	t_inner_block	*current_node;
@@ -386,15 +700,22 @@ void add_inner_block(t_inner_block **lst, t_inner_block *new_node)
 		current_node->next = new_node;
 	}
 }
-int	put_block_cmd(t_deque *tokens, t_block parsed_input)
+
+int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 {
 	t_inner_block	*new_node;
 	t_inner_block	*current_node;
 	t_inner_block	**cmd_list;
+	char			*str;
 
 	cmd_list = parsed_input.cmd_list;
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
-	new_node->str = ft_strdup(tokens->front->str);
+	str = tokens->front->str;
+	if (*str == '\'')
+		str = remove_single_quote(str);
+	else
+		str = apply_env(str, env_list);
+	new_node->str = str;
 	new_node->next = NULL;
 	add_inner_block(cmd_list, new_node);
 	delete_front(tokens);
@@ -402,6 +723,7 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input)
 }
 
 int	put_block_redirect(t_deque *tokens, t_block parsed_input)
+//TODO error 시 누수 확인 
 {
 	t_inner_block	*new_node_redirection;
 	t_inner_block	*new_node_file;
@@ -422,13 +744,14 @@ int	put_block_redirect(t_deque *tokens, t_block parsed_input)
 	add_inner_block(redirection_list, new_node_redirection);
 	return (1);
 }
-t_block	*parsing_block(t_deque *tokens, int pipecnt)
+
+t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 {
 	t_block	*parsed_input;
 	int		block_i;
 	int		grammar_valid;
 
-	parsed_input = (t_block *)calloc((pipecnt + 2), sizeof(t_block));
+	parsed_input = (t_block *)ft_calloc((pipecnt + 1), sizeof(t_block));
 	block_i = 0;
 	while(block_i < pipecnt + 1)
 	{
@@ -436,12 +759,12 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt)
 		parsed_input[block_i].redirection_list = (t_inner_block **)calloc(1, sizeof(t_inner_block *));
 		block_i++;
 	}
-	grammar_valid = 1;
 	block_i = 0;
+	grammar_valid = 1;
 	while (tokens->front != NULL && grammar_valid)
 	{
 		if (tokens->front->token_type == WORD)
-			grammar_valid = put_block_cmd(tokens, parsed_input[block_i]);
+			grammar_valid = put_block_cmd(tokens, parsed_input[block_i], env_list);
 		else if (tokens->front->token_type == PIPE)
 		{
 			if (tokens->front->next == NULL)
@@ -457,7 +780,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt)
 	return (parsed_input);
 }
 
-t_block	*parsing(char *input)
+t_block	*parsing(char *input, t_env_list **env_list)
 {
 	t_deque	*tokens;
 	int		pipecnt;
@@ -467,16 +790,75 @@ t_block	*parsing(char *input)
 	tokens = tokenize(input, &pipecnt);
 	if (tokens == NULL)
 		return (0);
-	parsed_input = parsing_block(tokens, pipecnt);
+	parsed_input = parsing_block(tokens, pipecnt, env_list);
 	return (parsed_input);
 }
 
-int	main()
+
+static int check_env_add(char *env_key)
 {
+	if (env_key[0] >= '0' && env_key[0] <= '9')
+		return (0);
+	else
+	{
+		while (*env_key != 0)
+		{
+			if (!(ft_isalnum(*env_key)||*env_key=='_'))
+				return (0);
+			env_key++;
+		}
+	}
+	return (1);
+}
+
+int add_new_list(char *env, t_env_list **env_list)
+{
+	t_env_list	*new_node;
+	t_env_list	*tmp_node;
+	char		**splited_env;
+
+	new_node = (t_env_list *)malloc(sizeof(t_env_list));
+	splited_env = ft_split(env, '=');
+	if (check_env_add(splited_env[0]) == 0)
+		return (0);
+	new_node->env_key = splited_env[0];
+	new_node->env_value = splited_env[1];
+	new_node->next = NULL;
+	if (*env_list == NULL)
+		*env_list = new_node;
+	else
+	{
+		tmp_node = *env_list;
+		while (tmp_node->next != NULL)
+			tmp_node = tmp_node->next;
+		tmp_node->next = new_node;
+	}
+	return (1);
+}
+
+static void	init_env_list(char **env, t_env_list **env_list)
+{
+	int	i;
+
+	i = 0;
+	while (env[i] != NULL)
+	{
+		add_new_list(env[i], env_list);
+		i++;
+	}
+}
+
+int	main(int ac, char **av, char **env)
+{
+	ac = 0;
+	av = NULL;
+	t_env_list *env_list;
+	env_list = NULL;
+	init_env_list(env, &env_list);
 	int	idx = 0;
 	int pipecnt = 0;
-	char *input = "<< Hyoyoon cat > out | hello";
-	t_block	*parsed_input = parsing(input);
+	char *input = "Hyoyoon \"cat\" $TERM$TERM > out | hello";
+	t_block	*parsed_input = parsing(input, &env_list);
 	while (parsed_input[idx].cmd_list != NULL || parsed_input[idx].redirection_list != NULL)
 	{
 		t_inner_block **cmd_list = parsed_input[idx].cmd_list;

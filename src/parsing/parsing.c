@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/11 19:28:26 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 19:48:28 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,31 @@ void add_inner_block(t_inner_block **lst, t_inner_block *new_node)
 		current_node->next = new_node;
 	}
 }
-int	put_block_cmd(t_deque *tokens, t_block parsed_input)
+
+int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 {
 	t_inner_block	*new_node;
 	t_inner_block	*current_node;
 	t_inner_block	**cmd_list;
+	char			*str;
 
 	cmd_list = parsed_input.cmd_list;
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
-	new_node->str = ft_strdup(tokens->front->str);
+	str = tokens->front->str;
+	if (*str == '\'')
+		str = remove_single_quote(str);
+	else if (*str == '\"')
+		str = remove_double_quote(str, env_list);
+	else
+		str = apply_env(str, env_list);
+	new_node->str = str;
 	new_node->next = NULL;
 	add_inner_block(cmd_list, new_node);
 	delete_front(tokens);
 	return (1);
 }
 
-int	put_block_redirection(t_deque *tokens, t_block parsed_input)
+int	put_block_redirect(t_deque *tokens, t_block parsed_input)
 //TODO error 시 누수 확인 
 {
 	t_inner_block	*new_node_redirection;
@@ -64,7 +73,7 @@ int	put_block_redirection(t_deque *tokens, t_block parsed_input)
 	return (1);
 }
 
-t_block	*parsing_block(t_deque *tokens, int pipecnt)
+t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 {
 	t_block	*parsed_input;
 	int		block_i;
@@ -83,7 +92,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt)
 	while (tokens->front != NULL && grammar_valid)
 	{
 		if (tokens->front->token_type == WORD)
-			grammar_valid = put_block_cmd(tokens, parsed_input[block_i]);
+			grammar_valid = put_block_cmd(tokens, parsed_input[block_i], env_list);
 		else if (tokens->front->token_type == PIPE)
 		{
 			if (tokens->front->next == NULL)
@@ -99,7 +108,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt)
 	return (parsed_input);
 }
 
-t_block	*parsing(char *input)
+t_block	*parsing(char *input, t_env_list **env_list)
 {
 	t_deque	*tokens;
 	int		pipecnt;
@@ -109,7 +118,6 @@ t_block	*parsing(char *input)
 	tokens = tokenize(input, &pipecnt);
 	if (tokens == NULL)
 		return (0);
-	parsed_input = parsing_block(tokens, pipecnt);
+	parsed_input = parsing_block(tokens, pipecnt, env_list);
 	return (parsed_input);
-	
 }

@@ -1,38 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 18:48:02 by hyoyoon          ###   ########.fr       */
+/*   Created: 2024/09/15 18:17:05 by hyoyoon           #+#    #+#             */
+/*   Updated: 2024/09/15 20:28:42 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	init_env_list(char **env, t_env_list **env_list)
+char	*my_strndup(char *s, size_t n)
 {
-	int	i;
+	char	*result;
 
-	i = 0;
-	while (env[i] != NULL)
-	{
-		add_new_list(env[i], env_list);
-		i++;
-	}
+	result = (char *) malloc(sizeof(char) * (n + 1));
+	if (result == 0)
+		malloc_fail();
+	ft_strlcpy(result, s, n + 1);
+	return (result);
 }
 
-int	main(int ac, char **av, char **env)
+int	my_strcmp(char *s1, char *s2)
 {
-	t_env_list	**env_list;
-	ac;
-	av;
-	env;
-
-	*env_list = NULL;
-	init_env_list(env, env_list);
-	char *input = "hello I am Hyoyoon >> > < << <| | || 'sdf'";
-	t_block	*parsed_input = parsing(input, env_list);
+	while (*s1 == *s2)
+	{
+		if (*s1 == '\0')
+			return (0);
+		s1++;
+		s2++;
+	}
+	if (*s1 > *s2)
+		return (1);
+	else
+		return (-1);
 }
