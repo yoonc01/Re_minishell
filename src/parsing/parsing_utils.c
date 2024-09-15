@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:46:33 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/11 18:09:07 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 17:24:21 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,16 @@ void	free_parsed_input(t_block *parsed_input, t_deque *tokens, int block_i)
 	free(parsed_input);
 	while (tokens->front != NULL)
 		delete_front(tokens);
+}
+
+char	*remove_single_quote(char *str)
+{
+	char	*result;
+	size_t	len;
+
+	len = ft_strlen(str);
+	result = (char *)malloc(sizeof(char) * (len - 1));
+	ft_strlcpy(result, (str + 1), len - 2);
+	free(str);
+	return (result);
 }

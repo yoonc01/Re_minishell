@@ -1,0 +1,29 @@
+export $
+-> 밸류값 없이 키 값만 들어오는 경우와 동일하게 처리
+키값만 들어오는 경우에는 환경변수 리스트에 key=''으로 저장되게 처리
+
+env 명령어 실행시에는 env_list돌면서 value값이 있는 경우만 출력
+export 명령어는 env_list에 있는 모든 key와 value값출력
+
+알파벳 아닌경우 숫자 아닌경우 언더바 아닌경우
+!((*env >= 0 && *env <= 9)||(*env >=a ** *env <= z)||
+(*env >= A && *env <= Z)||*env=='_')
+
+그냥 환경변수만 $()
+sfd"${}"sdf
+
+asdf$asdfjklasdf
+
+sdjklasdfjklasdjfklasjdklf
+
+sdjklasdfsdjk 
+
+asd$sjddkf
+
+환경변수 3개
+asd$a$b$c
+이 스트링의 길이를 어떻게 알고 malloc 할 것인가
+1. strjoin으로 뒤에 붙여주기
+
+input이 어떤 경우에는 복사 멈춤
+-> ""(큰 따옴표 나오면), '', $

@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/11 16:38:39 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 18:11:56 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ typedef enum e_token_type
 
 typedef enum e_grammar_status
 {
-	ST_START =0,
+	ST_START = 0,
 	ST_REDIRECT,
 	ST_WORD
-}t_grammar_status;
+}	t_grammar_status;
 
 typedef struct s_node
 {
@@ -49,6 +49,13 @@ typedef struct s_deque
 	t_node	*rear;
 	int		size;
 }	t_deque;
+
+typedef struct s_env_list
+{
+	char				*env_key;
+	char				*env_value;
+	struct s_env_list	*next;
+}	t_env_list;
 
 typedef struct s_inner_block
 {
@@ -70,5 +77,8 @@ void	delete_rear(t_deque *dq);
 void	malloc_fail(void);
 void	argc_err(void);
 t_deque	*tokenize(char *input, int *pipecnt);
+
+void add_new_list(char *env, t_env_list **env_list);
+t_block	*parsing(char *input, t_env_list **env_list);
 
 #endif

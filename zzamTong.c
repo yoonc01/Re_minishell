@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/11 19:28:32 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:29:51 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,7 +306,7 @@ static char	*process_word(t_deque *tokens, char *start)
 
 	idx = start;
 	while (*idx != '\0' && !ft_isspace(*idx)
-		&& *idx != '|' && *idx != '>' && *idx != '<')
+		&& *idx != '|' && *idx != '>' && *idx != '<' && *idx != '\'' && *idx != '\"')
 		idx++;
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
 	ft_strlcpy(tmp, start, idx - start + 1);
@@ -475,7 +475,7 @@ int	main()
 {
 	int	idx = 0;
 	int pipecnt = 0;
-	char *input = "<< Hyoyoon cat > out | hello";
+	char *input = "Hyoyoon\" cat\" > out | hello";
 	t_block	*parsed_input = parsing(input);
 	while (parsed_input[idx].cmd_list != NULL || parsed_input[idx].redirection_list != NULL)
 	{
