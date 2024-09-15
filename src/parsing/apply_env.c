@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 19:42:17 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 20:29:22 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*get_env_value(char *str, size_t *idx, t_env_list **env_list)
 	temp = (*env_list);
 	while(temp->next != NULL)
 	{
-		if (ft_strncmp(env_key, temp->env_key, ft_strlen(env_key)) == 0)
+		if (my_strcmp(env_key, temp->env_key) == 0)
 			return (temp->env_value);
 		temp = temp->next;
 	}

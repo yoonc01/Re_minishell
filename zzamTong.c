@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 19:41:14 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 20:29:00 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,24 +74,20 @@ size_t	ft_strlcat(char *dest, const char *src, size_t size)
 	}
 }
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+int	my_strcmp(char *s1, char *s2)
 {
-	size_t				i;
-	const unsigned char	*temp_s1;
-	const unsigned char	*temp_s2;
-
-	temp_s1 = (const unsigned char *)s1;
-	temp_s2 = (const unsigned char *)s2;
-	i = 0;
-	while ((temp_s1[i] || temp_s2[i]) && i < n)
+	while (*s1 == *s2)
 	{
-		if (temp_s1[i] != temp_s2[i])
-			return (temp_s1[i] - temp_s2[i]);
-		i++;
+		if (*s1 == '\0')
+			return (0);
+		s1++;
+		s2++;
 	}
-	return (0);
+	if (*s1 > *s2)
+		return (1);
+	else
+		return (-1);
 }
-
 char	*my_strndup(char *s, size_t n)
 {
 	char	*result;
@@ -116,6 +112,23 @@ int	ft_isspace(char c)
 {
 	return (9 <= c && c <= 13 || c == ' ');
 }
+
+void	*ft_memset(void *ptr, int value, size_t num)
+{
+	size_t			i;
+	unsigned char	*temp_ptr;
+
+	temp_ptr = (unsigned char *)ptr;
+	i = 0;
+	while (num > i)
+		temp_ptr[i++] = (unsigned char)value;
+	return (ptr);
+}
+
+void	ft_bzero(void *ptr, size_t size)
+{
+	ft_memset(ptr, 0, size);
+}
 char	*ft_strdup(const char *s1)
 {
 	size_t	len;
@@ -135,7 +148,20 @@ char	*ft_strdup(const char *s1)
 	s1_cpy[i] = 0;
 	return (s1_cpy);
 }
+void	*ft_calloc(size_t count, size_t size)
+{
+	void		*arr;
+	size_t		mul_size_cnt;
 
+	mul_size_cnt = count * size;
+	if (count != 0 && mul_size_cnt / count != size)
+		return (NULL);
+	arr = malloc(count * size);
+	if (!arr)
+		return (NULL);
+	ft_bzero(arr, count * size);
+	return (arr);
+}
 typedef enum e_token_type
 {
 	WORD = 0,
@@ -196,6 +222,8 @@ void	delete_rear(t_deque *dq);
 void	malloc_fail(void);
 void	argc_err(void);
 t_deque	*tokenize(char *input, int *pipecnt);
+
+
 
 void	malloc_fail(void)
 {
@@ -450,7 +478,7 @@ char	*remove_single_quote(char *str)
 
 	len = ft_strlen(str);
 	result = (char *)malloc(sizeof(char) * (len - 1));
-	ft_strlcpy(result, (str + 1), len - 2);
+	ft_strlcpy(result, (str + 1), len - 1);
 	free(str);
 	return (result);
 }
@@ -483,11 +511,11 @@ char	*get_env_value(char *str, size_t *idx, t_env_list **env_list)
 		return ("");
 	while (is_valid_env_key(str[*idx]))
 		(*idx)++;
-	env_key = my_strndup(str, idx);
+	env_key = my_strndup(str + 1, *idx);
 	temp = (*env_list);
 	while(temp->next != NULL)
 	{
-		if (ft_strncmp(env_key, temp->env_key, ft_strlen(env_key)) == 0)
+		if (my_strcmp(env_key, temp->env_key) == 0)
 			return (temp->env_value);
 		temp = temp->next;
 	}
@@ -496,7 +524,6 @@ char	*get_env_value(char *str, size_t *idx, t_env_list **env_list)
 
 char	*ft_strnjoin(char *result, char *str, size_t size)
 {
-	size_t	idx;
 	char	*new_result;
 
 	new_result = (char *)malloc(sizeof(char) * (ft_strlen(result) + size + 1));
@@ -531,6 +558,113 @@ char	*apply_env(char *str, t_env_list **env_list)
 			idx++;
 	}
 }
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/04 12:32:00 by ycho2             #+#    #+#             */
+/*   Updated: 2024/04/29 16:34:24 by ycho2            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+static int		count_words(char const *s, char c);
+static char		*sep_words(char const *s, int start, int end);
+static int		save_words(char const *s, char c, char **split);
+
+char	**ft_split(char const *s, char c)
+{
+	char	**split;
+
+	split = (char **)malloc(sizeof(char *) * (count_words(s, c) + 1));
+	save_words(s, c, split);
+	return (split);
+}
+
+static int	count_words(char const *s, char c)
+{
+	int	i;
+	int	cnt;
+	int	flag;
+
+	i = 0;
+	cnt = 0;
+	flag = 0;
+	while (s[i])
+	{
+		if (s[i] != c && flag == 0)
+		{
+			flag = 1;
+			cnt++;
+		}
+		else if (s[i] == c && flag == 1)
+			flag = 0;
+		i++;
+	}
+	return (cnt);
+}
+
+static char	*sep_words(char const *s, int start, int end)
+{
+	char	*word;
+	int		i;
+
+	i = 0;
+	word = (char *)malloc(sizeof(char) * (end - start + 1));
+	if (!word)
+		return (0);
+	while (i < end - start)
+	{
+		word[i] = s[i + start];
+		i++;
+	}
+	word[i] = 0;
+	return (word);
+}
+
+static int	save_words(char const *s, char c, char **split)
+{
+	size_t		i;
+	long long	start;
+	size_t		nth_word;
+
+	start = -1;
+	nth_word = 0;
+	i = 0;
+	while (i <= ft_strlen(s))
+	{
+		if (s[i] != c && start == -1)
+			start = i;
+		else if ((s[i] == c || i == ft_strlen(s)) && start != -1)
+		{
+			split[nth_word] = sep_words(s, start, i);
+			if (!split[nth_word])
+				return (0);
+			start = -1;
+			nth_word++;
+		}
+		i++;
+	}
+	split[nth_word] = 0;
+	return (1);
+}
+
+void	split_free(char **split)
+{
+	size_t	i;
+
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}
+
 
 			// temp = ft_calloc((ft_strlen(str) + ft_strlen(env_value) + 1), sizeof(char));
 			// ft_strlcpy(temp, result, idx + 1);
@@ -588,7 +722,7 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 	return (1);
 }
 
-int	put_block_redirection(t_deque *tokens, t_block parsed_input)
+int	put_block_redirect(t_deque *tokens, t_block parsed_input)
 //TODO error 시 누수 확인 
 {
 	t_inner_block	*new_node_redirection;
@@ -667,7 +801,7 @@ static int check_env_add(char *env_key)
 		return (0);
 	else
 	{
-		while (*env_key != NULL)
+		while (*env_key != 0)
 		{
 			if (!(ft_isalnum(*env_key)||*env_key=='_'))
 				return (0);
@@ -716,15 +850,15 @@ static void	init_env_list(char **env, t_env_list **env_list)
 
 int	main(int ac, char **av, char **env)
 {
-	ac;
-	av;
-	t_env_list **env_list;
-	*env_list = NULL;
-	init_env_list(env, env_list);
+	ac = 0;
+	av = NULL;
+	t_env_list *env_list;
+	env_list = NULL;
+	init_env_list(env, &env_list);
 	int	idx = 0;
 	int pipecnt = 0;
-	char *input = "Hyoyoon\" cat\" > out | hello";
-	t_block	*parsed_input = parsing(input, env_list);
+	char *input = "Hyoyoon \"cat\" $TERM > out | hello";
+	t_block	*parsed_input = parsing(input, &env_list);
 	while (parsed_input[idx].cmd_list != NULL || parsed_input[idx].redirection_list != NULL)
 	{
 		t_inner_block **cmd_list = parsed_input[idx].cmd_list;

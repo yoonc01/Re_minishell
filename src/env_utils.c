@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 13:29:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 18:12:05 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 19:46:27 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int check_env_add(char *env_key)
 		return (0);
 	else
 	{
-		while (*env_key != NULL)
+		while (*env_key != 0)
 		{
 			if (!(ft_isalnum(*env_key)||*env_key=='_'))
 				return (0);

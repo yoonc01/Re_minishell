@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 19:28:57 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 19:48:28 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 	return (1);
 }
 
-int	put_block_redirection(t_deque *tokens, t_block parsed_input)
+int	put_block_redirect(t_deque *tokens, t_block parsed_input)
 //TODO error 시 누수 확인 
 {
 	t_inner_block	*new_node_redirection;

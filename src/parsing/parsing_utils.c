@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:46:33 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 17:24:21 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 20:11:35 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*remove_single_quote(char *str)
 
 	len = ft_strlen(str);
 	result = (char *)malloc(sizeof(char) * (len - 1));
-	ft_strlcpy(result, (str + 1), len - 2);
+	ft_strlcpy(result, (str + 1), len - 1);
 	free(str);
 	return (result);
 }
