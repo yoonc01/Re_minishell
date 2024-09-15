@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 16:56:28 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 19:28:57 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	put_block_redirection(t_deque *tokens, t_block parsed_input)
 	return (1);
 }
 
-t_block	*parsing_block(t_deque *tokens, int pipecnt)
+t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 {
 	t_block	*parsed_input;
 	int		block_i;
@@ -92,7 +92,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt)
 	while (tokens->front != NULL && grammar_valid)
 	{
 		if (tokens->front->token_type == WORD)
-			grammar_valid = put_block_cmd(tokens, parsed_input[block_i]);
+			grammar_valid = put_block_cmd(tokens, parsed_input[block_i], env_list);
 		else if (tokens->front->token_type == PIPE)
 		{
 			if (tokens->front->next == NULL)
@@ -118,6 +118,6 @@ t_block	*parsing(char *input, t_env_list **env_list)
 	tokens = tokenize(input, &pipecnt);
 	if (tokens == NULL)
 		return (0);
-	parsed_input = parsing_block(tokens, pipecnt);
+	parsed_input = parsing_block(tokens, pipecnt, env_list);
 	return (parsed_input);
 }

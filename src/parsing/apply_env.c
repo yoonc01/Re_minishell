@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 18:47:36 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 19:42:17 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,17 @@ int		is_valid_env_key(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-char	*get_env_value(char **str, t_env_list **env_list)
+char	*get_env_value(char *str, size_t *idx, t_env_list **env_list)
 {
 	t_env_list	*temp;
 	char		*env_key;
-	char		*key_start;
 
-	(*str)++;
-	key_start = *str;
-	if (ft_isdigit(*str))
+	(*idx)++;
+	if (ft_isdigit(str[*idx]))
 		return ("");
-	while (is_valid_env_key(**str))
-		(*str)++;
-	env_key = my_strndup(key_start, *str - key_start);
+	while (is_valid_env_key(str[*idx]))
+		(*idx)++;
+	env_key = my_strndup(str, idx);
 	temp = (*env_list);
 	while(temp->next != NULL)
 	{
@@ -39,30 +37,48 @@ char	*get_env_value(char **str, t_env_list **env_list)
 	}
 	return ("");
 }
+
+char	*ft_strnjoin(char *result, char *str, size_t size)
+{
+	size_t	idx;
+	char	*new_result;
+
+	new_result = (char *)malloc(sizeof(char) * (ft_strlen(result) + size + 1));
+	ft_strlcpy(new_result, result, ft_strlen(result) + 1);
+	ft_strlcat(new_result, str, (ft_strlen(result) + size + 1));
+	free(result);
+	return (new_result);
+}
 char	*apply_env(char *str, t_env_list **env_list)
 {
-	char	*dst;
-	char	*temp;
+	size_t	idx;
 	char	*result;
 	char	*env_value;
 
-	result = ft_strdup(str);
-	dst = result;
-	while (*str != '\0')
+	result = ft_strdup("");
+	idx = 0;
+	while (1)
 	{
-		if (*str == '$' && is_valid_env_key(*(str + 1)))
+		if ((str[idx] == '$' && is_valid_env_key(str[idx + 1])) || str[idx] == '\0')
 		{
-			env_value = get_env_value(&str, env_list);
-			temp = ft_calloc((ft_strlen(result) + ft_strlen(env_value) + 1), sizeof(char));
-			ft_strlcpy(temp, result, dst - result + 1);
-			ft_strlcat(temp, env_value, ft_strlen(env_value) + 1);
-			free(result);
-			result = temp;
-			dst = result + ft_strlen(result);
+			result = ft_strnjoin(result, str, idx);
+			str = str + idx;
+			idx = 0;
+			if (str[idx] == '\0')
+				return (result);
+			env_value = get_env_value(str, &idx, env_list);
+			result = ft_strnjoin(result, env_value, ft_strlen(env_value));
+			str = str + idx;
+			idx = 0;
 		}
 		else
-			*dst++ = *str++;
+			idx++;
 	}
-	*dst = '\0';
-	return (result);
 }
+
+			// temp = ft_calloc((ft_strlen(str) + ft_strlen(env_value) + 1), sizeof(char));
+			// ft_strlcpy(temp, result, idx + 1);
+			// ft_strlcat(temp, env_value, ft_strlen(env_value) + 1);
+			// free(result);
+			// result = temp;
+			// idx = idx + ft_strlen(env_value);
