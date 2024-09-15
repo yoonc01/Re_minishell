@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 20:29:00 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/15 20:41:28 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -511,7 +511,7 @@ char	*get_env_value(char *str, size_t *idx, t_env_list **env_list)
 		return ("");
 	while (is_valid_env_key(str[*idx]))
 		(*idx)++;
-	env_key = my_strndup(str + 1, *idx);
+	env_key = my_strndup(str + 1, *idx - 1);
 	temp = (*env_list);
 	while(temp->next != NULL)
 	{
@@ -857,7 +857,7 @@ int	main(int ac, char **av, char **env)
 	init_env_list(env, &env_list);
 	int	idx = 0;
 	int pipecnt = 0;
-	char *input = "Hyoyoon \"cat\" $TERM > out | hello";
+	char *input = "Hyoyoon \"cat\" $TERM$TERM > out | hello";
 	t_block	*parsed_input = parsing(input, &env_list);
 	while (parsed_input[idx].cmd_list != NULL || parsed_input[idx].redirection_list != NULL)
 	{
