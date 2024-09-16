@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 19:48:28 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/16 18:16:14 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// 파싱한 inner_block를 해당하는 block멤버에 맞게 연결리스트 맨 뒤의 멤버로 넣어줌
 void add_inner_block(t_inner_block **lst, t_inner_block *new_node)
 {
 	t_inner_block	*current_node;
@@ -27,30 +28,36 @@ void add_inner_block(t_inner_block **lst, t_inner_block *new_node)
 	}
 }
 
+// 토큰화한 WORD가 cmd일경우 여기로 들어온다
+// 환경변수가 들어있을경우 적용해서 파싱한다
 int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 {
 	t_inner_block	*new_node;
 	t_inner_block	*current_node;
 	t_inner_block	**cmd_list;
-	char			*str;
+	char			*cmd;
 
 	cmd_list = parsed_input.cmd_list;
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
-	str = tokens->front->str;
-	if (*str == '\'')
-		str = remove_single_quote(str);
-	else if (*str == '\"')
-		str = remove_double_quote(str, env_list);
+	cmd = tokens->front->str;
+	if (*cmd == '\'')
+	{
+		cmd = remove_single_quote(cmd);
+	}
 	else
-		str = apply_env(str, env_list);
-	new_node->str = str;
+	{
+		/// TODO remove_double_auote 
+		cmd = apply_env(cmd, env_list);
+	}
+	new_node->str = cmd;
 	new_node->next = NULL;
 	add_inner_block(cmd_list, new_node);
 	delete_front(tokens);
 	return (1);
 }
 
-int	put_block_redirect(t_deque *tokens, t_block parsed_input)
+// 현재 파싱중인 block 의 redirection멤버에 데이터 넣어줌
+int	put_block_redirect(t_deque *tokens, t_block current_block) // 받아오는 인자수정
 //TODO error 시 누수 확인 
 {
 	t_inner_block	*new_node_redirection;
@@ -58,7 +65,7 @@ int	put_block_redirect(t_deque *tokens, t_block parsed_input)
 	t_inner_block	*current_node;
 	t_inner_block	**redirection_list;
 
-	redirection_list = parsed_input.redirection_list;
+	redirection_list = current_block.redirection_list;
 	if (tokens->front->next == NULL || tokens->front->next->token_type != WORD)
 		return (0);
 	new_node_redirection = (t_inner_block *)malloc(sizeof(t_inner_block));
@@ -73,6 +80,7 @@ int	put_block_redirect(t_deque *tokens, t_block parsed_input)
 	return (1);
 }
 
+// 파이프 마다 블록 만든 뒤 블록 리스트로 만들어서 parsed_input에 넣어준다 
 t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 {
 	t_block	*parsed_input;
@@ -83,8 +91,8 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 	block_i = 0;
 	while(block_i < pipecnt + 1)
 	{
-		parsed_input[block_i].cmd_list = (t_inner_block **)calloc(1, sizeof(t_inner_block *));
-		parsed_input[block_i].redirection_list = (t_inner_block **)calloc(1, sizeof(t_inner_block *));
+		parsed_input[block_i].cmd_list = (t_inner_block **)ft_calloc(1, sizeof(t_inner_block *));
+		parsed_input[block_i].redirection_list = (t_inner_block **)ft_calloc(1, sizeof(t_inner_block *));
 		block_i++;
 	}
 	block_i = 0;
@@ -104,7 +112,9 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 			grammar_valid = put_block_redirect(tokens, parsed_input[block_i]);
 	}
 	if (grammar_valid == 0)
-		free_parsed_input(parsed_input, tokens, block_i);
+	{
+		// free_parsed_input(parsed_input, tokens, block_i);
+	}
 	return (parsed_input);
 }
 

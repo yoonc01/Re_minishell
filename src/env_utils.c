@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 13:29:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 19:46:27 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/16 16:01:12 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,10 @@ int add_new_list(char *env, t_env_list **env_list)
 		tmp_node->next = new_node;
 	}
 	return (1);
+}
+
+// 환경변수 키 값이 적절한지 확인
+int		is_valid_env_key(char c)
+{
+	return (ft_isalnum(c) || c == '_');
 }
