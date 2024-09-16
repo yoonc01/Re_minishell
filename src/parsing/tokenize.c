@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 16:45:43 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/16 17:15:25 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*process_quote(t_deque *tokens, char *start, char quote)
 		idx++;
 	if (*idx == '\0')
 	{
-		write(2, "Error unmatched quote\n", 24);
+		write(2, "Error unmatched quote\n", 23);
 		while (tokens->front != NULL)
 			delete_front(tokens);
 		free(tokens);
@@ -65,7 +65,7 @@ static char	*process_word(t_deque *tokens, char *start)
 
 	idx = start;
 	while (*idx != '\0' && !ft_isspace(*idx)
-		&& *idx != '|' && *idx != '>' && *idx != '<' && *idx != '\'' && idx != '\"')
+		&& *idx != '|' && *idx != '>' && *idx != '<' && *idx != '\'' && *idx != '\"')
 		idx++;
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
 	ft_strlcpy(tmp, start, idx - start + 1);

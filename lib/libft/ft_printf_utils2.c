@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 13:59:58 by ycho2             #+#    #+#             */
-/*   Updated: 2024/04/15 15:01:52 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/16 16:42:55 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,7 @@ char	*ft_uitoa(unsigned int n)
 	int				len;
 	char			*str;
 	unsigned long	ul_n;
-	int				i;
 
-	i = 0;
 	ul_n = (unsigned long)n;
 	len = ft_numlen(ul_n);
 	str = (char *)ft_calloc(len + 1, 1);

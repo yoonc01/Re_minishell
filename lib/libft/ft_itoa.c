@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/28 03:01:19 by ycho2             #+#    #+#             */
-/*   Updated: 2023/11/05 14:12:57 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/16 16:41:36 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ char	*ft_itoa(int n)
 	size_t		len;
 	char		*str;
 	long long	ll_n;
-	size_t		i;
 
-	i = 0;
 	ll_n = (long long)n;
 	len = ft_numlen(ll_n);
 	str = (char *)ft_calloc(len + 1, 1);

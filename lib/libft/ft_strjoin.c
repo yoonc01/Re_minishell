@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:50:18 by ycho2             #+#    #+#             */
-/*   Updated: 2024/04/15 15:07:32 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/16 16:42:00 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	len;
-	size_t	i;
 	size_t	len_s1;
 	size_t	len_s2;
 	char	*concat_str;
 
-	len = 0;
-	i = 0;
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
 	concat_str = (char *)malloc(sizeof(char) * (len_s1 + len_s2 + 1));

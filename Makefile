@@ -1,6 +1,6 @@
 NAME = minishell
 cc = cc
-CFLAGS = -g -Wall -Werror -Wextra
+CFLAGS = -g
 RM = rm -rf
 
 LIB_DIR = ./lib/
@@ -18,12 +18,18 @@ HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 INCLUDES = -I$(HEADERS_DIR) -I$(LIBFT_DIR)
 
 SRC_DIR = ./src/
-SRCS_LIST = main.c
+SRCS_LIST = main.c\
+			env_utils.c\
+			error.c\
+			utils.c
 
 PARSING_DIR = $(SRC_DIR)parsing
 PARSING_LIST = deque.c\
 			parsing.c\
 			tokenize.c\
+			apply_env.c\
+			parsing_utils.c\
+			tokenize_utils.c
 
 SRCS = $(addprefix $(SRC_DIR), $(SRCS_LIST)) $(addprefix $(PARSING_DIR), $(PARSING_LIST))
 
@@ -34,7 +40,7 @@ OBJS = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 all : $(NAME)
 
 $(NAME) : $(LIBFT) $(OBJ_DIR) $(OBJS)
-	$(cc) $(CFLAGS) $(INCLUDES) $(LIBRARIES) $(OBJS) -o $(NAME)
+	$(cc) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBRARIES) -o $(NAME)
 
 $(OBJ_DIR) :
 	mkdir -p $(OBJ_DIR)
@@ -44,7 +50,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADERS)
 	$(cc) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # PARSING_DIR에 있는 .c 파일들을 처리
-$(OBJ_DIR)%.o: $(PARSING_DIR)%.c $(HEADERS)
+$(OBJ_DIR)%.o: $(PARSING_DIR)/%.c $(HEADERS)
 	$(cc) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT) :

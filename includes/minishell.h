@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/15 18:11:56 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/16 17:49:30 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,23 @@ void	malloc_fail(void);
 void	argc_err(void);
 t_deque	*tokenize(char *input, int *pipecnt);
 
-void add_new_list(char *env, t_env_list **env_list);
+void	process_operator_out(char c, size_t *len, t_token_type *token_type);
+void	process_operator_in(char c, size_t *len, t_token_type *token_type);
+
+int add_new_list(char *env, t_env_list **env_list);
 t_block	*parsing(char *input, t_env_list **env_list);
+
+char	*apply_env(char *str, t_env_list **env_list);
+
+char	*remove_single_quote(char *str);
+void	free_parsed_input(t_block *parsed_input, t_deque *tokens, int block_i);
+void	free_inner_block(t_inner_block **lst);
+
+int		is_valid_env_key(char c);
+
+char	*my_strndup(char *s, size_t n);
+int	my_strcmp(char *s1, char *s2);
+char	*ft_strnjoin(char *result, char *str, size_t size);
+int	ft_isspace(char c);
 
 #endif
