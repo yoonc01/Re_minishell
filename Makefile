@@ -8,7 +8,7 @@ LIB_DIR = ./lib/
 LIBFT_DIR = $(LIB_DIR)libft/
 LIBFT = $(LIBFT_DIR)libft.a
 
-LIBRARIES = -lft -L$(LIBFT_DIR)
+LIBRARIES = -lft -lreadline -L$(LIBFT_DIR)
 
 HEADERS_DIR = ./includes/
 
@@ -21,7 +21,9 @@ SRC_DIR = ./src/
 SRCS_LIST = main.c\
 			env_utils.c\
 			error.c\
-			utils.c
+			utils.c\
+			terminal.c\
+			signal.c
 
 PARSING_DIR = $(SRC_DIR)parsing
 PARSING_LIST = deque.c\
