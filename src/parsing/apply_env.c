@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   apply_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/16 18:10:39 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/18 14:31:45 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,14 @@ char	*get_env_value(char *token_word, size_t *idx, t_env_list **env_list)
 	while(temp->next != NULL)
 	{
 		if (my_strcmp(env_key, temp->env_key) == 0)
+		{
+			free(env_key);
 			return (temp->env_value);
+		}
 		temp = temp->next;
 	}
 	// env_list 끝까지 탐색했는데 못찾았을 경우 빈 문자열 리턴
+	free(env_key);
 	return (ft_strdup(""));
 }
 

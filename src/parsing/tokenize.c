@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/16 17:15:25 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/18 13:45:32 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static char	*process_word(t_deque *tokens, char *start)
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
 	ft_strlcpy(tmp, start, idx - start + 1);
 	insert_rear(tokens, tmp, WORD);
-	return (idx + 1);
+	return (idx);
 }
 
 t_deque	*tokenize(char *input, int *pipecnt)
