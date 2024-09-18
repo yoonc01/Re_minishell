@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/16 17:14:24 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/18 14:02:55 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,17 @@ static void	init_env_list(char **env, t_env_list **env_list)
 int	main(int ac, char **av, char **env)
 {
 	t_env_list	*env_list;
-	int			pipe_idx;
+	int			pipe_idx = 0;
+	int			pipecnt;
 	ac;
 	av;
 	env;
 
 	env_list = NULL;
 	init_env_list(env, &env_list);
-	char *input = "Hyoyoon \"cat\" $TERM$TERM > out | hello";
-	t_block	*parsed_input = parsing(input, &env_list);
-	while (parsed_input[pipe_idx].cmd_list != NULL || parsed_input[pipe_idx].redirection_list != NULL)
+	char *input = "Hyoyoon  \'$TERM$TERM\' \"$TERM$TERM\" > out | hello";
+	t_block	*parsed_input = parsing(input, &pipecnt, &env_list);
+	while (pipe_idx <= pipecnt)
 	{
 		t_inner_block **cmd_list = parsed_input[pipe_idx].cmd_list;
 		t_inner_block **redirection_list = parsed_input[pipe_idx].redirection_list;

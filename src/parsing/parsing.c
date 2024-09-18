@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/16 18:16:14 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/18 14:01:06 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,11 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
 	cmd = tokens->front->str;
 	if (*cmd == '\'')
-	{
 		cmd = remove_single_quote(cmd);
-	}
+	else if (*cmd == '\"')
+		cmd = remove_double_quote(cmd, env_list);
 	else
-	{
-		/// TODO remove_double_auote 
 		cmd = apply_env(cmd, env_list);
-	}
 	new_node->str = cmd;
 	new_node->next = NULL;
 	add_inner_block(cmd_list, new_node);
@@ -118,16 +115,15 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 	return (parsed_input);
 }
 
-t_block	*parsing(char *input, t_env_list **env_list)
+t_block	*parsing(char *input, int *pipecnt, t_env_list **env_list)
 {
 	t_deque	*tokens;
-	int		pipecnt;
 	t_block	*parsed_input;
 
-	pipecnt = 0;
-	tokens = tokenize(input, &pipecnt);
+	*pipecnt = 0;
+	tokens = tokenize(input, pipecnt);
 	if (tokens == NULL)
 		return (0);
-	parsed_input = parsing_block(tokens, pipecnt, env_list);
+	parsed_input = parsing_block(tokens, *pipecnt, env_list);
 	return (parsed_input);
 }
