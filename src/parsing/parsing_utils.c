@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:46:33 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 16:05:05 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 18:14:33 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,19 @@ void	free_inner_block(t_inner_block **lst)
 	while (*lst)
 	{
 		temp_inner_block = (*lst)->next;
+		free((*lst)->str);
 		free((*lst));
 		*lst = temp_inner_block;
 	}
 }
-void	free_parsed_input(t_block *parsed_input, t_deque *tokens, int block_i)
+void	free_parsed_input(t_block *parsed_input, int pipecnt)
 {
 	int				idx;
 	t_inner_block	**cmd_list;
 	t_inner_block	**redirection_list;
 
 	idx = 0;
-	while(idx <= block_i)
+	while(idx <= pipecnt)
 	{
 		cmd_list = parsed_input[idx].cmd_list;
 		redirection_list = parsed_input[idx].redirection_list;
@@ -38,9 +39,9 @@ void	free_parsed_input(t_block *parsed_input, t_deque *tokens, int block_i)
 		free_inner_block(redirection_list);
 		idx++;
 	}
+	free(parsed_input->cmd_list);
+	free(parsed_input->redirection_list);
 	free(parsed_input);
-	while (tokens->front != NULL)
-		delete_front(tokens);
 }
 
 char	*remove_single_quote(char *str)

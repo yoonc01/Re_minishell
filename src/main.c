@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 16:06:46 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 18:08:37 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main(int ac, char **av, char **env)
 	atexit(check_leak);
 	env_list = NULL;
 	init_env_list(env, &env_list);
-	char *input = "< $TERM Hyo oon > nn an '$TERM' \"$TERM\"";
+	char *input = " Hyo < $TERM oon > nn an '$TERM' \"$TERM\" $?";
 	t_block	*parsed_input = parsing(input, &pipecnt, &env_list);
 	while (pipe_idx <= pipecnt)
 	{
@@ -49,6 +49,7 @@ int	main(int ac, char **av, char **env)
 		while (temp != NULL)
 		{
 			printf("%s\n", temp->str);
+			printf("%p", temp->str);
 			temp = temp->next;
 		}
 		temp = *redirection_list;
@@ -60,6 +61,7 @@ int	main(int ac, char **av, char **env)
 		printf("\n");
 		pipe_idx++;
 	}
+	free_parsed_input(parsed_input, pipecnt);
 	free_env_list(&env_list);
-	exit(0);
+	// exit(0);
 }
