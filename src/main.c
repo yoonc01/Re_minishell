@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 15:41:46 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 16:06:46 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main(int ac, char **av, char **env)
 	atexit(check_leak);
 	env_list = NULL;
 	init_env_list(env, &env_list);
-	char *input = "Hyo oon onn an '$TERM' \"$TERM\"";
+	char *input = "< $TERM Hyo oon > nn an '$TERM' \"$TERM\"";
 	t_block	*parsed_input = parsing(input, &pipecnt, &env_list);
 	while (pipe_idx <= pipecnt)
 	{

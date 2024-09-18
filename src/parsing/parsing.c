@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 15:00:31 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 16:05:35 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,7 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 
 	cmd_list = parsed_input.cmd_list;
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
-	cmd = tokens->front->str;
-	if (*cmd == '\'')
-		cmd = remove_single_quote(cmd);
-	else if (*cmd == '\"')
-		cmd = remove_double_quote(cmd, env_list);
-	else
-		cmd = apply_env(cmd, env_list);
+	cmd = rm_quote_ap_env(tokens->front->str, env_list, 0);
 	new_node->str = cmd;
 	new_node->next = NULL;
 	add_inner_block(cmd_list, new_node);
@@ -54,13 +48,14 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 }
 
 // 현재 파싱중인 block 의 redirection멤버에 데이터 넣어줌
-int	put_block_redirect(t_deque *tokens, t_block current_block) // 받아오는 인자수정
+int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list **env_list) // 받아오는 인자수정
 //TODO error 시 누수 확인 
 {
 	t_inner_block	*new_node_redirection;
 	t_inner_block	*new_node_file;
 	t_inner_block	*current_node;
 	t_inner_block	**redirection_list;
+	int				is_heredoc;
 
 	redirection_list = current_block.redirection_list;
 	if (tokens->front->next == NULL || tokens->front->next->token_type != WORD)
@@ -69,13 +64,14 @@ int	put_block_redirect(t_deque *tokens, t_block current_block) // 받아오는 �
 	new_node_file = (t_inner_block *)malloc(sizeof(t_inner_block));
 	new_node_redirection->str = ft_strdup(tokens->front->str);
 	new_node_redirection->next = new_node_file;
-	delete_front(tokens);
-	new_node_file->str = ft_strdup(tokens->front->str);
+	new_node_file->str = rm_quote_ap_env(tokens->front->next->str, env_list, tokens->front->token_type == HEREDOC);
 	new_node_file->next = NULL;
+	delete_front(tokens);
 	delete_front(tokens);
 	add_inner_block(redirection_list, new_node_redirection);
 	return (1);
 }
+
 
 // 파이프 마다 블록 만든 뒤 블록 리스트로 만들어서 parsed_input에 넣어준다 
 t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
@@ -106,7 +102,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 			delete_front(tokens);
 		}
 		else
-			grammar_valid = put_block_redirect(tokens, parsed_input[block_i]);
+			grammar_valid = put_block_redirect(tokens, parsed_input[block_i], env_list);
 	}
 	if (grammar_valid == 0)
 	{

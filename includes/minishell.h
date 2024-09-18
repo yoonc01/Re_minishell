@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 15:41:38 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:55:29 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ t_block	*parsing(char *input, int *pipecnt, t_env_list **env_list);
 char	*apply_env(char *str, t_env_list **env_list);
 
 char	*remove_single_quote(char *str);
-char	*remove_double_quote(char *str, t_env_list **env_list);
+char	*remove_double_quote(char *str);
+char	*rm_quote_ap_env(char *cmd, t_env_list **env_list, int is_heredoc);
 void	free_parsed_input(t_block *parsed_input, t_deque *tokens, int block_i);
 void	free_inner_block(t_inner_block **lst);
 

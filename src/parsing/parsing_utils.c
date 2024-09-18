@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:46:33 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 15:40:04 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 16:05:05 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,36 @@ char	*remove_single_quote(char *str)
 	return (result);
 }
 
-char	*remove_double_quote(char *str, t_env_list **env_list)
+char	*remove_double_quote(char *str)
 {
 	char	*result;
-	char	*removed;
 	size_t	len;
 
 	len = ft_strlen(str);
-	removed = (char *)malloc(sizeof(char) * (len - 1));
-	ft_strlcpy(removed, (str + 1), len - 1);
-	result = apply_env(removed, env_list);
-	free(removed);
+	result = (char *)malloc(sizeof(char) * (len - 1));
+	ft_strlcpy(result, (str + 1), len - 1);
 	return (result);
+}
+char	*rm_quote_ap_env(char *cmd, t_env_list **env_list, int is_heredoc)
+{
+	char	*temp;
+	char	*result;
+
+	if (*cmd == '\'')
+		return (remove_single_quote(cmd));
+	else if (*cmd == '\"')
+	{
+		temp = remove_double_quote(cmd);
+		if (is_heredoc)
+			return (temp);
+		result = apply_env(temp, env_list);
+		free(temp);
+		return (result);
+	}
+	else
+	{
+		if (is_heredoc)
+			return (ft_strdup(cmd));
+		return (apply_env(cmd, env_list));
+	}
 }
