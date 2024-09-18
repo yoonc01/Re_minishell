@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 18:07:27 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/18 18:34:30 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
+# include <termios.h>
+# include <string.h>
+# include <sys/wait.h>
+
 
 typedef enum e_token_type
 {
@@ -99,5 +106,9 @@ char	*my_strndup(char *s, size_t n);
 int		my_strcmp(char *s1, char *s2);
 char	*ft_strnjoin(char *result, char *str, size_t size);
 int		ft_isspace(char c);
+
+void	set_signals(void);
+
+void	set_terminal(void);
 
 #endif
