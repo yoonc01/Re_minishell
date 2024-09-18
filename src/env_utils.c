@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 13:29:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/16 16:01:12 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:40:41 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,12 @@ int add_new_list(char *env, t_env_list **env_list)
 	splited_env = ft_split(env, '=');
 	if (check_env_add(splited_env[0]) == 0)
 		return (0);
-	new_node->env_key = splited_env[0];
-	new_node->env_value = splited_env[1];
+	new_node->env_key = ft_strdup(splited_env[0]);
+	if (splited_env[1] == NULL)
+		new_node->env_value = ft_strdup("");
+	else
+		new_node->env_value = ft_strdup(splited_env[1]);
+	split_free(splited_env);
 	new_node->next = NULL;
 	if (*env_list == NULL)
 		*env_list = new_node;
@@ -51,6 +55,20 @@ int add_new_list(char *env, t_env_list **env_list)
 		tmp_node->next = new_node;
 	}
 	return (1);
+}
+
+void	free_env_list(t_env_list **env_list)
+{
+	t_env_list	*temp;
+
+	while(*env_list != NULL)
+	{
+		temp = *env_list;
+		free((*env_list)->env_key);
+		free((*env_list)->env_value);
+		(*env_list) = (*env_list)->next;
+		free(temp);
+	}
 }
 
 // 환경변수 키 값이 적절한지 확인

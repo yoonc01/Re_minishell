@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 14:01:06 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:00:31 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 	int		block_i;
 	int		grammar_valid;
 
-	parsed_input = (t_block *)ft_calloc((pipecnt + 1), sizeof(t_block));
+	parsed_input = (t_block *)ft_calloc(pipecnt, sizeof(t_block));
 	block_i = 0;
 	while(block_i < pipecnt + 1)
 	{
@@ -125,5 +125,6 @@ t_block	*parsing(char *input, int *pipecnt, t_env_list **env_list)
 	if (tokens == NULL)
 		return (0);
 	parsed_input = parsing_block(tokens, *pipecnt, env_list);
+	free(tokens);
 	return (parsed_input);
 }

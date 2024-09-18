@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 14:02:55 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:41:46 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ static void	init_env_list(char **env, t_env_list **env_list)
 		i++;
 	}
 }
-
+void	check_leak(void)
+{
+	system("leaks -q minishell");
+}
 int	main(int ac, char **av, char **env)
 {
 	t_env_list	*env_list;
@@ -33,9 +36,10 @@ int	main(int ac, char **av, char **env)
 	av;
 	env;
 
+	atexit(check_leak);
 	env_list = NULL;
 	init_env_list(env, &env_list);
-	char *input = "Hyoyoon  \'$TERM$TERM\' \"$TERM$TERM\" > out | hello";
+	char *input = "Hyo oon onn an '$TERM' \"$TERM\"";
 	t_block	*parsed_input = parsing(input, &pipecnt, &env_list);
 	while (pipe_idx <= pipecnt)
 	{
@@ -56,4 +60,6 @@ int	main(int ac, char **av, char **env)
 		printf("\n");
 		pipe_idx++;
 	}
+	free_env_list(&env_list);
+	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:46:33 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 13:43:01 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/18 15:40:04 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,13 @@ char	*remove_single_quote(char *str)
 char	*remove_double_quote(char *str, t_env_list **env_list)
 {
 	char	*result;
+	char	*removed;
 	size_t	len;
 
 	len = ft_strlen(str);
-	result = (char *)malloc(sizeof(char) * (len - 1));
-	ft_strlcpy(result, (str + 1), len - 1);
-	result = apply_env(result, env_list);
+	removed = (char *)malloc(sizeof(char) * (len - 1));
+	ft_strlcpy(removed, (str + 1), len - 1);
+	result = apply_env(removed, env_list);
+	free(removed);
 	return (result);
 }
