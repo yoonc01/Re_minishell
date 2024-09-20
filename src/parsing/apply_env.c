@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 14:31:45 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/20 15:44:24 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 // 환경 변수 키 값 str에 받아와서 value 반환
 // $1 $2 -> $뒤에 숫자 오는 경우 빈문자열 받환
-char	*get_env_value(char *token_word, size_t *idx, t_env_list **env_list)
+char	*get_env_value(char *token_word, size_t *idx, t_env_list *env_list)
 {
-	t_env_list	*temp;
+	t_env_node	*temp;
 	char		*env_key;
 
 	// 현재 인덱스 $이므로 하나 넘겨줌
@@ -28,7 +28,7 @@ char	*get_env_value(char *token_word, size_t *idx, t_env_list **env_list)
 	while (is_valid_env_key(token_word[*idx]))
 		(*idx)++;
 	env_key = my_strndup(token_word+1, *idx - 1);
-	temp = (*env_list);
+	temp = env_list->head;
 	while(temp->next != NULL)
 	{
 		if (my_strcmp(env_key, temp->env_key) == 0)
@@ -46,7 +46,7 @@ char	*get_env_value(char *token_word, size_t *idx, t_env_list **env_list)
 
 // WORD 토큰에 환경변수 적용하기
 // WORD에 들어있는 환경변수 키 값이 적절한지 1차로 확인 후 밸류 문자열 받아와서 넣어준다 아니면 빈 문자열 넣어준다
-char	*apply_env(char *token_word, t_env_list **env_list)
+char	*apply_env(char *token_word, t_env_list *env_list)
 {
 	size_t	token_word_i;
 	char	*env_applied;

@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 16:05:35 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/20 15:48:55 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void add_inner_block(t_inner_block **lst, t_inner_block *new_node)
 
 // 토큰화한 WORD가 cmd일경우 여기로 들어온다
 // 환경변수가 들어있을경우 적용해서 파싱한다
-int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
+int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list *env_list)
 {
 	t_inner_block	*new_node;
 	t_inner_block	*current_node;
@@ -48,7 +48,7 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list **env_list)
 }
 
 // 현재 파싱중인 block 의 redirection멤버에 데이터 넣어줌
-int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list **env_list) // 받아오는 인자수정
+int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list *env_list) // 받아오는 인자수정
 //TODO error 시 누수 확인 
 {
 	t_inner_block	*new_node_redirection;
@@ -74,7 +74,7 @@ int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list **env_
 
 
 // 파이프 마다 블록 만든 뒤 블록 리스트로 만들어서 parsed_input에 넣어준다 
-t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
+t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list *env_list)
 {
 	t_block	*parsed_input;
 	int		block_i;
@@ -111,7 +111,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list **env_list)
 	return (parsed_input);
 }
 
-t_block	*parsing(char *input, int *pipecnt, t_env_list **env_list)
+t_block	*parsing(char *input, int *pipecnt, t_env_list *env_list)
 {
 	t_deque	*tokens;
 	t_block	*parsed_input;

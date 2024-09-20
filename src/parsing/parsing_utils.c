@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:46:33 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/18 18:14:33 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/20 15:45:37 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*remove_double_quote(char *str)
 	ft_strlcpy(result, (str + 1), len - 1);
 	return (result);
 }
-char	*rm_quote_ap_env(char *cmd, t_env_list **env_list, int is_heredoc)
+char	*rm_quote_ap_env(char *cmd, t_env_list *env_list, int is_heredoc)
 {
 	char	*temp;
 	char	*result;
