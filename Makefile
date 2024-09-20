@@ -23,7 +23,8 @@ SRCS_LIST = main.c\
 			error.c\
 			utils.c\
 			terminal.c\
-			signal.c
+			signal.c\
+			env_list.c
 
 PARSING_DIR = $(SRC_DIR)parsing
 PARSING_LIST = deque.c\
