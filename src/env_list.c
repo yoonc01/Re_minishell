@@ -6,27 +6,11 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 12:47:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/20 16:45:09 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/21 14:25:54 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int check_env_add(char *env_key)
-{
-	if (env_key[0] >= '0' && env_key[0] <= '9')
-		return (0);
-	else
-	{
-		while (*env_key != 0)
-		{
-			if (!(ft_isalnum(*env_key) || *env_key=='_'))
-				return (0);
-			env_key++;
-		}
-	}
-	return (1);
-}
 
 t_env_list	*create_env_list(void)
 {
@@ -81,6 +65,7 @@ void	add_env_node(t_env_list *env_list, char *env_key, char *env_value)
 			current_node = current_node->next;
 		current_node->next = new_node;
 	}
+	env_list->size = env_list->size + 1;
 }
 
 int add_new_env_node(char *env, t_env_list *env_list)
@@ -121,6 +106,8 @@ void	delete_env_node(char *str, t_env_list *env_list)
 			free(temp->env_key);
 			free(temp->env_value);
 			free(temp);
+			env_list->size = env_list->size - 1;
+			return ;
 		}
 		current_node = current_node->next;
 	}

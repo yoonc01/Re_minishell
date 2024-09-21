@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/20 15:44:24 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/21 14:58:35 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ char	*apply_env(char *token_word, t_env_list *env_list)
 				return (env_applied);
 			env_value = get_env_value(token_word, &token_word_i, env_list);
 			env_applied = ft_strnjoin(env_applied, env_value, ft_strlen(env_value));
+			free(env_value);
 			token_word  += token_word_i;
 			token_word_i = 0;
 		}
