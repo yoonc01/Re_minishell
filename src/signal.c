@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:47:46 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/18 18:33:00 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/22 17:23:34 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	set_signals(void)
 	sa.sa_handler = handle_signals;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
 }
 
 static void	handle_signals(int signal)
@@ -33,12 +35,4 @@ static void	handle_signals(int signal)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	// if (signal == SIGTERM)
-	// {
-	// 	rl_replace_line("exit", 0);
-	// 	printf("\n");
-	// 	rl_on_new_line();
-	// 	rl_redisplay();
-	// 	exit(0);
-	// }
 }
