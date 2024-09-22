@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 12:47:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/21 14:25:54 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/22 16:54:01 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	add_env_node(t_env_list *env_list, char *env_key, char *env_value)
 	env_list->size = env_list->size + 1;
 }
 
-int add_new_env_node(char *env, t_env_list *env_list)
+int add_env(char *env, t_env_list *env_list)
 {
 	int		updated;
 	char	**splited_env;
@@ -88,29 +88,6 @@ int add_new_env_node(char *env, t_env_list *env_list)
 	if (updated == 0)
 		add_env_node(env_list, env_key, env_value);
 	return (1);
-}
-
-//unset을 위한  함수
-void	delete_env_node(char *str, t_env_list *env_list)
-{
-	t_env_node	*current_node;
-	t_env_node	*temp;
-
-	current_node = env_list->head;
-	while (current_node->next != NULL)
-	{
-		if (my_strcmp(current_node->next->env_key, str) == 0)
-		{
-			temp = current_node->next;
-			current_node->next = temp->next;
-			free(temp->env_key);
-			free(temp->env_value);
-			free(temp);
-			env_list->size = env_list->size - 1;
-			return ;
-		}
-		current_node = current_node->next;
-	}
 }
 
 void	free_env_list(t_env_list *env_list)

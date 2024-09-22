@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/21 14:28:10 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/22 16:58:29 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int 				check_env_add(char *env_key);
 int					is_valid_env_key(char c);
 
 t_env_list			*create_env_list(void);
-int 				add_new_env_node(char *env, t_env_list *env_list);
+int 				add_env(char *env, t_env_list *env_list);
 void				delete_env_node(char *str, t_env_list *env_list);
 void				free_env_list(t_env_list *env_list);
 
@@ -134,5 +134,9 @@ void				free_inner_block(t_inner_block_list *lst);
 void				set_signals(void);
 
 void				set_terminal(void);
+
+void				ft_unset(char	*env_key, t_env_list *env_list);
+void				ft_env(t_env_list *env_list);
+void				ft_export(char *env, t_env_list *env_list);
 
 #endif

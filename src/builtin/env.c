@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 22:47:46 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/22 17:23:34 by hyoyoon          ###   ########.fr       */
+/*   Created: 2024/09/22 16:27:00 by hyoyoon           #+#    #+#             */
+/*   Updated: 2024/09/22 16:37:55 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	handle_signals(int signal);
-
-void	set_signals(void)
+void	ft_env(t_env_list *env_list)
 {
-	struct sigaction sa;
+	t_env_node	*current_node;
 
-	sa.sa_flags = 0;
-	sa.sa_handler = handle_signals;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
-}
-
-static void	handle_signals(int signal)
-{
-	if (signal == SIGINT)
+	current_node = env_list->head;
+	while (current_node != NULL)
 	{
-		rl_replace_line("", 0);
-		printf("\n");
-		rl_on_new_line();
-		rl_redisplay();
+		if (current_node->env_value != NULL)
+		{
+			write(STDIN_FILENO, current_node->env_key, ft_strlen(current_node->env_key));
+			write(STDIN_FILENO, "=", 1);
+			write(STDIN_FILENO, current_node->env_value, ft_strlen(current_node->env_value));
+			write(STDIN_FILENO, "\n", 1);
+		}
+		current_node = current_node->next;
 	}
 }

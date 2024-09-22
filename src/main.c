@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/21 14:29:26 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/22 17:11:09 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	init_env_list(char **env, t_env_list *env_list)
 	i = 0;
 	while (env[i] != NULL)
 	{
-		add_new_env_node(env[i], env_list);
+		add_env(env[i], env_list);
 		i++;
 	}
 }
@@ -35,7 +35,7 @@ static char	*rl_gets(t_env_list *env_list)
 	int		pipecnt;
 
 	command = readline("minishell$ \033[s");
-	if(command && *command)
+	if(command)
 	{
 		add_history(command);
 		t_block	*parsed_input = parsing(command, &pipecnt, env_list);
