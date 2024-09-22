@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 15:37:25 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 15:51:57 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/22 16:22:01 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,29 @@ void	free_env_node(t_env_node *node)
 
 void	delete_env_node(char *str, t_env_list *env_list)
 {
+	t_env_node	*prev_node;
 	t_env_node	*current_node;
-	t_env_node	*temp;
 
 	if (env_list->head != NULL && my_strcmp(env_list->head->env_key, str) == 0)
 	{
-		temp = env_list->head;
+		current_node = env_list->head;
 		env_list->head = env_list->head->next;
-		free_env_node(temp);
+		free_env_node(current_node);
 		env_list->size = env_list->size - 1;
-		return ;
 	}
 	current_node = env_list->head;
-	while (current_node != NULL && current_node->next != NULL)
+	while (current_node != NULL && my_strcmp(current_node->env_key, str) != 0)
 	{
-		if (my_strcmp(current_node->next->env_key, str) == 0)
-		{
-			temp = current_node->next;
-			current_node->next = temp->next;
-			free_env_node(temp);
-			env_list->size = env_list->size - 1;
-			return ;
-		}
+		prev_node = current_node;
 		current_node = current_node->next;
 	}
+	if (current_node == NULL)
+		return ;
+	prev_node->next = current_node->next;
+	free_env_node(current_node);
+	env_list->size = env_list->size - 1;
 }
+
 void	unset(char	*env_key, t_env_list *env_list)
 {
 	delete_env_node(env_key, env_list);
