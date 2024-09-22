@@ -35,10 +35,18 @@ PARSING_LIST = deque.c\
 			tokenize_utils.c\
 			inner_block.c
 
-SRCS = $(addprefix $(SRC_DIR), $(SRCS_LIST)) $(addprefix $(PARSING_DIR), $(PARSING_LIST))
+BUILTIN_DIR = $(SRC_DIR)builtin
+BUILTIN_LIST = env.c\
+			unset.c\
+			export.c
+
+EXECUTE_DIR = $(SRC_DIR)execute
+EXECUTE_LIST = make_child.c
+
+SRCS = $(addprefix $(SRC_DIR), $(SRCS_LIST)) $(addprefix $(PARSING_DIR), $(PARSING_LIST)) $(addprefix $(BUILTIN_DIR), $(BUILTIN_LIST)) $(addprefix $(EXECUTE_DIR), $(EXECUTE_LIST))
 
 OBJ_DIR = ./objects/
-OBJ_LIST = $(SRCS_LIST:.c=.o) $(PARSING_LIST:.c=.o)
+OBJ_LIST = $(SRCS_LIST:.c=.o) $(PARSING_LIST:.c=.o) $(BUILTIN_LIST:.c=.o)  $(EXECUTE_LIST:.c=.o)
 OBJS = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 
 all : $(NAME)
@@ -55,6 +63,14 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADERS)
 
 # PARSING_DIR에 있는 .c 파일들을 처리
 $(OBJ_DIR)%.o: $(PARSING_DIR)/%.c $(HEADERS)
+	$(cc) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# BUILTIN_DIR에 있는 .c 파일들을 처리
+$(OBJ_DIR)%.o: $(BUILTIN_DIR)/%.c $(HEADERS)
+	$(cc) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# EXECUTE_DIR에 있는 .c 파일들을 처리
+$(OBJ_DIR)%.o: $(EXECUTE_DIR)/%.c $(HEADERS)
 	$(cc) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT) :

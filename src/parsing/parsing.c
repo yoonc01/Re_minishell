@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 17:50:17 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/22 17:57:51 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list *env_list)
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
 	cmd = rm_quote_ap_env(tokens->front->str, env_list, 0);
 	new_node->str = cmd;
+	new_node->type = tokens->front->token_type;
 	new_node->next = NULL;
 	add_inner_block(cmd_list, new_node);
 	delete_front(tokens);
@@ -47,6 +48,7 @@ int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list *env_l
 	new_node_redirection = (t_inner_block *)malloc(sizeof(t_inner_block));
 	new_node_file = (t_inner_block *)malloc(sizeof(t_inner_block));
 	new_node_redirection->str = ft_strdup(tokens->front->str);
+	new_node_redirection->type = tokens->front->token_type;
 	new_node_redirection->next = new_node_file;
 	new_node_file->str = rm_quote_ap_env(tokens->front->next->str, env_list, tokens->front->token_type == HEREDOC);
 	new_node_file->next = NULL;

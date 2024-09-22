@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 14:45:25 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/22 21:57:46 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	init_env_list(char **env, t_env_list *env_list)
 	i = 0;
 	while (env[i] != NULL)
 	{
-		add_new_env_node(env[i], env_list);
+		add_env(env[i], env_list);
 		i++;
 	}
 }
