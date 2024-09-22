@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/20 15:44:24 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/21 15:50:22 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ char	*get_env_value(char *token_word, size_t *idx, t_env_list *env_list)
 	(*idx)++;
 	// 환경변수 key 값 첫번째가 숫자인지 확인
 	if (ft_isdigit(token_word[*idx]))
-		return (ft_strdup(""));
+	{
+		(*idx)++;
+		return ("");
+	}
 	// 키 값이 적절한지 확인하면서 인덱스 밀어주기
 	while (is_valid_env_key(token_word[*idx]))
 		(*idx)++;
@@ -40,7 +43,7 @@ char	*get_env_value(char *token_word, size_t *idx, t_env_list *env_list)
 	}
 	// env_list 끝까지 탐색했는데 못찾았을 경우 빈 문자열 리턴
 	free(env_key);
-	return (ft_strdup(""));
+	return ("");
 }
 
 
@@ -56,8 +59,7 @@ char	*apply_env(char *token_word, t_env_list *env_list)
 	token_word_i = 0;
 	while (1)
 	{
-		if ((token_word[token_word_i] == '$' && is_valid_env_key(token_word[token_word_i + 1]))
-			|| token_word[token_word_i] == '\0')
+		if ((token_word[token_word_i] == '$' && is_valid_env_key(token_word[token_word_i + 1])) || token_word[token_word_i] == '\0')
 		{
 			//환경 변수 시작 또는 빈문자열 나오면 현재 인덱스 까지 값을 일단 env_applied에 저장해주기
 			env_applied = ft_strnjoin(env_applied, token_word, token_word_i);

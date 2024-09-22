@@ -6,36 +6,20 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/20 15:48:55 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/21 15:03:30 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// 파싱한 inner_block를 해당하는 block멤버에 맞게 연결리스트 맨 뒤의 멤버로 넣어줌
-void add_inner_block(t_inner_block **lst, t_inner_block *new_node)
-{
-	t_inner_block	*current_node;
-	
-	if (*lst == NULL)
-		*lst = new_node;
-	else
-	{
-		current_node = *lst;
-		while (current_node->next != NULL)
-			current_node = current_node->next;
-		current_node->next = new_node;
-	}
-}
-
 // 토큰화한 WORD가 cmd일경우 여기로 들어온다
 // 환경변수가 들어있을경우 적용해서 파싱한다
 int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list *env_list)
 {
-	t_inner_block	*new_node;
-	t_inner_block	*current_node;
-	t_inner_block	**cmd_list;
-	char			*cmd;
+	t_inner_block_list	*cmd_list;
+	t_inner_block		*new_node;
+	t_inner_block		*current_node;
+	char				*cmd;
 
 	cmd_list = parsed_input.cmd_list;
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
@@ -51,11 +35,11 @@ int	put_block_cmd(t_deque *tokens, t_block parsed_input, t_env_list *env_list)
 int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list *env_list) // 받아오는 인자수정
 //TODO error 시 누수 확인 
 {
-	t_inner_block	*new_node_redirection;
-	t_inner_block	*new_node_file;
-	t_inner_block	*current_node;
-	t_inner_block	**redirection_list;
-	int				is_heredoc;
+	t_inner_block_list	*redirection_list;
+	t_inner_block		*new_node_redirection;
+	t_inner_block		*new_node_file;
+	t_inner_block		*current_node;
+	int					is_heredoc;
 
 	redirection_list = current_block.redirection_list;
 	if (tokens->front->next == NULL || tokens->front->next->token_type != WORD)
@@ -80,12 +64,12 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list *env_list)
 	int		block_i;
 	int		grammar_valid;
 
-	parsed_input = (t_block *)ft_calloc(pipecnt, sizeof(t_block));
+	parsed_input = (t_block *)ft_calloc(pipecnt + 1, sizeof(t_block));
 	block_i = 0;
 	while(block_i < pipecnt + 1)
 	{
-		parsed_input[block_i].cmd_list = (t_inner_block **)ft_calloc(1, sizeof(t_inner_block *));
-		parsed_input[block_i].redirection_list = (t_inner_block **)ft_calloc(1, sizeof(t_inner_block *));
+		parsed_input[block_i].cmd_list = create_inner_block_list();
+		parsed_input[block_i].redirection_list = create_inner_block_list();
 		block_i++;
 	}
 	block_i = 0;

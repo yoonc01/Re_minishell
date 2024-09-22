@@ -32,7 +32,8 @@ PARSING_LIST = deque.c\
 			tokenize.c\
 			apply_env.c\
 			parsing_utils.c\
-			tokenize_utils.c
+			tokenize_utils.c\
+			inner_block.c
 
 SRCS = $(addprefix $(SRC_DIR), $(SRCS_LIST)) $(addprefix $(PARSING_DIR), $(PARSING_LIST))
 
