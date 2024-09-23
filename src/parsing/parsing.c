@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 17:57:51 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 17:56:40 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list *env_l
 
 	redirection_list = current_block.redirection_list;
 	if (tokens->front->next == NULL || tokens->front->next->token_type != WORD)
-		return (0);
+		return (parsing_error(tokens));
 	new_node_redirection = (t_inner_block *)malloc(sizeof(t_inner_block));
 	new_node_file = (t_inner_block *)malloc(sizeof(t_inner_block));
 	new_node_redirection->str = ft_strdup(tokens->front->str);
@@ -58,6 +58,26 @@ int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list *env_l
 	return (1);
 }
 
+t_block	*free_invalid_grammer(t_block *parsed_input, t_deque *tokens, int block_i)
+{
+	int					idx;
+	t_inner_block_list *cmd_list;
+	t_inner_block_list *redirection_list;
+
+	idx = 0;
+	while (idx <= block_i)
+	{
+		cmd_list = parsed_input[idx].cmd_list;
+		redirection_list = parsed_input[idx].redirection_list;
+		free_inner_block(cmd_list);
+		free_inner_block(redirection_list);
+		idx++;
+	}
+	free(parsed_input);
+	while (tokens->front != NULL)
+		delete_front(tokens);
+	return (NULL);
+}
 
 // 파이프 마다 블록 만든 뒤 블록 리스트로 만들어서 parsed_input에 넣어준다 
 t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list *env_list)
@@ -83,7 +103,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list *env_list)
 		else if (tokens->front->token_type == PIPE)
 		{
 			if (tokens->front->next == NULL)
-				grammar_valid = 0;
+				grammar_valid = parsing_error(tokens);
 			block_i++;
 			delete_front(tokens);
 		}
@@ -91,9 +111,7 @@ t_block	*parsing_block(t_deque *tokens, int pipecnt, t_env_list *env_list)
 			grammar_valid = put_block_redirect(tokens, parsed_input[block_i], env_list);
 	}
 	if (grammar_valid == 0)
-	{
-		// free_parsed_input(parsed_input, tokens, block_i);
-	}
+		return(free_invalid_grammer(parsed_input, tokens, pipecnt));
 	return (parsed_input);
 }
 
@@ -105,7 +123,7 @@ t_block	*parsing(char *input, int *pipecnt, t_env_list *env_list)
 	*pipecnt = 0;
 	tokens = tokenize(input, pipecnt);
 	if (tokens == NULL)
-		return (0);
+		return (NULL);
 	parsed_input = parsing_block(tokens, *pipecnt, env_list);
 	free(tokens);
 	return (parsed_input);
