@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 12:13:51 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 15:38:48 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*rl_gets(t_env_list *env_list)
 	int		pipecnt;
 
 	command = readline("minishell$ \033[s");
-	if(command && *command)
+	if(command)
 	{
 		add_history(command);
 		t_block	*parsed_input = parsing(command, &pipecnt, env_list);

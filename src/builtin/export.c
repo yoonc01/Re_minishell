@@ -6,14 +6,42 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:47:34 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 16:55:48 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 15:05:02 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_export(char *env, t_env_list *env_list)
+int	no_arg(t_env_list *env_list)
 {
-	//ERROR 처리
-	if (add_env(env, env_list) == 0);
+	t_env_node	*current_node;
+
+	current_node = env_list->head;
+	while (current_node != NULL)
+	{
+		write(STDIN_FILENO, current_node->env_key, ft_strlen(current_node->env_key));
+		if (my_strcmp(current_node->env_value, ""))
+		{
+			write(STDIN_FILENO, "=", 1);
+			write(STDIN_FILENO, current_node->env_value, ft_strlen(current_node->env_value));
+		}
+		write(STDIN_FILENO, "\n", 1);
+		current_node = current_node->next;
+	}
+	return (1);
+}
+
+int	ft_export(t_inner_block_list *cmd_list, t_env_list *env_list)
+{
+	t_inner_block	*current_node;
+
+	current_node = cmd_list->head->next;
+	if (current_node == NULL)
+		return (no_arg(env_list));
+	while (current_node != NULL)
+	{
+		if (add_env(current_node->str, env_list) == 0)
+			;//TODO ERROR
+		current_node = current_node->next;
+	}
 }
