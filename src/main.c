@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 17:11:09 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/22 21:57:46 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,29 +35,11 @@ static char	*rl_gets(t_env_list *env_list)
 	int		pipecnt;
 
 	command = readline("minishell$ \033[s");
-	if(command)
+	if(command && *command)
 	{
 		add_history(command);
 		t_block	*parsed_input = parsing(command, &pipecnt, env_list);
-		while (pipe_idx <= pipecnt)
-		{
-			t_inner_block_list *cmd_list = parsed_input[pipe_idx].cmd_list;
-			t_inner_block_list *redirection_list = parsed_input[pipe_idx].redirection_list;
-			t_inner_block *temp = cmd_list->head;
-			while (temp != NULL)
-			{
-				printf("%s\n", temp->str);
-				temp = temp->next;
-			}
-			temp = redirection_list->head;
-			while (temp != NULL)
-			{
-				printf("%s\n", temp->str);
-				temp = temp->next;
-			}
-			printf("\n");
-			pipe_idx++;
-		}
+		make_child(pipecnt, parsed_input, env_list);
 		free_parsed_input(parsed_input, pipecnt);
 		free(command);
 	}

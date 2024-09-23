@@ -27,3 +27,56 @@ asd$a$b$c
 
 input이 어떤 경우에는 복사 멈춤
 -> ""(큰 따옴표 나오면), '', $
+
+09/22
+pipecnt만큼 자식 fork
+자식들 pipe로 연결해주기
+자식들이 자기가 실행해야 하는 커맨드 출력
+자식들간에 파이프가 잘 연결 되었는지 확인
+-> 파이프를 통해 전달받은 숫자에 1 더해서 출력하기
+
+
+pipex와 다르게 처음과 끝에만 redirect가 들어오는게 아니라 
+파이픞 사이 사이에 들어올 수도 있다
+->fork하고 나서 자식 프로세스에서 redirection 설정 해줘야 한다
+connect pipe with older child 
+-> file redirection (file open, error handle, connect to stdin)
+(파이프와 파일 리다이렉션이 모드 들어오면 ex. ls| < test cat>test2 이면 
+cat의 input은 ls의 결과가 아닌 test의 내용
+리다이렉션이 파이프보다 우선시)
+-> stdin stdout 정해졌으므로 커맨드 실행
+
+부모는 항상 이전 자식 프로세스와 연결된 파이프의 pipefd[0]를 가지고 있다가
+새로운 자식을 만들 때 넘겨줘야 한다
+
+처음 자식일 때 -> stdin 어떻게 할 지
+마지막 자식일 때 -> stdout 어떻게 할 지
+
+파이프 생성 -> 포크		
+부모-> tmp_fd에 pipefd[1] 저장									-> 
+자식1-> fd1을 stdin으로 redirection	-> stdout을 pfd[1]로 바꾼다		->
+파이프 생성 ->포크
+부모 ->  tmp_fd에 pipefd[1] 저장
+자식2 -> stdin을 tmp_fd로 바꾼다 -> stdout을 pfd[1]로 바꾼다
+
+미니쉘에 어떻게 적용
+
+
+
+파이프 생성 -> 포크
+부모 -> tmp_fd 에 pipefd[1] 저장
+자식 -> 자신이 실행해야 되는 커맨드 가져오기, 환경변수 이차원 배열로 바꾸기, 
+		파이프 리다이렉션 적용하기 (stdin을 tmp_fd로 std_out을 pipefd[0]로), 파일 리다이렉션 적용하기
+	 -> 명령어 실행하기
+
+파일 리다이렉션 적용 시 맨마지막의 리다이렉션만 적용하면된다
+-> 하지만 open은 해줘야 한다
+파일 없이 리다이렉션 시에는 tokenize에서 오류 출력해줘야 함
+
+파일 open 에러 핸들링 -> 리다이렉션 하면서 파일 열다가 오류발생(없는 파일) 시 에러 메시지 출력하고 exit 하기
+
+heredoc
+
+V 마지막 자식은 파리프 만들기만 하고 사용하지 않음
+
+char *get_env(char *key) -> key값 넣으면 value반환 해주는 함수

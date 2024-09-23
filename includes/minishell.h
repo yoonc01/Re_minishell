@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 16:58:29 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 11:00:26 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "libft.h"
+# include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
@@ -34,6 +35,18 @@ typedef enum e_token_type
 	REDIR_OUT,
 	REDIR_APPEND
 }	t_token_type;
+
+typedef enum e_cmd_type
+{
+	B_ECHO = 0,
+	B_CD,
+	B_PWD,
+	B_EXPORT,
+	B_UNSET,
+	B_ENV,
+	B_EXIT,
+	NONBUILTIN
+}	t_cmd_type;
 
 typedef enum e_grammar_status
 {
@@ -73,6 +86,7 @@ typedef struct	s_env_list
 typedef struct s_inner_block
 {
 	char					*str;
+	int						type;
 	struct s_inner_block	*next;
 }	t_inner_block;
 
@@ -139,4 +153,11 @@ void				ft_unset(char	*env_key, t_env_list *env_list);
 void				ft_env(t_env_list *env_list);
 void				ft_export(char *env, t_env_list *env_list);
 
+void				make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list);
+
+void				execute_command(t_env_list *env_list, t_inner_block_list *cmd_list);
+
+char				**make_argv(t_inner_block_list *cmd_list);
+char				**make_envp(t_env_list *envp_list);
+char				**make_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 #endif
