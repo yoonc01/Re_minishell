@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 15:37:25 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 16:37:19 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 12:34:41 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,15 @@ void	delete_env_node(char *str, t_env_list *env_list)
 	env_list->size = env_list->size - 1;
 }
 
-void	ft_unset(char	*env_key, t_env_list *env_list)
+int	ft_unset(t_inner_block_list *cmd_list, t_env_list *env_list)
 {
-	delete_env_node(env_key, env_list);
+	t_inner_block	*current_node;
+
+	current_node = cmd_list->head->next;
+	while (current_node != NULL)
+	{
+		delete_env_node(current_node->str, env_list);
+		current_node = current_node->next;
+	}
+	return (1);
 }
