@@ -36,14 +36,19 @@ PARSING_LIST = deque.c\
 			inner_block.c
 
 BUILTIN_DIR = $(SRC_DIR)builtin
-BUILTIN_LIST = env.c\
-			unset.c\
-			export.c
+BUILTIN_LIST = cd.c\
+			echo.c\
+			env.c\
+			export.c\
+			pwd.c\
+			unset.c
 
 EXECUTE_DIR = $(SRC_DIR)execute
 EXECUTE_LIST = make_child.c\
 			execute_command.c\
-			make_argv_envp_path.c
+			make_argv_envp_path.c\
+			heredoc.c\
+			heredoc_utils.c
 
 SRCS = $(addprefix $(SRC_DIR), $(SRCS_LIST)) $(addprefix $(PARSING_DIR), $(PARSING_LIST)) $(addprefix $(BUILTIN_DIR), $(BUILTIN_LIST)) $(addprefix $(EXECUTE_DIR), $(EXECUTE_LIST))
 
