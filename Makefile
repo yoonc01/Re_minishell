@@ -33,7 +33,8 @@ PARSING_LIST = deque.c\
 			apply_env.c\
 			parsing_utils.c\
 			tokenize_utils.c\
-			inner_block.c
+			inner_block.c\
+			parsing_error.c
 
 BUILTIN_DIR = $(SRC_DIR)builtin
 BUILTIN_LIST = cd.c\

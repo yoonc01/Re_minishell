@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 17:59:28 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 18:19:52 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,4 +182,7 @@ char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 char				*get_heredoc_input(char *delimeter);
 
 char				*get_next_line(int fd);
+
+int					parsing_error(t_deque *tokens);
+
 #endif

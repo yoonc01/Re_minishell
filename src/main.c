@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 15:38:48 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 18:20:19 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	check_leak(void)
 {
 	system("leaks -q minishell");
 }
-
 static char	*rl_gets(t_env_list *env_list)
 {
 	char	*command;
@@ -39,8 +38,30 @@ static char	*rl_gets(t_env_list *env_list)
 	{
 		add_history(command);
 		t_block	*parsed_input = parsing(command, &pipecnt, env_list);
-		make_child(pipecnt, parsed_input, env_list);
-		free_parsed_input(parsed_input, pipecnt);
+		if (parsed_input != NULL)
+		{
+			// while (pipe_idx <= pipecnt)
+			// {
+			// 	t_inner_block_list *cmd_list = parsed_input[pipe_idx].cmd_list;
+			// 	t_inner_block_list *redirection_list = parsed_input[pipe_idx].redirection_list;
+			// 	t_inner_block *temp = cmd_list->head;
+			// 	while (temp != NULL)
+			// 	{
+			// 		printf("%s\n", temp->str);
+			// 		temp = temp->next;
+			// 	}
+			// 	temp = redirection_list->head;
+			// 	while (temp != NULL)
+			// 	{
+			// 		printf("%s\n", temp->str);
+			// 		temp = temp->next;
+			// 	}
+			// 	printf("\n");
+			// 	pipe_idx++;
+			// }
+			make_child(pipecnt, parsed_input, env_list);
+			free_parsed_input(parsed_input, pipecnt);
+		}
 		free(command);
 	}
 	else
