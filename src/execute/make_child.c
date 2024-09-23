@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 22:07:43 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 11:29:44 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	set_pipe(int pipe_i, int pie_cnt, int prev_pipe, int *pipefd);
 static void	apply_redir(t_inner_block_list *redirect_list);
 static int	redirect_input(t_inner_block *redirect_block);
 static int	redirect_output(t_inner_block *redirect_block);
-static void execute_command(t_env_list *env_list, t_inner_block_list *cmd_list);
 
 void print_parsing(int pipe_idx, t_block *parsed_input, t_env_list *env_list)
 {
@@ -50,39 +49,42 @@ void make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 	while (pipe_idx <= pipecnt)
 	{
 		// print_parsing(pipe_idx, parsed_input, env_list);
-		pipe(pipefd); // TODO 마지막 자식은 pipe 만들지 말지 정하기
+		pipe(pipefd);
 		pid = fork();
 		if (pid < 0)
 			exit(1); // TODO
 		else if (pid == 0) //자식
 		{
 			set_pipe(pipe_idx, pipecnt, prev_pipe, pipefd);
-			apply_redir(parsed_input[pipe_idx].redirection_list);
+			// apply_redir(parsed_input[pipe_idx].redirection_list);
 			execute_command(env_list, parsed_input[pipe_idx].cmd_list);
 		}
 		else // 부모
 		{
 			close(pipefd[1]);
-			if (pipe_idx != 0 && prev_pipe >= 0)
+			if (pipe_idx != 0) // 첫번째 block이 아닌 경우에는 저장해둔 prev_pipe삭제
+			{
 				close(prev_pipe);
-			prev_pipe = dup(pipefd[0]);
+				if (pipe_idx != pipecnt)
+					prev_pipe = dup(pipefd[0]);
+			}
 			close(pipefd[0]);
 		}
 		pipe_idx++;
 	}
 	pipe_idx = 0;
-	while (pipe_idx < pipecnt)
+	while (pipe_idx <= pipecnt)
 	{
 		wait(NULL);
 		pipe_idx++;
 	}
-
 }
 
-static void set_pipe(int pipe_i, int pie_cnt, int prev_pipe, int *pipefd)
+static void set_pipe(int pipe_i, int pipe_cnt, int prev_pipe, int *pipefd)
 {
 	close(pipefd[0]);
-	dup2(pipefd[1], STDOUT_FILENO);
+	if (pipe_i != pipe_cnt)
+		dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
 	if (pipe_i != 0)
 	{
@@ -138,16 +140,4 @@ static int redirect_output(t_inner_block *redirect_block)
 	return (0);
 }
 
-static void execute_command(t_env_list *env_list, t_inner_block_list *cmd_list)
-{
-	t_inner_block	*cur_cmd = cmd_list->head;
 
-	// while (cur_cmd)
-	// {
-	// 	printf("%s \n", cur_cmd->str);
-	// 	cur_cmd = cur_cmd->next;
-	// }
-	
-	printf("\n");
-	exit(1);
-}

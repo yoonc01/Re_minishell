@@ -77,6 +77,6 @@ cat의 input은 ls의 결과가 아닌 test의 내용
 
 heredoc
 
-마지막 자식은 파이프 만들지 말지
--> 안 만들면 close 실행하는 부분 복잡해짐
--> 만들경우 부모가 자식 다 만들고나서 prev_pipe를 STDOUT으로 리다이렉션 하면 된다 
+V 마지막 자식은 파리프 만들기만 하고 사용하지 않음
+
+char *get_env(char *key) -> key값 넣으면 value반환 해주는 함수

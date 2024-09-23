@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inner_block.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 14:09:27 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/21 14:27:22 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 11:29:11 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void add_inner_block(t_inner_block_list *lst, t_inner_block *new_node)
 			current_node = current_node->next;
 		current_node->next = new_node;
 	}
+	lst->size++;
 }
 
 void	free_inner_block(t_inner_block_list *lst)
