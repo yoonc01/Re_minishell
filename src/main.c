@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 15:25:32 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 15:38:48 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int ac, char **av, char **env)
 	int			pipe_idx = 0;
 	int			pipecnt;
 
-	atexit(check_leak);
+	// atexit(check_leak);
 	if (ac != 1)
 		argc_err();
 	set_signals();
