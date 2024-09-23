@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 16:04:23 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 17:59:28 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,20 @@
 # include <string.h>
 # include <sys/wait.h>
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1024
+# endif
+
+typedef struct s_buf
+{
+	char	read_buf[BUFFER_SIZE + 1];
+	int		idx;
+	int		used;
+}t_buf;
 
 typedef enum e_token_type
 {
@@ -163,6 +177,9 @@ void				execute_command(t_env_list *env_list, t_inner_block_list *cmd_list);
 
 char				**make_argv(t_inner_block_list *cmd_list);
 char				**make_envp(t_env_list *envp_list);
-char				**make_path(t_inner_block_list *cmd_list, t_env_list *env_list);
+char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 
+char				*get_heredoc_input(char *delimeter);
+
+char				*get_next_line(int fd);
 #endif
