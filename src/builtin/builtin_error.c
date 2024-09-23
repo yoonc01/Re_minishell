@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   builtin_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/23 15:33:25 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 19:29:35 by hyoyoon          ###   ########.fr       */
+/*   Created: 2024/09/23 18:28:40 by hyoyoon           #+#    #+#             */
+/*   Updated: 2024/09/23 18:32:25 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(t_inner_block_list *cmd_list)
+//TEST 필요
+int	builtin_error(char *str, char *token)
 {
-	char	*cwd;
-
-	cwd = getcwd(NULL, 0);
-	if (cwd == NULL)
-		malloc_fail();
-	write(STDIN_FILENO, cwd, ft_strlen(cwd));
-	write(STDIN_FILENO, "\n", 1);
-	free(cwd);
-    return (1);	
+	write(STDERR_FILENO, str, ft_strlen(str));
+	write(STDERR_FILENO, token, ft_strlen(token));
+	write(STDERR_FILENO, "\n", 1);
 }

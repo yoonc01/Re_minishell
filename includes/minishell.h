@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 18:19:52 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 18:31:41 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,5 +184,6 @@ char				*get_heredoc_input(char *delimeter);
 char				*get_next_line(int fd);
 
 int					parsing_error(t_deque *tokens);
+int					builtin_error(char *str, char *token);
 
 #endif
