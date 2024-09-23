@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/23 12:36:15 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 15:58:17 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ static int	check_cmd_type(t_inner_block *cur_cmd)
 static int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type)
 {
 	if (cmd_type == B_ECHO)
-		return (1);
+		return (ft_echo(cmd_list));
 	else if (cmd_type == B_CD)
-		return (1);
+		return (ft_cd(cmd_list, env_list));
 	else if (cmd_type == B_PWD)
-		return (1);
+		return (ft_pwd(cmd_list));
 	else if (cmd_type == B_EXPORT)
 		return (ft_export(cmd_list, env_list));
 	else if (cmd_type == B_UNSET)
