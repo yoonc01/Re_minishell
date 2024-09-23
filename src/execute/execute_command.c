@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/23 11:57:31 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 12:36:15 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ static int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, i
 	else if (cmd_type == B_PWD)
 		return (1);
 	else if (cmd_type == B_EXPORT)
-		return (1);
+		return (ft_export(cmd_list, env_list));
 	else if (cmd_type == B_UNSET)
-		return (1);
+		return (ft_unset(cmd_list, env_list));
 	else if (cmd_type == B_ENV)
-		return (1);
+		return (ft_env(env_list));
 	else if (cmd_type == B_EXIT)
 		return (1);
 }
