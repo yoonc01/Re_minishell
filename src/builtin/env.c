@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:27:00 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 12:00:03 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 12:18:19 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,16 @@ void	ft_env(t_env_list *env_list)
 		current_node = current_node->next;
 	}
 }
-// char *get_env(char *key) -> key값 넣으면 value반환 해주는 함수
+
+char	*get_env(char *key, t_env_list *env_list)
+{
+	t_env_node	*current_node;
+
+	current_node = env_list->head;
+	while (current_node != NULL)
+	{
+		if (my_strcmp(current_node->env_key, key) == 0)
+			return (ft_strdup(current_node->env_value));
+		current_node = current_node->next;
+	}
+}
