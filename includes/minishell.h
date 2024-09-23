@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 12:45:55 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/23 16:04:23 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,9 +149,13 @@ void				set_signals(void);
 
 void				set_terminal(void);
 
+char				*get_env(char *key, t_env_list *env_list);
 int					ft_unset(t_inner_block_list *cmd_list, t_env_list *env_list);
 int					ft_env(t_env_list *env_list);
 int					ft_export(t_inner_block_list *cmd_list, t_env_list *env_list);
+int					ft_pwd(t_inner_block_list *cmd_list);
+int					ft_cd(t_inner_block_list *cmd_list, t_env_list *env_list);
+int					ft_echo(t_inner_block_list *cmd_list);
 
 void				make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list);
 

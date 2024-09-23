@@ -36,9 +36,12 @@ PARSING_LIST = deque.c\
 			inner_block.c
 
 BUILTIN_DIR = $(SRC_DIR)builtin
-BUILTIN_LIST = env.c\
-			unset.c\
-			export.c
+BUILTIN_LIST = cd.c\
+			echo.c\
+			env.c\
+			export.c\
+			pwd.c\
+			unset.c
 
 EXECUTE_DIR = $(SRC_DIR)execute
 EXECUTE_LIST = make_child.c\
