@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/23 11:57:31 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 15:26:59 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ void	execute_command(t_env_list *env_list, t_inner_block_list *cmd_list)
 	int				exit_code;
 	const int	cmd_type = check_cmd_type(cur_cmd);
 	
-	if (cmd_type <= 6)
-	{
-		exit_code = execute_builtin(cmd_list, env_list, cmd_type);
-		exit(1);
-	}
-	else
+	// if (cmd_type <= 6)
+	// {
+	// 	exit_code = execute_builtin(cmd_list, env_list, cmd_type);
+	// 	exit(1);
+	// }
+	// else
 	{
 		execute_nbuiltin(cmd_list, env_list);
 		exit(1);
@@ -83,5 +83,10 @@ static void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 	argv = make_argv(cmd_list);
 	// printf("%s\n", argv[0]);
 	// path = make_path(cmd_list->head, env_list);
-	execve("/bin/pwd", argv, envp);
+	execve("/bin/cat", argv, envp);
+	// echo -> builtin 
+	// ls -alR
+	// ls
+	// -alR
+	// echo asdfasdfasdfsadfasdf
 }

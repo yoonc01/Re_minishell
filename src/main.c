@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 21:57:46 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 12:13:51 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int ac, char **av, char **env)
 	int			pipe_idx = 0;
 	int			pipecnt;
 
-	atexit(check_leak);
+	// atexit(check_leak);
 	if (ac != 1)
 		argc_err();
 	set_signals();
