@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/22 21:57:46 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 15:25:32 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*rl_gets(t_env_list *env_list)
 	int		pipecnt;
 
 	command = readline("minishell$ \033[s");
-	if(command && *command)
+	if(command)
 	{
 		add_history(command);
 		t_block	*parsed_input = parsing(command, &pipecnt, env_list);

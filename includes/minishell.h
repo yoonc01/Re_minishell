@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 11:00:26 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/23 12:45:55 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,9 +149,9 @@ void				set_signals(void);
 
 void				set_terminal(void);
 
-void				ft_unset(char	*env_key, t_env_list *env_list);
-void				ft_env(t_env_list *env_list);
-void				ft_export(char *env, t_env_list *env_list);
+int					ft_unset(t_inner_block_list *cmd_list, t_env_list *env_list);
+int					ft_env(t_env_list *env_list);
+int					ft_export(t_inner_block_list *cmd_list, t_env_list *env_list);
 
 void				make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list);
 
@@ -160,4 +160,5 @@ void				execute_command(t_env_list *env_list, t_inner_block_list *cmd_list);
 char				**make_argv(t_inner_block_list *cmd_list);
 char				**make_envp(t_env_list *envp_list);
 char				**make_path(t_inner_block_list *cmd_list, t_env_list *env_list);
+
 #endif
