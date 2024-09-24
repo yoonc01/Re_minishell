@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 17:56:40 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/24 23:08:30 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	put_block_redirect(t_deque *tokens, t_block current_block, t_env_list *env_l
 	new_node_redirection->next = new_node_file;
 	new_node_file->str = rm_quote_ap_env(tokens->front->next->str, env_list, tokens->front->token_type == HEREDOC);
 	new_node_file->next = NULL;
+	new_node_file->type = tokens->front->next->token_type;
 	delete_front(tokens);
 	delete_front(tokens);
 	add_inner_block(redirection_list, new_node_redirection);

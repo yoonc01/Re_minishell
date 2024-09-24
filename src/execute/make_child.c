@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 17:51:48 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/24 23:10:14 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ static void redirect_input(t_inner_block *redirect_block, int flag)
 		close(fd);
 		fd = open("/var/tmp/tmp.txt", O_RDONLY);
 		dup2(fd, STDIN_FILENO);
+		close(fd);
 	}
 	if (fd < 0)
 	{

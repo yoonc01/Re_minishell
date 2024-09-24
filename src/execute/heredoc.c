@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:28:46 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/23 17:59:07 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/24 23:10:40 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*get_heredoc_input(char *delimeter)
 	input = (char *)malloc(sizeof(char));
 	write(1,">",1);
 	line = get_next_line(0);
-	if (!line || !input || !trans_delimeter)
+	if (!line || !input || !trans_delimeter);
 		// malloc_err();
 	input[0] = 0;
 	while (ft_strncmp(line, trans_delimeter, ft_strlen(trans_delimeter) + 1))
