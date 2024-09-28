@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:47:34 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 18:29:53 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 17:11:11 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	no_arg(t_env_list *env_list)
 		write(STDIN_FILENO, "\n", 1);
 		current_node = current_node->next;
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }
 
 int	ft_export(t_inner_block_list *cmd_list, t_env_list *env_list)
@@ -41,7 +41,11 @@ int	ft_export(t_inner_block_list *cmd_list, t_env_list *env_list)
 	while (current_node != NULL)
 	{
 		if (add_env(current_node->str, env_list) == 0)
+		{
 			builtin_error("export : not an identifier: ", current_node->str);
+			return (EXIT_FAILURE);
+		}
 		current_node = current_node->next;
 	}
+	return (EXIT_SUCCESS);
 }

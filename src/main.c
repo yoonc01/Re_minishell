@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 13:48:33 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 16:37:01 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	check_leak(void)
 {
 	system("leaks -q minishell");
 }
-static char	*rl_gets(t_env_list *env_list)
+static char	*rl_gets(t_env_list *env_list, int *exit_code)
 {
 	char	*command;
 	int		pipe_idx = 0;
@@ -40,7 +40,7 @@ static char	*rl_gets(t_env_list *env_list)
 		t_block	*parsed_input = parsing(command, &pipecnt, env_list);
 		if (parsed_input != NULL)
 		{
-			execute_command(pipecnt, parsed_input, env_list);
+			execute_command(pipecnt, parsed_input, env_list, exit_code);
 			free_parsed_input(parsed_input, pipecnt);
 		}
 		free(command);
@@ -59,6 +59,7 @@ int	main(int ac, char **av, char **env)
 	t_env_list	*env_list;
 	int			pipe_idx = 0;
 	int			pipecnt;
+	int			exit_code = 0;
 
 	// atexit(check_leak);
 	if (ac != 1)
@@ -67,6 +68,6 @@ int	main(int ac, char **av, char **env)
 	set_terminal();
 	env_list = create_env_list();
 	init_env_list(env, env_list);
-	while(rl_gets(env_list));	
+	while(rl_gets(env_list, &exit_code));	
 	free_env_list(env_list);
 }
