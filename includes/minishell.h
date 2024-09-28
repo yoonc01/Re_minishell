@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 18:44:34 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 21:47:58 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,15 @@ typedef struct s_block
 	t_inner_block_list	*redirection_list;
 }	t_block;
 
+typedef struct s_pipe_util
+{
+	int	pipe_i;
+	int	pipecnt;
+	int	prev_pipe;
+	int	pipefd[2];
+	int	childfd[2];
+}	t_pipe_util;
+
 t_deque				*create_deque(void);
 void				insert_front(t_deque *dq, char *str, t_token_type token_type);
 void				insert_rear(t_deque *dq, char *str, t_token_type token_type);
@@ -191,9 +200,6 @@ char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 int					parsing_error(t_deque *tokens);
 void				builtin_error(char *str, char *token);
 
-void				redirect_input(t_inner_block *redirect_block, int flag);
-void				redirect_output(t_inner_block *redirect_block, int flag);
-
-void				set_redir_solo(t_inner_block_list *redirect_list);
-
+void				set_redir_no_fork(t_inner_block_list *redirect_list);
+void				set_child_redir(t_inner_block_list *redirect_list, t_pipe_util *pipe_util);
 #endif

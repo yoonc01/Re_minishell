@@ -6,13 +6,13 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 12:24:51 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 18:44:35 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 19:09:47 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	redirect_input(t_inner_block *redirect_block, int flag)
+static void	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
 {
 	int		fd;
 	char	*heredoc_str;
@@ -39,7 +39,7 @@ void	redirect_input(t_inner_block *redirect_block, int flag)
 	}
 }
 
-void	redirect_output(t_inner_block *redirect_block, int flag)
+static void	redir_out_no_fork(t_inner_block *redirect_block, int flag)
 {
 	int	fd;
 
@@ -57,7 +57,7 @@ void	redirect_output(t_inner_block *redirect_block, int flag)
 	}
 }
 
-void	set_redir_solo(t_inner_block_list *redirect_list)
+void	set_redir_no_fork(t_inner_block_list *redirect_list)
 {
 
 	int	flag;
@@ -68,7 +68,7 @@ void	set_redir_solo(t_inner_block_list *redirect_list)
 	while(curr_redir)
 	{
 		if (curr_redir->type == WORD && flag <= 3)
-			redirect_input(curr_redir, flag);
+			redirect_in_no_fork(curr_redir, flag);
 		else
 			flag = curr_redir->type;
 		curr_redir = curr_redir->next;
@@ -78,7 +78,7 @@ void	set_redir_solo(t_inner_block_list *redirect_list)
 	while(curr_redir)
 	{
 		if (curr_redir->type == WORD && flag >= 4)
-			redirect_output(curr_redir, flag);
+			redir_out_no_fork(curr_redir, flag);
 		else
 			flag = curr_redir->type;
 		curr_redir = curr_redir->next;
