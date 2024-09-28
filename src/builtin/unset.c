@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 15:37:25 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 12:34:41 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 16:25:12 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,5 @@ int	ft_unset(t_inner_block_list *cmd_list, t_env_list *env_list)
 		delete_env_node(current_node->str, env_list);
 		current_node = current_node->next;
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }

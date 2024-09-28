@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:33:25 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 19:29:35 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 16:24:52 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ int	ft_pwd(t_inner_block_list *cmd_list)
 	write(STDIN_FILENO, cwd, ft_strlen(cwd));
 	write(STDIN_FILENO, "\n", 1);
 	free(cwd);
-    return (1);	
+    return (EXIT_SUCCESS);	
 }

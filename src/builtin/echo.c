@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:47:46 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 15:56:24 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 16:20:49 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ int	ft_echo(t_inner_block_list *cmd_list)
 			write(STDERR_FILENO, "\n", new_line);
 		current_node = current_node->next;
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }

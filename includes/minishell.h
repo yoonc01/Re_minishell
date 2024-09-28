@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 12:58:21 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 16:30:53 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,10 +170,11 @@ int					ft_export(t_inner_block_list *cmd_list, t_env_list *env_list);
 int					ft_pwd(t_inner_block_list *cmd_list);
 int					ft_cd(t_inner_block_list *cmd_list, t_env_list *env_list);
 int					ft_echo(t_inner_block_list *cmd_list);
+int					ft_exit(t_inner_block_list *cmd_list);
 
 void				make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list);
 
-void				execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list);
+void				execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list, int *exit_code);
 int					check_cmd_type(t_inner_block *cur_cmd);
 int					execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type);
 void				execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
@@ -188,7 +189,7 @@ char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 
 
 int					parsing_error(t_deque *tokens);
-int					builtin_error(char *str, char *token);
+void				builtin_error(char *str, char *token);
 
 void				redirect_input(t_inner_block *redirect_block, int flag);
 void				redirect_output(t_inner_block *redirect_block, int flag);
