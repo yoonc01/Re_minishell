@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 16:30:53 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 18:44:34 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,6 @@ void				builtin_error(char *str, char *token);
 void				redirect_input(t_inner_block *redirect_block, int flag);
 void				redirect_output(t_inner_block *redirect_block, int flag);
 
-
+void				set_redir_solo(t_inner_block_list *redirect_list);
 
 #endif

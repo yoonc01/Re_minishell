@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 17:06:50 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 18:44:54 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 		while (pipe_idx <= pipecnt)
 		{
 			pipe(pipefd);
-			child_redir = set_child_redir(pipecnt, pipe_idx, parsed_input->redirection_list, prev_pipe);
+			// child_redir = set_child_redir(pipecnt, pipe_idx, parsed_input, prev_pipe);
 			pid = fork();
 			if (pid < 0)
 				exit(1); // TODO

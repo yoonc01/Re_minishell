@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 17:37:15 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 17:39:31 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list, i
 	if (pipecnt == 0 && head_cmd_type <= 6)
 		{
 			printf("%d\n", head_cmd_type); //TODO for debug
-			tmp_std_in = dup(STDIN_FILENO);
+			tmp_std_in = dup(STDIN_FILENO);// restore in out default fd
 			tmp_std_out = dup(STDOUT_FILENO);
 			set_redir_solo(parsed_input->redirection_list);
 			*exit_code = execute_builtin(parsed_input->cmd_list, env_list, head_cmd_type);

@@ -6,13 +6,13 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 12:24:51 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 12:26:13 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 18:44:35 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void redirect_input(t_inner_block *redirect_block, int flag)
+void	redirect_input(t_inner_block *redirect_block, int flag)
 {
 	int		fd;
 	char	*heredoc_str;
@@ -39,7 +39,7 @@ void redirect_input(t_inner_block *redirect_block, int flag)
 	}
 }
 
-void redirect_output(t_inner_block *redirect_block, int flag)
+void	redirect_output(t_inner_block *redirect_block, int flag)
 {
 	int	fd;
 
@@ -54,5 +54,33 @@ void redirect_output(t_inner_block *redirect_block, int flag)
 		fd = open(redirect_block->str, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
+	}
+}
+
+void	set_redir_solo(t_inner_block_list *redirect_list)
+{
+
+	int	flag;
+	t_inner_block *curr_redir;
+
+	flag = 0;
+	curr_redir = redirect_list->head;
+	while(curr_redir)
+	{
+		if (curr_redir->type == WORD && flag <= 3)
+			redirect_input(curr_redir, flag);
+		else
+			flag = curr_redir->type;
+		curr_redir = curr_redir->next;
+	}
+	flag = 0;
+	curr_redir = redirect_list->head;
+	while(curr_redir)
+	{
+		if (curr_redir->type == WORD && flag >= 4)
+			redirect_output(curr_redir, flag);
+		else
+			flag = curr_redir->type;
+		curr_redir = curr_redir->next;
 	}
 }

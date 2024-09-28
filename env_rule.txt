@@ -114,5 +114,7 @@ child_out = pipefd[1] -> child_out = out1_fd -> child_out = out2_fd
 pipefd의 쓰기엔드가 열려있고 읽기 엔드가 닫힌 경우에 쓰려고하면 SIGPIPE ERROR가 발생한다
 파이프는 순차적으로 생성되므로 읽기엔드 먼저닫히는 경우는 없음
 
+2번째 자식에서 리다이렉션 처리중에 input fd가 prev_pipe에서 바뀌는 경우 
+
 0번째 블록일 경우-> 
 마지막 블록일 경우->
