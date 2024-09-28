@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:37:25 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/23 16:03:26 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 13:23:54 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,23 @@ char	**make_argv(t_inner_block_list *cmd_list)
 
 char	**make_envp(t_env_list *envp_list)
 {
-	// TODO
+	char		**env_arr;
+	int			env_i;
+	t_env_node	*cur_env;
+	char		*tmp_str;
+
+	env_i = 0;
+	env_arr = (char **)malloc((envp_list->size+1) * sizeof(char *));
+	cur_env = envp_list->head;
+	while (env_i < envp_list->size)
+	{
+		tmp_str = ft_strjoin(cur_env->env_key, "=");
+		env_arr[env_i] = ft_strjoin(tmp_str, cur_env->env_value);
+		free(tmp_str);
+		cur_env = cur_env->next;
+		env_i++;
+	}
+	return (env_arr);
 }
 
 char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)

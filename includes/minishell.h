@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 18:31:41 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 12:58:21 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,17 +173,26 @@ int					ft_echo(t_inner_block_list *cmd_list);
 
 void				make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list);
 
-void				execute_command(t_env_list *env_list, t_inner_block_list *cmd_list);
+void				execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list);
+int					check_cmd_type(t_inner_block *cur_cmd);
+int					execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type);
+void				execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
+
+char				*get_next_line(int fd);
+
+char				*get_heredoc_input(char *delimeter);
 
 char				**make_argv(t_inner_block_list *cmd_list);
 char				**make_envp(t_env_list *envp_list);
 char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 
-char				*get_heredoc_input(char *delimeter);
-
-char				*get_next_line(int fd);
 
 int					parsing_error(t_deque *tokens);
 int					builtin_error(char *str, char *token);
+
+void				redirect_input(t_inner_block *redirect_block, int flag);
+void				redirect_output(t_inner_block *redirect_block, int flag);
+
+
 
 #endif

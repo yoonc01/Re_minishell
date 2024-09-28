@@ -6,36 +6,28 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/23 17:21:21 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 13:48:42 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-static void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
-static int	check_cmd_type(t_inner_block *cur_cmd);
-static int	execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type);
-
-void	execute_command(t_env_list *env_list, t_inner_block_list *cmd_list)
+void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 {
-	t_inner_block	*cur_cmd = cmd_list->head;
-	int				exit_code;
-	const int	cmd_type = check_cmd_type(cur_cmd);
-	
-	// if (cmd_type <= 6)
-	// {
-	// 	exit_code = execute_builtin(cmd_list, env_list, cmd_type);
-	// 	exit(1);
-	// }
-	// else
-	{
-		execute_nbuiltin(cmd_list, env_list);
-		exit(1);
-	}
+	const int	head_cmd_type = check_cmd_type(parsed_input->cmd_list->head);
+
+	if (pipecnt == 0 && head_cmd_type <= 6)
+		{
+			printf("%d\n", head_cmd_type); //TODO for debug
+			execute_builtin(parsed_input->cmd_list, env_list, head_cmd_type);
+			printf("%d %d\n", head_cmd_type, parsed_input->cmd_list->size); //TODO for debug
+		}
+	else
+		make_child(pipecnt, parsed_input, env_list);
 }
 
-static int	check_cmd_type(t_inner_block *cur_cmd)
+int	check_cmd_type(t_inner_block *cur_cmd)
 {
 	int	type;
 	if (my_strcmp(cur_cmd->str, "echo") == 0)
@@ -57,7 +49,7 @@ static int	check_cmd_type(t_inner_block *cur_cmd)
 	return(type);
 }
 
-static int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type)
+int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type)
 {
 	if (cmd_type == B_ECHO)
 		return (ft_echo(cmd_list));
@@ -77,19 +69,14 @@ static int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, i
 		return (1);
 }
 
-static void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
+void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 {
 	char	**argv;
 	char	**envp = { NULL};
 	char	*path;
 
 	argv = make_argv(cmd_list);
-	// printf("%s\n", argv[0]);
 	path = make_cmd_path(cmd_list, env_list);
+	envp = make_envp(env_list);
 	execve(path, argv, envp);
-	// echo -> builtin
-	// ls -alR
-	// ls
-	// -alR
-	// echo asdfasdfasdfsadfasdf
 }
