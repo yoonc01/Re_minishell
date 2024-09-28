@@ -43,7 +43,8 @@ BUILTIN_LIST = cd.c\
 			export.c\
 			pwd.c\
 			unset.c\
-			builtin_error.c
+			builtin_error.c\
+			exit.c
 
 EXECUTE_DIR = $(SRC_DIR)execute
 EXECUTE_LIST = make_child.c\

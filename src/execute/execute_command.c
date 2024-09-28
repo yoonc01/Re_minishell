@@ -6,14 +6,14 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 16:55:32 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 17:37:15 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list)
+void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list, int *exit_code)
 {
 	int	head_cmd_type = check_cmd_type(parsed_input->cmd_list->head);
 	int tmp_std_in;
@@ -25,7 +25,7 @@ void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 			tmp_std_in = dup(STDIN_FILENO);
 			tmp_std_out = dup(STDOUT_FILENO);
 			set_redir_solo(parsed_input->redirection_list);
-			execute_builtin(parsed_input->cmd_list, env_list, head_cmd_type);
+			*exit_code = execute_builtin(parsed_input->cmd_list, env_list, head_cmd_type);
 			dup2(tmp_std_in, STDIN_FILENO);
 			dup2(tmp_std_out, STDOUT_FILENO);
 			printf("%d %d\n", head_cmd_type, parsed_input->cmd_list->size); //TODO for debug
@@ -71,9 +71,7 @@ int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_
 	else if (cmd_type == B_ENV)
 		return (ft_env(env_list));
 	else if (cmd_type == B_EXIT)
-		return (1);
-	else
-		return (1);
+		return (ft_exit(cmd_list));
 }
 
 void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
