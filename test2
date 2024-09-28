@@ -1,9 +1,0 @@
-Makefile
-env_rule.txt
-includes
-lib
-minishell
-objects
-src
-test
-test2

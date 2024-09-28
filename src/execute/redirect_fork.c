@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_fork.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 21:58:13 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/29 02:02:34 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ static void	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_uti
 			flag = cur_redir->type;
 		cur_redir = cur_redir->next;
 	}
-	pipe_util->childfd[0] = fd;
+	if (fd >= 0)
+		pipe_util->childfd[0] = fd;
 }
 
 static void	redir_output(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
@@ -93,13 +94,12 @@ static void	redir_output(t_inner_block_list *redirect_list, t_pipe_util *pipe_ut
 			flag = cur_redir->type;
 		cur_redir = cur_redir->next;
 	}
-	pipe_util->childfd[1] = fd;
+	if (fd >= 0)
+		pipe_util->childfd[1] = fd;
 }
 
 static void	set_pipe(t_pipe_util *pipe_util)
 {
-	int	*child_fd;
-
 	if (pipe_util->pipe_i != 0) // 첫번째 커맨드가 아니면 prev_pipe 를 std_in으로
 		pipe_util->childfd[0] = pipe_util->prev_pipe;
 	if (pipe_util->pipe_i != pipe_util->pipecnt) // 마지막 커맨드가 아니면 pipefd[1]을 stdout 으로
