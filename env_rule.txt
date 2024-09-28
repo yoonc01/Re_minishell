@@ -35,8 +35,6 @@ pipecnt만큼 자식 fork
 자식들간에 파이프가 잘 연결 되었는지 확인
 -> 파이프를 통해 전달받은 숫자에 1 더해서 출력하기
 
-heredoc
-파이프 없이 단일 명령어일 때 -> no fork
 
 pipex와 다르게 처음과 끝에만 redirect가 들어오는게 아니라 
 파이픞 사이 사이에 들어올 수도 있다
@@ -77,7 +75,12 @@ cat의 input은 ls의 결과가 아닌 test의 내용
 
 파일 open 에러 핸들링 -> 리다이렉션 하면서 파일 열다가 오류발생(없는 파일) 시 에러 메시지 출력하고 exit 하기
 
-history에 공백 들어가는거 처리해줘야 함
+heredoc
 
+V 마지막 자식은 파리프 만들기만 하고 사용하지 않음
 
-path 환경변수 삭제하고 ls 하면 실행이 안 되겠지만 그 ls를 현재 디렉토리로 가져오고 ls를 하면 실행이 됨...
+char *get_env(char *key) -> key값 넣으면 value반환 해주는 함수
+
+redirect 재건축 예정 -> 모든 리다이렉션, pipe, hererdoc 처리해주고 자식 프로세스 만들어줘야 함 (이렇게 안하면 heredoc입력 받는 와중에 output redirect file 생성됨)
+pipefd[2] 를 원소로 가지는 2차원 int 배열로 pipefd 관리
+최종적으로 리다이렉션이 완료되고 자식 프로세스 만들기 직전의 자식 프로세스들의 in out이 순서대로 있는 int 배열 만들기
