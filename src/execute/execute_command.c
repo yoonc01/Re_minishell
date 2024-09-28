@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 13:48:42 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 16:30:18 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list)
+void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list, int *exit_code)
 {
 	const int	head_cmd_type = check_cmd_type(parsed_input->cmd_list->head);
 
 	if (pipecnt == 0 && head_cmd_type <= 6)
 		{
 			printf("%d\n", head_cmd_type); //TODO for debug
-			execute_builtin(parsed_input->cmd_list, env_list, head_cmd_type);
+			*exit_code = execute_builtin(parsed_input->cmd_list, env_list, head_cmd_type);
 			printf("%d %d\n", head_cmd_type, parsed_input->cmd_list->size); //TODO for debug
 		}
 	else
@@ -64,9 +64,7 @@ int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_
 	else if (cmd_type == B_ENV)
 		return (ft_env(env_list));
 	else if (cmd_type == B_EXIT)
-		return (1);
-	else
-		return (1);
+		return (ft_exit(cmd_list));
 }
 
 void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
