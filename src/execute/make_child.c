@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 12:42:04 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/28 17:06:50 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	set_pipe(int pipe_i, int pie_cnt, int prev_pipe, int *pipefd);
 static void	apply_redir(t_inner_block_list *redirect_list);
-static void	execute_child(t_env_list *env_list, t_inner_block_list *cmd_list);
+static void	execute_child(t_env_list *env_list, t_inner_block_list *cmd_list, int *child_redir);
 
 // void print_parsing(int pipe_idx, t_block *parsed_input, t_env_list *env_list)
 // {
@@ -42,6 +42,7 @@ void make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 	int	pid;
 	int	pipefd[2];
 	int	prev_pipe;
+	int	*child_redir;
 
 		pipe_idx = 0;
 		prev_pipe = -1;
@@ -49,6 +50,7 @@ void make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 		while (pipe_idx <= pipecnt)
 		{
 			pipe(pipefd);
+			child_redir = set_child_redir(pipecnt, pipe_idx, parsed_input->redirection_list, prev_pipe);
 			pid = fork();
 			if (pid < 0)
 				exit(1); // TODO
@@ -56,7 +58,7 @@ void make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 			{
 				set_pipe(pipe_idx, pipecnt, prev_pipe, pipefd);
 				apply_redir(parsed_input[pipe_idx].redirection_list);
-				execute_child(env_list, parsed_input[pipe_idx].cmd_list);
+				execute_child(env_list, parsed_input[pipe_idx].cmd_list, child_redir);
 			}
 			else // 부모
 			{
@@ -124,7 +126,7 @@ static void apply_redir(t_inner_block_list *redirect_list)
 	}
 }
 
-static void	execute_child(t_env_list *env_list, t_inner_block_list *cmd_list)
+static void	execute_child(t_env_list *env_list, t_inner_block_list *cmd_list, int *child_redir)
 {
 	const int	cmd_type = check_cmd_type(cmd_list->head);
 	int			exit_code;

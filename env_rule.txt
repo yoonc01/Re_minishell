@@ -84,3 +84,35 @@ char *get_env(char *key) -> key값 넣으면 value반환 해주는 함수
 redirect 재건축 예정 -> 모든 리다이렉션, pipe, hererdoc 처리해주고 자식 프로세스 만들어줘야 함 (이렇게 안하면 heredoc입력 받는 와중에 output redirect file 생성됨)
 pipefd[2] 를 원소로 가지는 2차원 int 배열로 pipefd 관리
 최종적으로 리다이렉션이 완료되고 자식 프로세스 만들기 직전의 자식 프로세스들의 in out이 순서대로 있는 int 배열 만들기
+
+ "       " 입력 시 segfault문제
+ ->add history는 해줘야 함
+"          << eof" heredoc입력은 받아줘야 한다
+-> check_cmd_type하면서 문제 발생
+	null cmd type 추가하기 -> execute_builtin 안에서 redirection 하고 나가기
+	check_cmd_type하기 전에 redirection 완료하기
+	parsing redirection 할 때 parsing in parsing out으로 in과 out 따로 만들기
+
+> out1 <<eof << eee  > out2  <test
+-> in redirection 처리 heredoc 입력받음
+-> out redirection 처리 
+-> cmd_check_type null으로 명령어 실행하지 않고 종료
+
+solo builtin은 어떻게 redirection할지 stdout stdin을 따로 dup해놨다가 solo builtin끝나면 복구해주기
+
+
+ls | >out1 << eof << eee cat >out2 <test| cat
+2번째 자식의 리다이렉션 -> 
+redirection_in -> << eof <eee <test 
+redirection_out -> >out1 >out2 
+부모에서 자식의 in 과 out 정해줘야 함
+
+child_in = prev_pipe -> child_in = heredoc_eof -> child_in = heredoc_eee -> child_in = test_fd
+heredoc프롬프트는 아직 output이 redirection되지 않았으므로 stdout 에 출력해도 넘어가지 않는다
+
+child_out = pipefd[1] -> child_out = out1_fd -> child_out = out2_fd
+pipefd의 쓰기엔드가 열려있고 읽기 엔드가 닫힌 경우에 쓰려고하면 SIGPIPE ERROR가 발생한다
+파이프는 순차적으로 생성되므로 읽기엔드 먼저닫히는 경우는 없음
+
+0번째 블록일 경우-> 
+마지막 블록일 경우->
