@@ -3,35 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 21:54:27 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/29 13:29:24 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-void	execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list, int *exit_code)
+void	execute_command(t_blackhole *blackhole)
 {
-	int	head_cmd_type = check_cmd_type(parsed_input->cmd_list->head);
-	int tmp_std_in;
-	int tmp_std_out;
+	int		head_cmd_type;
+	int 	tmp_std_in;
+	int 	tmp_std_out;
 
-	if (pipecnt == 0 && head_cmd_type <= 6)
-		{
-			printf("%d\n", head_cmd_type); //TODO for debug
-			tmp_std_in = dup(STDIN_FILENO);// save in out default fd
-			tmp_std_out = dup(STDOUT_FILENO);
-			set_redir_no_fork(parsed_input->redirection_list);
-			*exit_code = execute_builtin(parsed_input->cmd_list, env_list, head_cmd_type);
-			dup2(tmp_std_in, STDIN_FILENO);// restore in out default fd
-			dup2(tmp_std_out, STDOUT_FILENO);
-			printf("%d %d\n", head_cmd_type, parsed_input->cmd_list->size); //TODO for debug
-		}
+ 	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
+	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 6)
+	{
+		tmp_std_in = dup(STDIN_FILENO);// save in out default fd
+		tmp_std_out = dup(STDOUT_FILENO);
+		set_redir_no_fork(blackhole->parsed_input->redirection_list);
+		execute_builtin(blackhole, head_cmd_type);
+		dup2(tmp_std_in, STDIN_FILENO);// restore in out default fd
+		dup2(tmp_std_out, STDOUT_FILENO);
+	}
 	else
-		make_child(pipecnt, parsed_input, env_list);
+		make_child(blackhole);
 }
 
 int	check_cmd_type(t_inner_block *cur_cmd)
@@ -56,22 +55,22 @@ int	check_cmd_type(t_inner_block *cur_cmd)
 	return(type);
 }
 
-int execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type)
+void execute_builtin(t_blackhole *blackhole, int cmd_type)
 {
 	if (cmd_type == B_ECHO)
-		return (ft_echo(cmd_list));
+		blackhole->exit_code = ft_echo(blackhole);
 	else if (cmd_type == B_CD)
-		return (ft_cd(cmd_list, env_list));
+		blackhole->exit_code = ft_cd(blackhole);
 	else if (cmd_type == B_PWD)
-		return (ft_pwd(cmd_list));
+		blackhole->exit_code = ft_pwd();
 	else if (cmd_type == B_EXPORT)
-		return (ft_export(cmd_list, env_list));
+		blackhole->exit_code = ft_export(blackhole);
 	else if (cmd_type == B_UNSET)
-		return (ft_unset(cmd_list, env_list));
+		blackhole->exit_code = ft_unset(blackhole);
 	else if (cmd_type == B_ENV)
-		return (ft_env(env_list));
+		blackhole->exit_code = ft_env(blackhole);
 	else if (cmd_type == B_EXIT)
-		return (ft_exit(cmd_list));
+		blackhole->exit_code = ft_exit(blackhole);
 }
 
 void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)

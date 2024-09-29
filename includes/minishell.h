@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 21:47:58 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/29 14:15:58 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,14 @@ typedef struct s_pipe_util
 	int	childfd[2];
 }	t_pipe_util;
 
+typedef struct s_blackhole
+{
+	t_env_list	*env_list;
+	t_block		*parsed_input;
+	int			pipe_cnt;
+	int			exit_code;
+}	t_blackhole;
+
 t_deque				*create_deque(void);
 void				insert_front(t_deque *dq, char *str, t_token_type token_type);
 void				insert_rear(t_deque *dq, char *str, t_token_type token_type);
@@ -150,13 +158,11 @@ t_deque				*tokenize(char *input, int *pipecnt);
 void				process_operator_out(char c, size_t *len, t_token_type *token_type);
 void				process_operator_in(char c, size_t *len, t_token_type *token_type);
 
-t_block				*parsing(char *input, int *pipecnt, t_env_list *env_list);
+void				parsing(char *input, t_blackhole *blackhole);
 
-char				*apply_env(char *str, t_env_list *env_list);
+char				*apply_env(char *token_word, t_blackhole *blackhole);
 
-char				*remove_single_quote(char *str);
-char				*remove_double_quote(char *str);
-char				*rm_quote_ap_env(char *cmd, t_env_list *env_list, int is_heredoc);
+char				*rm_quote_ap_env(char *cmd, t_blackhole *blackhole, int is_heredoc);
 void				free_parsed_input(t_block *parsed_input, int pipecnt);
 
 char				*my_strndup(char *s, size_t n);
@@ -173,19 +179,19 @@ void				set_signals(void);
 void				set_terminal(void);
 
 char				*get_env(char *key, t_env_list *env_list);
-int					ft_unset(t_inner_block_list *cmd_list, t_env_list *env_list);
-int					ft_env(t_env_list *env_list);
-int					ft_export(t_inner_block_list *cmd_list, t_env_list *env_list);
-int					ft_pwd(t_inner_block_list *cmd_list);
-int					ft_cd(t_inner_block_list *cmd_list, t_env_list *env_list);
-int					ft_echo(t_inner_block_list *cmd_list);
-int					ft_exit(t_inner_block_list *cmd_list);
+int					ft_unset(t_blackhole *blackhole);
+int					ft_env(t_blackhole *blackhole);
+int					ft_export(t_blackhole *blackhole);
+int					ft_pwd(void);
+int					ft_cd(t_blackhole *blackhole);
+int					ft_echo(t_blackhole *blackhole);
+int					ft_exit(t_blackhole *blackhole);
 
-void				make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list);
+void 				make_child(t_blackhole *blackhole);
 
-void				execute_command(int pipecnt, t_block *parsed_input, t_env_list *env_list, int *exit_code);
+void				execute_command(t_blackhole *blackhole);
 int					check_cmd_type(t_inner_block *cur_cmd);
-int					execute_builtin(t_inner_block_list *cmd_list, t_env_list *env_list, int cmd_type);
+void				execute_builtin(t_blackhole *blackhole, int cmd_type);
 void				execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
 
 char				*get_next_line(int fd);
@@ -197,7 +203,7 @@ char				**make_envp(t_env_list *envp_list);
 char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 
 
-int					parsing_error(t_deque *tokens);
+int					parsing_error(t_deque *tokens, t_blackhole *blackhole);
 void				builtin_error(char *str, char *token);
 
 void				set_redir_no_fork(t_inner_block_list *redirect_list);

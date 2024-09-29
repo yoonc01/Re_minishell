@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/21 15:50:22 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 14:04:15 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // 환경 변수 키 값 str에 받아와서 value 반환
 // $1 $2 -> $뒤에 숫자 오는 경우 빈문자열 받환
-char	*get_env_value(char *token_word, size_t *idx, t_env_list *env_list)
+static char	*get_env_value(char *token_word, size_t *idx, t_env_list *env_list)
 {
 	t_env_node	*temp;
 	char		*env_key;
@@ -49,7 +49,12 @@ char	*get_env_value(char *token_word, size_t *idx, t_env_list *env_list)
 
 // WORD 토큰에 환경변수 적용하기
 // WORD에 들어있는 환경변수 키 값이 적절한지 1차로 확인 후 밸류 문자열 받아와서 넣어준다 아니면 빈 문자열 넣어준다
-char	*apply_env(char *token_word, t_env_list *env_list)
+
+
+//TODO exit_code 적용하는 경우 따로 적용
+//코드 다시 읽어보기
+
+char	*apply_env(char *token_word, t_blackhole *blackhole)
 {
 	size_t	token_word_i;
 	char	*env_applied;
@@ -59,7 +64,18 @@ char	*apply_env(char *token_word, t_env_list *env_list)
 	token_word_i = 0;
 	while (1)
 	{
-		if ((token_word[token_word_i] == '$' && is_valid_env_key(token_word[token_word_i + 1])) || token_word[token_word_i] == '\0')
+		if (token_word[token_word_i] == '$' && token_word[token_word_i + 1] == '?')
+		{
+			env_applied = ft_strnjoin(env_applied, token_word, token_word_i);
+			token_word = token_word + token_word_i;
+			token_word_i = 0;
+			if (token_word[token_word_i] == '\0')
+				return (env_applied);
+			env_value = ft_itoa(blackhole->exit_code);
+			env_applied = ft_strnjoin(env_applied, env_value, ft_strlen(env_value));
+			token_word  += 2;
+		}
+		else if ((token_word[token_word_i] == '$' && is_valid_env_key(token_word[token_word_i + 1])) || token_word[token_word_i] == '\0')
 		{
 			//환경 변수 시작 또는 빈문자열 나오면 현재 인덱스 까지 값을 일단 env_applied에 저장해주기
 			env_applied = ft_strnjoin(env_applied, token_word, token_word_i);
@@ -67,7 +83,7 @@ char	*apply_env(char *token_word, t_env_list *env_list)
 			token_word_i = 0;
 			if (token_word[token_word_i] == '\0')
 				return (env_applied);
-			env_value = get_env_value(token_word, &token_word_i, env_list);
+			env_value = get_env_value(token_word, &token_word_i, blackhole->env_list);
 			env_applied = ft_strnjoin(env_applied, env_value, ft_strlen(env_value));
 			token_word  += token_word_i;
 			token_word_i = 0;

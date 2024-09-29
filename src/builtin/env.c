@@ -6,17 +6,17 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:27:00 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 18:55:31 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 13:04:09 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_env(t_env_list *env_list)
+int	ft_env(t_blackhole *blackhole)
 {
 	t_env_node	*current_node;
 
-	current_node = env_list->head;
+	current_node = blackhole->env_list->head;
 	while (current_node != NULL)
 	{
 		if (my_strcmp(current_node->env_value, ""))
