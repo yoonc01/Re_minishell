@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 14:15:58 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 21:31:57 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <termios.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <sys/ioctl.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
@@ -52,7 +53,8 @@ typedef enum e_token_type
 
 typedef enum e_cmd_type
 {
-	B_ECHO = 0,
+	B_NULL = 0,
+	B_ECHO,
 	B_CD,
 	B_PWD,
 	B_EXPORT,
@@ -175,8 +177,8 @@ void				add_inner_block(t_inner_block_list *lst, t_inner_block *new_node);
 void				free_inner_block(t_inner_block_list *lst);
 
 void				set_signals(void);
-
-void				set_terminal(void);
+void				ignore_signal(int signum);
+void				set_terminal(int setting);
 
 char				*get_env(char *key, t_env_list *env_list);
 int					ft_unset(t_blackhole *blackhole);

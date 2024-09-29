@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:47:46 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 13:03:23 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 21:27:48 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_echo(t_blackhole *blackhole)
 		if (current_node->next != NULL)
 			write(STDOUT_FILENO, " ", 1);
 		else
-			write(STDERR_FILENO, "\n", new_line);
+			write(STDERR_FILENO, "\n", new_line); // FIX 리다이렉션 시 해당 코드로인해 개행 출력
 		current_node = current_node->next;
 	}
 	return (EXIT_SUCCESS);

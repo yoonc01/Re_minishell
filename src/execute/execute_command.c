@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/29 13:29:24 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 21:31:27 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@ void	execute_command(t_blackhole *blackhole)
 	int 	tmp_std_out;
 
  	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
-	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 6)
+	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 7)
 	{
 		tmp_std_in = dup(STDIN_FILENO);// save in out default fd
 		tmp_std_out = dup(STDOUT_FILENO);
 		set_redir_no_fork(blackhole->parsed_input->redirection_list);
-		execute_builtin(blackhole, head_cmd_type);
+		if (head_cmd_type == B_NULL)
+			blackhole->exit_code = 0;
+		else
+			execute_builtin(blackhole, head_cmd_type);
 		dup2(tmp_std_in, STDIN_FILENO);// restore in out default fd
 		dup2(tmp_std_out, STDOUT_FILENO);
 	}
@@ -36,7 +39,10 @@ void	execute_command(t_blackhole *blackhole)
 int	check_cmd_type(t_inner_block *cur_cmd)
 {
 	int	type;
-	if (my_strcmp(cur_cmd->str, "echo") == 0)
+
+	if (cur_cmd == NULL)
+		type = B_NULL;
+	else if (my_strcmp(cur_cmd->str, "echo") == 0)
 		type = B_ECHO;
 	else if (my_strcmp(cur_cmd->str, "cd") == 0)
 		type = B_CD;
