@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:47:46 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 16:20:49 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 18:55:21 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	ft_echo(t_inner_block_list *cmd_list)
 	new_line = !(my_strcmp(current_node->str, "-n") == 0);
 	while (current_node != NULL)
 	{
-		write(STDIN_FILENO, current_node->str, ft_strlen(current_node->str));
+		write(STDOUT_FILENO, current_node->str, ft_strlen(current_node->str));
 		if (current_node->next != NULL)
-			write(STDIN_FILENO, " ", 1);
+			write(STDOUT_FILENO, " ", 1);
 		else
 			write(STDERR_FILENO, "\n", new_line);
 		current_node = current_node->next;
