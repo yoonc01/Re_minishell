@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   make_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 12:42:04 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/29 02:04:25 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	set_pipe(int pipe_i, int pie_cnt, int prev_pipe, int *pipefd);
-static void	apply_redir(t_inner_block_list *redirect_list);
 static void	execute_child(t_env_list *env_list, t_inner_block_list *cmd_list);
 
 // void print_parsing(int pipe_idx, t_block *parsed_input, t_env_list *env_list)
@@ -38,43 +36,50 @@ static void	execute_child(t_env_list *env_list, t_inner_block_list *cmd_list);
 
 void make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 {
-	int	pipe_idx;
 	int	pid;
-	int	pipefd[2];
-	int	prev_pipe;
+	int *childfd;
+	t_pipe_util pipe_util;
 
-		pipe_idx = 0;
-		prev_pipe = -1;
-		// export 구조체에 환경변수
-		while (pipe_idx <= pipecnt)
+	pipe_util.pipe_i = 0;
+	pipe_util.pipecnt = pipecnt;
+	pipe_util.prev_pipe = -1;
+	
+	// export 구조체에 환경변수
+	while (pipe_util.pipe_i <= pipecnt)
+	{
+		pipe(pipe_util.pipefd);
+		pipe_util.childfd[0] = STDIN_FILENO;
+		pipe_util.childfd[1] = STDOUT_FILENO;
+		set_child_redir(parsed_input[pipe_util.pipe_i].redirection_list, &pipe_util);
+		pid = fork();
+		if (pid < 0)
+			exit(1); // TODO
+		else if (pid == 0) //자식
 		{
-			pipe(pipefd);
-			pid = fork();
-			if (pid < 0)
-				exit(1); // TODO
-			else if (pid == 0) //자식
-			{
-				set_pipe(pipe_idx, pipecnt, prev_pipe, pipefd);
-				apply_redir(parsed_input[pipe_idx].redirection_list);
-				execute_child(env_list, parsed_input[pipe_idx].cmd_list);
-			}
-			else // 부모
-			{
-				close(pipefd[1]);
-				if (pipe_idx != 0) // 첫번째 block이 아닌 경우에는 저장해둔 prev_pipe삭제
-					close(prev_pipe);
-				if (pipe_idx != pipecnt)
-					prev_pipe = dup(pipefd[0]);
-				close(pipefd[0]);
-			}
-			pipe_idx++;
+			close(pipe_util.pipefd[0]); // 부모가 pipefd 들고 있으므로 close해도 된다
+			dup2(pipe_util.childfd[0], STDIN_FILENO);
+			dup2(pipe_util.childfd[1], STDOUT_FILENO);
+			close(pipe_util.pipefd[1]); // 리다이렉션 끝났으니까 닫아도 된다
+			// 아직 이전 자식의 출력이 끝나지 않았을 수 있으므로 prev_pipe는 닫지 않는다
+			execute_child(env_list, parsed_input[pipe_util.pipe_i].cmd_list);
 		}
-		pipe_idx = 0;
-		while (pipe_idx <= pipecnt)
+		else // 부모
 		{
-			wait(NULL);
-			pipe_idx++;
+			close(pipe_util.pipefd[1]);
+			if (pipe_util.pipe_i != 0) // 첫번째 block이 아닌 경우에는 저장해둔 prev_pipe삭제
+				close(pipe_util.prev_pipe);
+			if (pipe_util.pipe_i != pipecnt)
+				pipe_util.prev_pipe = dup(pipe_util.pipefd[0]);
+			close(pipe_util.pipefd[0]);
 		}
+		pipe_util.pipe_i++;
+	}
+	pipe_util.pipe_i = 0;
+	while (pipe_util.pipe_i <= pipecnt)
+	{
+		wait(NULL);
+		pipe_util.pipe_i++;
+	}
 }
 
 // 자식프로세스 - 파이프에 유무, excute로 해야하는가?
@@ -88,41 +93,6 @@ void make_child(int pipecnt, t_block *parsed_input, t_env_list *env_list)
 // echo -> path없다 -> 
 // if ( execve )
 	// excute 동작
-
-static void set_pipe(int pipe_i, int pipe_cnt, int prev_pipe, int *pipefd)
-{
-	close(pipefd[0]);
-	if (pipe_i != 0)
-	{
-		dup2(prev_pipe, STDIN_FILENO);
-		close(prev_pipe);
-	}
-	if (pipe_i != pipe_cnt)
-		dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[1]);
-}
-
-static void apply_redir(t_inner_block_list *redirect_list)
-{
-	int	flag;
-	t_inner_block *curr_redirection;
-
-	flag = 0;
-	curr_redirection = redirect_list->head;
-	while(curr_redirection)
-	{
-		if (curr_redirection->type == WORD)
-		{
-			if (flag <= 3)
-				redirect_input(curr_redirection, flag);
-			else
-				redirect_output(curr_redirection, flag);
-		}
-		else
-			flag = curr_redirection->type;
-		curr_redirection = curr_redirection->next;
-	}
-}
 
 static void	execute_child(t_env_list *env_list, t_inner_block_list *cmd_list)
 {
