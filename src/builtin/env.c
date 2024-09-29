@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:27:00 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 17:10:40 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/28 18:55:31 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int	ft_env(t_env_list *env_list)
 	{
 		if (my_strcmp(current_node->env_value, ""))
 		{
-			write(STDIN_FILENO, current_node->env_key, ft_strlen(current_node->env_key));
-			write(STDIN_FILENO, "=", 1);
-			write(STDIN_FILENO, current_node->env_value, ft_strlen(current_node->env_value));
-			write(STDIN_FILENO, "\n", 1);
+			write(STDOUT_FILENO, current_node->env_key, ft_strlen(current_node->env_key));
+			write(STDOUT_FILENO, "=", 1);
+			write(STDOUT_FILENO, current_node->env_value, ft_strlen(current_node->env_value));
+			write(STDOUT_FILENO, "\n", 1);
 		}
 		current_node = current_node->next;
 	}
