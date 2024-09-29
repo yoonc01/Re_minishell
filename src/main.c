@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 13:46:49 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 14:10:17 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*rl_gets(t_blackhole *blackhole)
 	{
 		add_history(command);
 		parsing(command, blackhole);
-		if (blackhole->parsed_input != NULL)
+		if (blackhole->exit_code == 0)
 		{
 			execute_command(blackhole);
 			free_parsed_input(blackhole->parsed_input, blackhole->pipe_cnt);

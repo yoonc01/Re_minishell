@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 13:55:53 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 14:22:44 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // 토큰화한 WORD가 cmd일경우 여기로 들어온다
 // 환경변수가 들어있을경우 적용해서 파싱한다
-static void	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
+static int	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 {
 	t_inner_block_list	*cmd_list;
 	t_inner_block		*new_node;
@@ -29,11 +29,11 @@ static void	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 	new_node->next = NULL;
 	add_inner_block(cmd_list, new_node);
 	delete_front(tokens);
-	blackhole->exit_code = 0;
+	return (1);
 }
 
 // 현재 파싱중인 block 의 redirection멤버에 데이터 넣어줌
-static void	put_block_redirect(t_deque *tokens, int block_i, t_blackhole *blackhole)
+static int	put_block_redirect(t_deque *tokens, int block_i, t_blackhole *blackhole)
 {
 	t_inner_block_list	*redirection_list;
 	t_inner_block		*new_node_redirection;
@@ -54,7 +54,7 @@ static void	put_block_redirect(t_deque *tokens, int block_i, t_blackhole *blackh
 	delete_front(tokens);
 	delete_front(tokens);
 	add_inner_block(redirection_list, new_node_redirection);
-	blackhole->exit_code = 0;
+	return (1);
 }
 
 
@@ -100,25 +100,29 @@ static void	init_parsed_input(t_blackhole *blackhole)
 static void	parsing_block(t_deque *tokens, t_blackhole *blackhole)
 {
 	int		block_i;
+	int		grammer_valid;
 
 	init_parsed_input(blackhole);
 	block_i = 0;
-	while (tokens->front != NULL && blackhole->exit_code == 0)
+	grammer_valid = 1;
+	while (tokens->front != NULL && grammer_valid)
 	{
 		if (tokens->front->token_type == WORD)
-			put_block_cmd(tokens, block_i, blackhole);
+			grammer_valid = put_block_cmd(tokens, block_i, blackhole);
 		else if (tokens->front->token_type == PIPE)
 		{
 			if (tokens->front->next == NULL)
-				parsing_error(tokens, blackhole);
+				grammer_valid = parsing_error(tokens, blackhole);
 			block_i++;
 			delete_front(tokens);
 		}
 		else
-			put_block_redirect(tokens, block_i, blackhole);
+			grammer_valid = put_block_redirect(tokens, block_i, blackhole);
 	}
-	if (blackhole->exit_code != 0)
-		return (free_invalid_grammer(blackhole->parsed_input, tokens, block_i));
+	if (!grammer_valid)
+		free_invalid_grammer(blackhole->parsed_input, tokens, block_i);
+	else
+		blackhole->exit_code = 0;
 }
 
 void	parsing(char *input, t_blackhole *blackhole)
@@ -128,10 +132,7 @@ void	parsing(char *input, t_blackhole *blackhole)
 	blackhole->pipe_cnt = 0;
 	tokens = tokenize(input, &blackhole->pipe_cnt);
 	if (tokens == NULL)
-	{
-		blackhole->exit_code = 1;
 		return ;
-	}
 	parsing_block(tokens, blackhole);
 	free(tokens);
 }

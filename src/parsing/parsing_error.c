@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:21:39 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 12:42:18 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 14:15:30 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@ static void	write_error(char *type)
 }
 
 
-void	parsing_error(t_deque *tokens, t_blackhole *blackhole)
+int	parsing_error(t_deque *tokens, t_blackhole *blackhole)
 {
 	if (tokens->front->next == NULL)
 		write_error("newline");
 	else if (tokens->front->next != WORD)
 		write_error(tokens->front->next->str);
 	blackhole->exit_code = 127;
+	return (0);
 }

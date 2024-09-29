@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 13:34:41 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 14:15:58 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ char				**make_envp(t_env_list *envp_list);
 char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 
 
-void				parsing_error(t_deque *tokens, t_blackhole *blackhole);
+int					parsing_error(t_deque *tokens, t_blackhole *blackhole);
 void				builtin_error(char *str, char *token);
 
 void				set_redir_no_fork(t_inner_block_list *redirect_list);
