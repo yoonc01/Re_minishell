@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:47:34 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 18:55:51 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 13:06:22 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ int	no_arg(t_env_list *env_list)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_export(t_inner_block_list *cmd_list, t_env_list *env_list)
+int	ft_export(t_blackhole *blackhole)
 {
 	t_inner_block	*current_node;
 
-	current_node = cmd_list->head->next;
+	current_node = blackhole->parsed_input->cmd_list->head->next;
 	if (current_node == NULL)
-		return (no_arg(env_list));
+		return (no_arg(blackhole->env_list));
 	while (current_node != NULL)
 	{
-		if (add_env(current_node->str, env_list) == 0)
+		if (add_env(current_node->str, blackhole->env_list) == 0)
 		{
 			builtin_error("export : not an identifier: ", current_node->str);
 			return (EXIT_FAILURE);

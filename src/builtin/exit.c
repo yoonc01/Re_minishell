@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 15:33:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 17:04:58 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 13:05:36 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ static int	my_atoi(const char *str)
 	return ((int) sign * ans);
 }
 
-int	ft_exit(t_inner_block_list *cmd_list)
+int	ft_exit(t_blackhole *blackhole)
 {
 	int				exit_code;
 	t_inner_block	*current_node;
 
-	current_node = cmd_list->head->next;
+	current_node = blackhole->parsed_input->cmd_list->head->next;
 	if (current_node != NULL)
 	{
 		if (!ft_alldigit(current_node->str))

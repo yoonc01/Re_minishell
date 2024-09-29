@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 15:37:25 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/28 16:25:12 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 13:07:46 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ void	delete_env_node(char *str, t_env_list *env_list)
 	env_list->size = env_list->size - 1;
 }
 
-int	ft_unset(t_inner_block_list *cmd_list, t_env_list *env_list)
+int	ft_unset(t_blackhole *blackhole)
 {
 	t_inner_block	*current_node;
 
-	current_node = cmd_list->head->next;
+	current_node = blackhole->parsed_input->cmd_list->head->next;
 	while (current_node != NULL)
 	{
-		delete_env_node(current_node->str, env_list);
+		delete_env_node(current_node->str, blackhole->env_list);
 		current_node = current_node->next;
 	}
 	return (EXIT_SUCCESS);
