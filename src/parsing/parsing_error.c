@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:21:39 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 15:10:09 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 19:58:27 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static void	write_error(char *type)
 	write(STDERR_FILENO, type, ft_strlen(type));
 	write(STDERR_FILENO, "`\n", 2);
 }
-
 
 int	parsing_error(t_deque *tokens, t_blackhole *blackhole)
 {

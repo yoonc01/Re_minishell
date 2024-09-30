@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 16:50:19 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 20:08:15 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ char				*apply_env(char *token_word, t_blackhole *blackhole);
 
 char				*rm_quote_ap_env(char *cmd, t_blackhole *blackhole, int is_heredoc);
 void				free_parsed_input(t_block *parsed_input, int pipecnt);
+void				free_invalid(t_block *parsed_input, t_deque *tokens, int block_i);
 
 char				*my_strndup(char *s, size_t n);
 int					my_strcmp(char *s1, char *s2);
@@ -214,4 +215,5 @@ int					set_redir_no_fork(t_inner_block_list *redirect_list);
 int					set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util);
 
 int					ft_heredoc(char *delimeter, int fd);
+
 #endif

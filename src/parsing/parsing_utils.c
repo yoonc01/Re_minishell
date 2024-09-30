@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:46:33 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 12:26:42 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/30 20:07:57 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static char	*remove_double_quote(char *str)
 	ft_strlcpy(result, (str + 1), len - 1);
 	return (result);
 }
+
 char	*rm_quote_ap_env(char *cmd, t_blackhole *blackhole, int is_heredoc)
 {
 	char	*temp;
@@ -64,7 +65,7 @@ void	free_parsed_input(t_block *parsed_input, int pipecnt)
 	t_inner_block_list	*redirection_list;
 
 	idx = 0;
-	while(idx <= pipecnt)
+	while (idx <= pipecnt)
 	{
 		cmd_list = parsed_input[idx].cmd_list;
 		redirection_list = parsed_input[idx].redirection_list;
@@ -73,4 +74,24 @@ void	free_parsed_input(t_block *parsed_input, int pipecnt)
 		idx++;
 	}
 	free(parsed_input);
+}
+
+void	free_invalid(t_block *parsed_input, t_deque *tokens, int block_i)
+{
+	int					idx;
+	t_inner_block_list	*cmd_list;
+	t_inner_block_list	*redirection_list;
+
+	idx = 0;
+	while (idx <= block_i)
+	{
+		cmd_list = parsed_input[idx].cmd_list;
+		redirection_list = parsed_input[idx].redirection_list;
+		free_inner_block(cmd_list);
+		free_inner_block(redirection_list);
+		idx++;
+	}
+	free(parsed_input);
+	while (tokens->front != NULL)
+		delete_front(tokens);
 }
