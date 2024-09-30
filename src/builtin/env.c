@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:27:00 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 13:04:09 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/30 18:26:26 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,5 @@ char	*get_env(char *key, t_env_list *env_list)
 			return (ft_strdup(current_node->env_value));
 		current_node = current_node->next;
 	}
-	return (NULL);
+	return (ft_strdup(""));
 }

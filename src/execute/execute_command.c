@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/30 15:00:19 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 18:28:17 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,12 @@ void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 	char	**argv;
 	char	**envp = { NULL};
 	char	*path;
+	int		rst;
 
 	argv = make_argv(cmd_list);
-	path = make_cmd_path(cmd_list, env_list);
 	envp = make_envp(env_list);
-	execve(path, argv, envp);
+	path = make_cmd_path(cmd_list, env_list);
+	rst = execve(path, argv, envp);
+	if (rst < 0)
+		builtin_error("command not found: ", argv[0]);
 }

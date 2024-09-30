@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_argv_envp_path.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:37:25 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 13:23:54 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 18:26:35 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)
 
 	path_i = 0;
 	path_env = get_env("PATH", env_list);
-	path_arr = ft_split(path_env, ':');
 	slash_cmd = ft_strjoin("/", cmd_list->head->str);
+	path_arr = ft_split(path_env, ':');
 	while (path_arr[path_i])
 	{
 		join_path_cmd = ft_strjoin(path_arr[path_i], slash_cmd);
@@ -73,5 +73,5 @@ char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)
 		path_i++;
 	}
 	free(slash_cmd);
-	return (NULL); // TODO: cmd 못 찾았을 경우 현재 디렉토리에서 찾아야 함
+	return(ft_strjoin(getcwd(NULL, 0), slash_cmd));
 }
