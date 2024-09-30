@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:21:39 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 14:15:30 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/30 15:10:09 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ int	parsing_error(t_deque *tokens, t_blackhole *blackhole)
 		write_error("newline");
 	else if (tokens->front->next != WORD)
 		write_error(tokens->front->next->str);
-	blackhole->exit_code = 127;
+	blackhole->exit_code = 258;
 	return (0);
 }

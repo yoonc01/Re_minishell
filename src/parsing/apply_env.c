@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   apply_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 14:04:15 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/30 15:17:28 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ char	*apply_env(char *token_word, t_blackhole *blackhole)
 				return (env_applied);
 			env_value = ft_itoa(blackhole->exit_code);
 			env_applied = ft_strnjoin(env_applied, env_value, ft_strlen(env_value));
+			free(env_value);
 			token_word  += 2;
 		}
 		else if ((token_word[token_word_i] == '$' && is_valid_env_key(token_word[token_word_i + 1])) || token_word[token_word_i] == '\0')
