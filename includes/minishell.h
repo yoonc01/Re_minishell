@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 21:31:57 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 14:47:49 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ t_inner_block_list	*create_inner_block_list(void);
 void				add_inner_block(t_inner_block_list *lst, t_inner_block *new_node);
 void				free_inner_block(t_inner_block_list *lst);
 
-void				set_signals(void);
+void				signal_default(void);
 void				ignore_signal(int signum);
 void				set_terminal(int setting);
 
@@ -208,6 +208,8 @@ char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
 int					parsing_error(t_deque *tokens, t_blackhole *blackhole);
 void				builtin_error(char *str, char *token);
 
-void				set_redir_no_fork(t_inner_block_list *redirect_list);
-void				set_child_redir(t_inner_block_list *redirect_list, t_pipe_util *pipe_util);
+int					set_redir_no_fork(t_inner_block_list *redirect_list);
+int					set_child_redir(t_inner_block_list *redirect_list, t_pipe_util *pipe_util);
+
+int					ft_heredoc(char *delimeter, int fd);
 #endif

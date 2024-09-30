@@ -6,24 +6,24 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:46:49 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/29 21:29:16 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 13:43:00 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	off_echoctl(void);
-static void	on_echoctl(void);
+static void	echoctl_off(void);
+static void	echoctl_on(void);
 
 void	set_terminal(int setting)
 {
 	if (setting)
-		on_echoctl();
+		echoctl_on();
 	else
-		off_echoctl();
+		echoctl_off();
 }
 
-static void	off_echoctl(void)
+static void	echoctl_off(void)
 {
 	struct termios	t;
 
@@ -32,7 +32,7 @@ static void	off_echoctl(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
 }
 
-static void	on_echoctl(void)
+static void	echoctl_on(void)
 {
 	struct termios	t;
 

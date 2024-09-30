@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 21:27:33 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 13:42:08 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static char	*rl_gets(t_blackhole *blackhole)
 	char	*command;
 
 	set_terminal(0);
-	set_signals();
+	signal_default();
 	command = readline("minishell$ \033[s");
 	if(command && *command) // 명령어 입력
 	{

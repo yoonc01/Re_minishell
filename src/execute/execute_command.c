@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/29 21:31:27 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 14:47:30 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,17 @@
 void	execute_command(t_blackhole *blackhole)
 {
 	int		head_cmd_type;
-	int 	tmp_std_in;
-	int 	tmp_std_out;
+	int		tmp_std_in;
+	int		tmp_std_out;
+	int		heredoc_sigint;
 
  	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
 	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 7)
 	{
 		tmp_std_in = dup(STDIN_FILENO);// save in out default fd
 		tmp_std_out = dup(STDOUT_FILENO);
-		set_redir_no_fork(blackhole->parsed_input->redirection_list);
+		heredoc_sigint = set_redir_no_fork(blackhole->parsed_input->redirection_list);
+			return ;
 		if (head_cmd_type == B_NULL)
 			blackhole->exit_code = 0;
 		else
