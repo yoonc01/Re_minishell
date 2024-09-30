@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 16:50:19 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/01 00:25:54 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
+# include <sys/errno.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
@@ -214,4 +215,6 @@ int					set_redir_no_fork(t_inner_block_list *redirect_list);
 int					set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util);
 
 int					ft_heredoc(char *delimeter, int fd);
+
+void				err_exit(char *field1, char *field2);
 #endif

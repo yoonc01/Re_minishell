@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 18:33:56 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/01 00:41:19 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void make_child(t_blackhole *blackhole)
 {
 	int				pid;
 	t_child_util	child_util;
-	int				heredoc_sigint;
+	int				redir_err;
 	int				status;
 
 	child_util.pipe_i = 0;
@@ -33,8 +33,8 @@ void make_child(t_blackhole *blackhole)
 		pipe(child_util.pipefd);
 		child_util.childfd[0] = STDIN_FILENO;
 		child_util.childfd[1] = STDOUT_FILENO;
-		heredoc_sigint = set_child_redir(blackhole->parsed_input[child_util.pipe_i].redirection_list, &child_util);
-		if (heredoc_sigint == 1)
+		redir_err = set_child_redir(blackhole->parsed_input[child_util.pipe_i].redirection_list, &child_util);
+		if (redir_err == 1)
 		{
 			blackhole->exit_code = 1;
 			break ;
