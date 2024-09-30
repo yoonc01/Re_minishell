@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 14:09:27 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/23 11:29:11 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 20:03:25 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@ t_inner_block_list	*create_inner_block_list(void)
 	return (inner_block_list);
 }
 
-// 파싱한 inner_block를 해당하는 block멤버에 맞게 연결리스트 맨 뒤의 멤버로 넣어줌
-void add_inner_block(t_inner_block_list *lst, t_inner_block *new_node)
+void	add_inner_block(t_inner_block_list *lst, t_inner_block *new_node)
 {
 	t_inner_block	*current_node;
-	
+
 	if (lst->head == NULL)
 		lst->head = new_node;
 	else

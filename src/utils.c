@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 18:17:05 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/16 17:11:46 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/30 20:33:00 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ char	*my_strndup(char *s, size_t n)
 	char	*result;
 
 	result = (char *) malloc(sizeof(char) * (n + 1));
-	// if (result == 0)
-	// 	malloc_fail();
+	if (result == 0)
+		malloc_fail();
 	ft_strlcpy(result, s, n + 1);
 	return (result);
 }

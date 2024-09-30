@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 12:47:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 17:37:47 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/30 20:27:14 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	update_env_node(t_env_list *env_list, char *env_key, char *env_value)
 	return (0);
 }
 
-// 존재하는 환경변수 update하는 경우와 존재하지 않는 환경 변수를 새로 추가하는 경우에 대한 경우 처리 필요
 void	add_env_node(t_env_list *env_list, char *env_key, char *env_value)
 {
 	t_env_node	*new_node;
@@ -68,7 +67,7 @@ void	add_env_node(t_env_list *env_list, char *env_key, char *env_value)
 	env_list->size = env_list->size + 1;
 }
 
-int add_env(char *env, t_env_list *env_list)
+int	add_env(char *env, t_env_list *env_list)
 {
 	int		updated;
 	char	**splited_env;
@@ -99,7 +98,7 @@ void	free_env_list(t_env_list *env_list)
 	t_env_node	*temp;
 
 	current_node = env_list->head;
-	while(current_node != NULL)
+	while (current_node != NULL)
 	{
 		free(current_node->env_key);
 		free(current_node->env_value);
