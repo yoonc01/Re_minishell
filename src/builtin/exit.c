@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 15:33:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 13:05:36 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/30 20:22:38 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ int	ft_exit(t_blackhole *blackhole)
 	{
 		if (!ft_alldigit(current_node->str))
 		{
-			builtin_error("exit: numeric argument required: ", current_node->str);
+			builtin_error("exit: numeric argument required: ",
+				current_node->str);
 			exit(255);
 		}
 		if (current_node->next != NULL)

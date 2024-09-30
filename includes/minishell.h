@@ -169,6 +169,7 @@ char				*apply_env(char *token_word, t_blackhole *blackhole);
 
 char				*rm_quote_ap_env(char *cmd, t_blackhole *blackhole, int is_heredoc);
 void				free_parsed_input(t_block *parsed_input, int pipecnt);
+void				free_invalid(t_block *parsed_input, t_deque *tokens, int block_i);
 
 char				*my_strndup(char *s, size_t n);
 int					my_strcmp(char *s1, char *s2);
@@ -217,4 +218,5 @@ int					set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_u
 int					ft_heredoc(char *delimeter, int fd);
 
 void				err_exit(char *field1, char *field2);
+
 #endif

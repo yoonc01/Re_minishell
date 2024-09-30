@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 13:42:08 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 20:31:39 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ static void	init_env_list(char **env, t_env_list *env_list)
 		i++;
 	}
 }
-void	check_leak(void)
-{
-	system("leaks -q minishell");
-}
+
 static char	*rl_gets(t_blackhole *blackhole)
 {
 	char	*command;
@@ -34,7 +31,7 @@ static char	*rl_gets(t_blackhole *blackhole)
 	set_terminal(0);
 	signal_default();
 	command = readline("minishell$ \033[s");
-	if(command && *command) // 명령어 입력
+	if (command && *command)
 	{
 		add_history(command);
 		parsing(command, blackhole);
@@ -51,17 +48,13 @@ static char	*rl_gets(t_blackhole *blackhole)
 		exit(0);
 	}
 	//else enter입력
-	return(command);
+	return (command);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_blackhole	*blackhole;
-	int			pipe_idx = 0;
-	int			pipecnt;
-	int			exit_code = 0;
 
-	// atexit(check_leak);
 	if (ac != 1)
 		argc_err();
 	blackhole = (t_blackhole *)malloc(sizeof(t_blackhole));
@@ -70,7 +63,8 @@ int	main(int ac, char **av, char **env)
 	blackhole->env_list = create_env_list();
 	init_env_list(env, blackhole->env_list);
 	blackhole->exit_code = 0;
-	while(rl_gets(blackhole));	
+	while (rl_gets(blackhole))
+		;
 	free_env_list(blackhole->env_list);
 	free(blackhole);
 }
