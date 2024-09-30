@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 14:10:17 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/09/29 21:27:33 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static char	*rl_gets(t_blackhole *blackhole)
 {
 	char	*command;
 
+	set_terminal(0);
+	set_signals();
 	command = readline("minishell$ \033[s");
 	if(command && *command) // 명령어 입력
 	{
@@ -45,7 +47,7 @@ static char	*rl_gets(t_blackhole *blackhole)
 	}
 	else if (!command) // ctrl-d 입력 -> 널포인터
 	{
-		printf("\033[u\033[1B\033[1Aexit\n");
+		printf("\033[uexit\n");
 		exit(0);
 	}
 	//else enter입력
@@ -62,8 +64,6 @@ int	main(int ac, char **av, char **env)
 	// atexit(check_leak);
 	if (ac != 1)
 		argc_err();
-	set_signals();
-	set_terminal();
 	blackhole = (t_blackhole *)malloc(sizeof(t_blackhole));
 	if (blackhole == NULL)
 		malloc_fail();

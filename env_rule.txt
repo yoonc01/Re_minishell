@@ -118,3 +118,40 @@ pipefd의 쓰기엔드가 열려있고 읽기 엔드가 닫힌 경우에 쓰려�
 
 0번째 블록일 경우-> 
 마지막 블록일 경우->
+
+
+
+"                    " 입력 시 segfault
+-> 헤더 파일 매크로 수정, check_cmd_type, execute_command수정
+-> exitcode 0으로 설정
+
+프롬프트 섞여서 나오는 문제
+명령어 입력중에 ctrl \ 입력
+
+
+1. 커맨드를 입력 받을 때마다 터미널 세팅과 시그널 초기화 해야된다
+-> 터미널은 echoctl off 해서 ctrl c ctrl \ 입력받아도 제어문자 안나오도록 한다
+-> 시그널은 ctrl c 입력 시 개행 출력하고 프롬프트 출력하도록 한다 heredoc 예외처리하기
+-> SIGQUIT은 무시한다
+2. 
+	1 - no fork 일 경우 -> heredoc으로 처리하면됨
+	2 - fork 일 경우 -> fork 전에 시그널 핸들러로 SIGQUIT들어와도 아무것도 안하게 설정 execve 하면 시그널 핸들러 초기화 된다
+	3 - 자식 
+	4 - 부모 echoctl on 해서 ctrl c ctrl \ 입력 들어오면 제어문자 출력되도록 한다
+		signal 세팅해서 SIGINT들어오면 개행 출력 되도록 (제어문자 + 개행)
+		waitchild 함수에서 마지막 자식의 pid들고 간 다음에
+		종료 상태를 waitpid(-1, &status, 0)을 이용해서 받기
+		마지막 커맨드 종료상태를 보고 시그널종료인지 정상 종료인지 확인하기
+
+
+echo 개행 안들어가는 문제
+"         "입력시 릭나는 문제
+export a+=b할 경우 릭나는 문제
+heredoc 입력 받을 때 뒤에 지워짐
+<<ss echo segfault
+echo ssss 하면 개행 출력되는 문제
+
+heredoc은 따로 빼 놨다가 fork하고 나서 하기
+
+heredoc 입력 받는중에 sigint들어오면 뒤에 파이프가 있더라도 명령어를 동료해야 한다
+-> 자식을 포크해서 거기서 heredoc 실행하기 실행하다가 sigint들어오면 자식 종료하고 부모에게 반환하기 

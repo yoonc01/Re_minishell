@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_fork.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/29 02:02:34 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/29 22:03:07 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static void	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_uti
 			{
 				if (fd > 0)
 					close(fd);
+				// ft_heredoc(&fd, cur_redir->str);
 				fd = open("/var/tmp/tmp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 				heredoc_str = get_heredoc_input(cur_redir->str);
 				write(fd, heredoc_str, ft_strlen(heredoc_str));
@@ -63,6 +64,8 @@ static void	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_uti
 	if (fd >= 0)
 		pipe_util->childfd[0] = fd;
 }
+
+
 
 static void	redir_output(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
 {
