@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 14:47:49 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 16:50:19 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,14 +118,16 @@ typedef struct s_block
 	t_inner_block_list	*redirection_list;
 }	t_block;
 
-typedef struct s_pipe_util
+typedef struct s_child_util
 {
 	int	pipe_i;
 	int	pipecnt;
 	int	prev_pipe;
 	int	pipefd[2];
 	int	childfd[2];
-}	t_pipe_util;
+	int	last_child_pid;
+	int	last_child_status;
+}	t_child_util;
 
 typedef struct s_blackhole
 {
@@ -209,7 +211,7 @@ int					parsing_error(t_deque *tokens, t_blackhole *blackhole);
 void				builtin_error(char *str, char *token);
 
 int					set_redir_no_fork(t_inner_block_list *redirect_list);
-int					set_child_redir(t_inner_block_list *redirect_list, t_pipe_util *pipe_util);
+int					set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util);
 
 int					ft_heredoc(char *delimeter, int fd);
 #endif
