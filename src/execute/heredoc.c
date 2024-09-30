@@ -3,14 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:28:46 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/24 23:52:21 by youngho          ###   ########.fr       */
+/*   Updated: 2024/09/30 13:42:08 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	sigint_heredoc_parent(int signum);
+
+int	ft_heredoc(char *delimeter, int fd) // 여기서 fork 뜨고 자식이 heredoc받기
+{
+	char	*heredoc_str;
+	int		pid;
+	int		h_exitcode;
+	int		status;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		heredoc_str = get_heredoc_input(delimeter);
+		write(fd, heredoc_str, ft_strlen(heredoc_str));
+		free(heredoc_str);
+		exit(0);
+	}
+	else
+	{
+		signal(SIGINT, sigint_heredoc_parent);
+		waitpid(pid, &status, 0);
+		signal_default();
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+			return (1);
+		else
+			return (0);
+	}
+}
+
+static void	sigint_heredoc_parent(int signum)
+{
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 1);
+}
 
 char	*get_heredoc_input(char *delimeter)
 {

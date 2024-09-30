@@ -6,29 +6,34 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/29 22:03:07 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 12:36:25 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	redir_input(t_inner_block_list *redir_l, t_pipe_util *pipe_util);
+static int	redir_input(t_inner_block_list *redir_l, t_pipe_util *pipe_util);
 static void	redir_output(t_inner_block_list *redir_l, t_pipe_util *pipe_util);
 static void	set_pipe(t_pipe_util *pipe_util);
 
-void	set_child_redir(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
+int	set_child_redir(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
 {
+	int	heredoc_sigint;
+
 	set_pipe(pipe_util);
-	redir_input(redirect_list, pipe_util);
+	heredoc_sigint = redir_input(redirect_list, pipe_util);
+	if (heredoc_sigint)
+		return (1);
 	redir_output(redirect_list, pipe_util);
+	return (0);
 }
 
-static void	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
+static int	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
 {
 	int				fd;
-	char			*heredoc_str;
 	int				flag;
 	t_inner_block	*cur_redir;
+	int				heredoc_sigint;
 
 	fd = -1;
 	flag = 0;
@@ -50,9 +55,9 @@ static void	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_uti
 					close(fd);
 				// ft_heredoc(&fd, cur_redir->str);
 				fd = open("/var/tmp/tmp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
-				heredoc_str = get_heredoc_input(cur_redir->str);
-				write(fd, heredoc_str, ft_strlen(heredoc_str));
-				free(heredoc_str);
+				heredoc_sigint = ft_heredoc(cur_redir->str, fd);
+				if (heredoc_sigint == 1)
+					return (1);
 				fd = open("/var/tmp/tmp.txt", O_RDONLY);
 				// TODO heredoc tmp.txt를 unlink해줘야 함
 			}
@@ -63,6 +68,7 @@ static void	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_uti
 	}
 	if (fd >= 0)
 		pipe_util->childfd[0] = fd;
+	return (0);
 }
 
 

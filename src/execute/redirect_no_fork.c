@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection.c                                      :+:      :+:    :+:   */
+/*   redirect_no_fork.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 12:24:51 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/28 19:09:47 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 14:48:54 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
+static int	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
 {
 	int		fd;
 	char	*heredoc_str;
+	int		heredoc_sigint;
 	// TODO file open error
 	if (flag == REDIR_IN)
 	{
@@ -26,9 +27,9 @@ static void	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
 	else // TODO HEREDOC 출력 형식 앞에 > 붙여줘야 함
 	{
 		fd = open("/var/tmp/tmp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
-		heredoc_str = get_heredoc_input(redirect_block->str);
-		write(fd, heredoc_str, ft_strlen(heredoc_str));
-		close(fd);
+		heredoc_sigint = ft_heredoc(redirect_block->str, fd);
+		if (heredoc_sigint == 1)
+			return (1);
 		fd = open("/var/tmp/tmp.txt", O_RDONLY);
 		dup2(fd, STDIN_FILENO);
 		close(fd);
@@ -37,6 +38,7 @@ static void	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
 	{
 		// TODO 파일 오픈 에러 처리
 	}
+	return (0);
 }
 
 static void	redir_out_no_fork(t_inner_block *redirect_block, int flag)
@@ -57,18 +59,23 @@ static void	redir_out_no_fork(t_inner_block *redirect_block, int flag)
 	}
 }
 
-void	set_redir_no_fork(t_inner_block_list *redirect_list)
+int	set_redir_no_fork(t_inner_block_list *redirect_list)
 {
 
 	int	flag;
-	t_inner_block *curr_redir;
+	t_inner_block	*curr_redir;
+	int				heredoc_sigint;
 
 	flag = 0;
 	curr_redir = redirect_list->head;
 	while(curr_redir)
 	{
 		if (curr_redir->type == WORD && flag <= 3)
-			redirect_in_no_fork(curr_redir, flag);
+		{
+			heredoc_sigint = redirect_in_no_fork(curr_redir, flag);
+			if (heredoc_sigint == 1)
+				return (1);
+		}
 		else
 			flag = curr_redir->type;
 		curr_redir = curr_redir->next;
@@ -83,4 +90,5 @@ void	set_redir_no_fork(t_inner_block_list *redirect_list)
 			flag = curr_redir->type;
 		curr_redir = curr_redir->next;
 	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/29 21:34:17 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 12:35:15 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,20 @@ void make_child(t_blackhole *blackhole)
 	int	pid;
 	int *childfd;
 	t_pipe_util pipe_util;
+	int	heredoc_sigint;
 
 	pipe_util.pipe_i = 0;
 	pipe_util.pipecnt = blackhole->pipe_cnt;
 	pipe_util.prev_pipe = -1;
-	
 	// export 구조체에 환경변수
 	while (pipe_util.pipe_i <= blackhole->pipe_cnt)
 	{
 		pipe(pipe_util.pipefd);
 		pipe_util.childfd[0] = STDIN_FILENO;
 		pipe_util.childfd[1] = STDOUT_FILENO;
-		set_child_redir(blackhole->parsed_input[pipe_util.pipe_i].redirection_list, &pipe_util);
+		heredoc_sigint = set_child_redir(blackhole->parsed_input[pipe_util.pipe_i].redirection_list, &pipe_util);
+		if (heredoc_sigint == 1)
+			break;
 		signal(SIGQUIT, ignore_signal); // 자식에서execve실행하면 시그널 핸들러 초기화된다
 		pid = fork();
 		if (pid < 0)
@@ -72,16 +74,15 @@ void make_child(t_blackhole *blackhole)
 			if (pipe_util.pipe_i != blackhole->pipe_cnt)
 				pipe_util.prev_pipe = dup(pipe_util.pipefd[0]);
 			close(pipe_util.pipefd[0]);
+			pipe_util.pipe_i++;
 		}
-		pipe_util.pipe_i++;
 	}
 	set_terminal(1); // 시그널 입력 시 제어문자 표시
 	signal(SIGINT, ignore_signal); // 자식에서는 SIGINT 넣으면 종료되고 부모에서는 개행만 발생
-	pipe_util.pipe_i = 0;
-	while (pipe_util.pipe_i <= blackhole->pipe_cnt)
+	while (pipe_util.pipe_i > 0)
 	{
 		wait(NULL);
-		pipe_util.pipe_i++;
+		pipe_util.pipe_i--;
 	}
 }
 
