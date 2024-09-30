@@ -6,29 +6,29 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/30 12:36:25 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 15:56:05 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	redir_input(t_inner_block_list *redir_l, t_pipe_util *pipe_util);
-static void	redir_output(t_inner_block_list *redir_l, t_pipe_util *pipe_util);
-static void	set_pipe(t_pipe_util *pipe_util);
+static int	redir_input(t_inner_block_list *redir_l, t_child_util *child_util);
+static void	redir_output(t_inner_block_list *redir_l, t_child_util *child_util);
+static void	set_pipe(t_child_util *child_util);
 
-int	set_child_redir(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
+int	set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util)
 {
 	int	heredoc_sigint;
 
-	set_pipe(pipe_util);
-	heredoc_sigint = redir_input(redirect_list, pipe_util);
+	set_pipe(child_util);
+	heredoc_sigint = redir_input(redirect_list, child_util);
 	if (heredoc_sigint)
 		return (1);
-	redir_output(redirect_list, pipe_util);
+	redir_output(redirect_list, child_util);
 	return (0);
 }
 
-static int	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
+static int	redir_input(t_inner_block_list *redirect_list, t_child_util *child_util)
 {
 	int				fd;
 	int				flag;
@@ -67,13 +67,13 @@ static int	redir_input(t_inner_block_list *redirect_list, t_pipe_util *pipe_util
 		cur_redir = cur_redir->next;
 	}
 	if (fd >= 0)
-		pipe_util->childfd[0] = fd;
+		child_util->childfd[0] = fd;
 	return (0);
 }
 
 
 
-static void	redir_output(t_inner_block_list *redirect_list, t_pipe_util *pipe_util)
+static void	redir_output(t_inner_block_list *redirect_list, t_child_util *child_util)
 {
 	int				fd;
 	int				flag;
@@ -104,13 +104,13 @@ static void	redir_output(t_inner_block_list *redirect_list, t_pipe_util *pipe_ut
 		cur_redir = cur_redir->next;
 	}
 	if (fd >= 0)
-		pipe_util->childfd[1] = fd;
+		child_util->childfd[1] = fd;
 }
 
-static void	set_pipe(t_pipe_util *pipe_util)
+static void	set_pipe(t_child_util *child_util)
 {
-	if (pipe_util->pipe_i != 0) // 첫번째 커맨드가 아니면 prev_pipe 를 std_in으로
-		pipe_util->childfd[0] = pipe_util->prev_pipe;
-	if (pipe_util->pipe_i != pipe_util->pipecnt) // 마지막 커맨드가 아니면 pipefd[1]을 stdout 으로
-		pipe_util->childfd[1] = pipe_util->pipefd[1];
+	if (child_util->pipe_i != 0) // 첫번째 커맨드가 아니면 prev_pipe 를 std_in으로
+		child_util->childfd[0] = child_util->prev_pipe;
+	if (child_util->pipe_i != child_util->pipecnt) // 마지막 커맨드가 아니면 pipefd[1]을 stdout 으로
+		child_util->childfd[1] = child_util->pipefd[1];
 }
