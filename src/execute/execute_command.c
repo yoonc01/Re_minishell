@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/01 00:44:33 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/01 01:31:42 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,17 +85,21 @@ void execute_builtin(t_blackhole *blackhole, int cmd_type)
 		blackhole->exit_code = ft_exit(blackhole);
 }
 
-void	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
+int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 {
 	char	**argv;
 	char	**envp = { NULL};
 	char	*path;
-	int		rst;
 
 	argv = make_argv(cmd_list);
 	envp = make_envp(env_list);
 	path = make_cmd_path(cmd_list, env_list);
-	rst = execve(path, argv, envp);
-	if (rst < 0)
-		builtin_error("command not found: ", argv[0]);
+	execve(path, argv, envp);
+	if (errno == ENOENT)
+	{
+		err_exit(argv[0], "command not found");
+		return (127);
+	}
+	err_exit(argv[0], strerror(errno));
+	return (EXIT_FAILURE);
 }

@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/01 00:25:54 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/01 01:22:19 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void 				make_child(t_blackhole *blackhole);
 void				execute_command(t_blackhole *blackhole);
 int					check_cmd_type(t_inner_block *cur_cmd);
 void				execute_builtin(t_blackhole *blackhole, int cmd_type);
-void				execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
+int					execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
 
 char				*get_next_line(int fd);
 

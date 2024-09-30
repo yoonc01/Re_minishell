@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/01 00:41:19 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/01 01:21:51 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void make_child(t_blackhole *blackhole)
 			blackhole->exit_code = 1;
 			break ;
 		}
+		
 		signal(SIGQUIT, ignore_signal); // 자식에서execve실행하면 시그널 핸들러 초기화된다
 		pid = fork();
 		if (pid < 0)
@@ -105,7 +106,7 @@ static void	execute_child(t_blackhole *blackhole, int pipe_i)
 	}
 	else
 	{
-		execute_nbuiltin(blackhole->parsed_input[pipe_i].cmd_list, blackhole->env_list);
-		exit(EXIT_SUCCESS);
+		exit_code = execute_nbuiltin(blackhole->parsed_input[pipe_i].cmd_list, blackhole->env_list);
+		exit(exit_code);
 	}
 }
