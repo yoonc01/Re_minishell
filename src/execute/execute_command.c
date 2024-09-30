@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/30 14:47:30 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/09/30 15:00:19 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	execute_command(t_blackhole *blackhole)
 		tmp_std_in = dup(STDIN_FILENO);// save in out default fd
 		tmp_std_out = dup(STDOUT_FILENO);
 		heredoc_sigint = set_redir_no_fork(blackhole->parsed_input->redirection_list);
+		if (heredoc_sigint ==1)
 			return ;
 		if (head_cmd_type == B_NULL)
 			blackhole->exit_code = 0;
