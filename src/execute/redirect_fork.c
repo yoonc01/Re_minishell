@@ -3,28 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_fork.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/30 15:56:05 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/01 00:35:27 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	redir_input(t_inner_block_list *redir_l, t_child_util *child_util);
-static void	redir_output(t_inner_block_list *redir_l, t_child_util *child_util);
+static int	redir_output(t_inner_block_list *redir_l, t_child_util *child_util);
 static void	set_pipe(t_child_util *child_util);
 
 int	set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util)
 {
-	int	heredoc_sigint;
+	int	err_flag;
 
 	set_pipe(child_util);
-	heredoc_sigint = redir_input(redirect_list, child_util);
-	if (heredoc_sigint)
+	err_flag = redir_input(redirect_list, child_util);
+	if (err_flag)
 		return (1);
-	redir_output(redirect_list, child_util);
+	err_flag = redir_output(redirect_list, child_util);
+	if (err_flag)
+		return (1);
 	return (0);
 }
 
@@ -48,6 +50,11 @@ static int	redir_input(t_inner_block_list *redirect_list, t_child_util *child_ut
 				if (fd > 0)
 					close(fd);
 				fd = open(cur_redir->str, O_RDONLY, 0);
+				if (fd < 0)
+				{
+					err_exit(cur_redir->str, strerror(errno));
+					return (1);
+				}
 			}
 			else if (flag == HEREDOC)// TODO HEREDOC 출력 형식 앞에 > 붙여줘야 함
 			{
@@ -73,7 +80,7 @@ static int	redir_input(t_inner_block_list *redirect_list, t_child_util *child_ut
 
 
 
-static void	redir_output(t_inner_block_list *redirect_list, t_child_util *child_util)
+static int	redir_output(t_inner_block_list *redirect_list, t_child_util *child_util)
 {
 	int				fd;
 	int				flag;
@@ -91,12 +98,22 @@ static void	redir_output(t_inner_block_list *redirect_list, t_child_util *child_
 				if (fd > 0)
 					close(fd);
 				fd = open(cur_redir->str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				if (fd < 0)
+				{
+					err_exit(cur_redir->str, strerror(errno));
+					return (1);
+				}
 			}
 			else if (flag == REDIR_APPEND)
 			{
 				if (fd > 0)
 					close(fd);
 				fd = open(cur_redir->str, O_WRONLY | O_CREAT | O_APPEND, 0644);
+				if (fd < 0)
+				{
+					err_exit(cur_redir->str, strerror(errno));
+					return (1);
+				}
 			}
 		}
 		else

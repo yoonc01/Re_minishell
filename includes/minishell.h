@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:08:15 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/01 01:22:19 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
+# include <sys/errno.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
@@ -197,7 +198,7 @@ void 				make_child(t_blackhole *blackhole);
 void				execute_command(t_blackhole *blackhole);
 int					check_cmd_type(t_inner_block *cur_cmd);
 void				execute_builtin(t_blackhole *blackhole, int cmd_type);
-void				execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
+int					execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
 
 char				*get_next_line(int fd);
 
@@ -215,5 +216,7 @@ int					set_redir_no_fork(t_inner_block_list *redirect_list);
 int					set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util);
 
 int					ft_heredoc(char *delimeter, int fd);
+
+void				err_exit(char *field1, char *field2);
 
 #endif

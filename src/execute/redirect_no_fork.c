@@ -3,14 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_no_fork.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 12:24:51 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/30 14:48:54 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/01 00:45:20 by youngho          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	redirect_in_no_fork(t_inner_block *redirect_block, int flag);
+static int	redir_out_no_fork(t_inner_block *redirect_block, int flag);
+
+int	set_redir_no_fork(t_inner_block_list *redirect_list)
+{
+
+	int	flag;
+	t_inner_block	*curr_redir;
+	int				redir_err;
+
+	flag = 0;
+	curr_redir = redirect_list->head;
+	while(curr_redir)
+	{
+		if (curr_redir->type == WORD && flag <= 3)
+		{
+			redir_err = redirect_in_no_fork(curr_redir, flag);
+			if (redir_err == 1)
+				return (1);
+		}
+		else
+			flag = curr_redir->type;
+		curr_redir = curr_redir->next;
+	}
+	flag = 0;
+	curr_redir = redirect_list->head;
+	while(curr_redir)
+	{
+		if (curr_redir->type == WORD && flag >= 4)
+			redir_out_no_fork(curr_redir, flag);
+		else
+			flag = curr_redir->type;
+		curr_redir = curr_redir->next;
+	}
+	return (0);
+}
 
 static int	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
 {
@@ -21,6 +58,11 @@ static int	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
 	if (flag == REDIR_IN)
 	{
 		fd = open(redirect_block->str, O_RDONLY, 0);
+		if (fd < 0)
+		{
+			err_exit(redirect_block->str, strerror(errno));
+			return (1);
+		}
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 	}
@@ -41,54 +83,30 @@ static int	redirect_in_no_fork(t_inner_block *redirect_block, int flag)
 	return (0);
 }
 
-static void	redir_out_no_fork(t_inner_block *redirect_block, int flag)
+static int	redir_out_no_fork(t_inner_block *redirect_block, int flag)
 {
 	int	fd;
 
 	if (flag == REDIR_OUT)
 	{
 		fd = open(redirect_block->str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd < 0)
+		{
+			err_exit(redirect_block->str, strerror(errno));
+			return (1);
+		}
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
 	else if (flag == REDIR_APPEND)
 	{
 		fd = open(redirect_block->str, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd < 0)
+		{
+			err_exit(redirect_block->str, strerror(errno));
+			return (1);
+		}
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
-}
-
-int	set_redir_no_fork(t_inner_block_list *redirect_list)
-{
-
-	int	flag;
-	t_inner_block	*curr_redir;
-	int				heredoc_sigint;
-
-	flag = 0;
-	curr_redir = redirect_list->head;
-	while(curr_redir)
-	{
-		if (curr_redir->type == WORD && flag <= 3)
-		{
-			heredoc_sigint = redirect_in_no_fork(curr_redir, flag);
-			if (heredoc_sigint == 1)
-				return (1);
-		}
-		else
-			flag = curr_redir->type;
-		curr_redir = curr_redir->next;
-	}
-	flag = 0;
-	curr_redir = redirect_list->head;
-	while(curr_redir)
-	{
-		if (curr_redir->type == WORD && flag >= 4)
-			redir_out_no_fork(curr_redir, flag);
-		else
-			flag = curr_redir->type;
-		curr_redir = curr_redir->next;
-	}
-	return (0);
 }
