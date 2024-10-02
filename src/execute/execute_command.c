@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/01 01:31:42 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/02 15:17:59 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -20,13 +19,13 @@ void	execute_command(t_blackhole *blackhole)
 	int		tmp_std_out;
 	int		redir_err;
 
- 	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
+	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
 	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 7)
 	{
 		tmp_std_in = dup(STDIN_FILENO);// save in out default fd
 		tmp_std_out = dup(STDOUT_FILENO);
 		redir_err = set_redir_no_fork(blackhole->parsed_input->redirection_list);
-		if (redir_err ==1)
+		if (redir_err == 1)
 		{
 			blackhole->exit_code = 1;
 			return ;
@@ -64,10 +63,10 @@ int	check_cmd_type(t_inner_block *cur_cmd)
 		type = B_EXIT;
 	else
 		type = NONBUILTIN;
-	return(type);
+	return (type);
 }
 
-void execute_builtin(t_blackhole *blackhole, int cmd_type)
+void	execute_builtin(t_blackhole *blackhole, int cmd_type)
 {
 	if (cmd_type == B_ECHO)
 		blackhole->exit_code = ft_echo(blackhole);
@@ -88,7 +87,7 @@ void execute_builtin(t_blackhole *blackhole, int cmd_type)
 int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 {
 	char	**argv;
-	char	**envp = { NULL};
+	char	**envp = {NULL};
 	char	*path;
 
 	argv = make_argv(cmd_list);

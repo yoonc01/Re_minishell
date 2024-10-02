@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 12:24:51 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/01 00:45:20 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/02 15:07:42 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,13 @@ static int	redir_out_no_fork(t_inner_block *redirect_block, int flag);
 
 int	set_redir_no_fork(t_inner_block_list *redirect_list)
 {
-
-	int	flag;
+	int				flag;
 	t_inner_block	*curr_redir;
 	int				redir_err;
 
 	flag = 0;
 	curr_redir = redirect_list->head;
-	while(curr_redir)
+	while (curr_redir)
 	{
 		if (curr_redir->type == WORD && flag <= 3)
 		{
@@ -38,7 +37,7 @@ int	set_redir_no_fork(t_inner_block_list *redirect_list)
 	}
 	flag = 0;
 	curr_redir = redirect_list->head;
-	while(curr_redir)
+	while (curr_redir)
 	{
 		if (curr_redir->type == WORD && flag >= 4)
 			redir_out_no_fork(curr_redir, flag);

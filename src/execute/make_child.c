@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/01 01:21:51 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/02 15:04:37 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	execute_child(t_blackhole *blackhole, int pipe_i);
 static void	ft_handle_last_status(int last_status, t_blackhole *blackhole);
 
-void make_child(t_blackhole *blackhole)
+void	make_child(t_blackhole *blackhole)
 {
 	int				pid;
 	t_child_util	child_util;
@@ -39,11 +39,10 @@ void make_child(t_blackhole *blackhole)
 			blackhole->exit_code = 1;
 			break ;
 		}
-		
 		signal(SIGQUIT, ignore_signal); // 자식에서execve실행하면 시그널 핸들러 초기화된다
 		pid = fork();
 		if (pid < 0)
-			exit(1); // TODO
+			exit(1);
 		else if (pid == 0) //자식
 		{
 			close(child_util.pipefd[0]); // 부모가 pipefd 들고 있으므로 close해도 된다
@@ -74,7 +73,6 @@ void make_child(t_blackhole *blackhole)
 		pid = waitpid(-1, &status, 0);
 		if (child_util.last_child_pid != -1 && pid == child_util.last_child_pid)
 			child_util.last_child_status = status;
-		
 	}
 	ft_handle_last_status(child_util.last_child_status, blackhole);
 }
@@ -83,13 +81,13 @@ static void	ft_handle_last_status(int last_status, t_blackhole *blackhole)
 {
 	int	status_signal;
 
-	status_signal = last_status&0x7f;
+	status_signal = last_status & 0x7f;
 	if (status_signal == 0)
 		blackhole->exit_code = (last_status >> 8) & 0x000000ff;
 	else if (status_signal != 0x7f)
 	{
 		if (status_signal == 3)
-			write(2,"Quit: 3\n",8);
+			write(STDERR_FILENO, "Quit: 3\n", 8);
 		blackhole->exit_code = (status_signal + 128);
 	}
 }

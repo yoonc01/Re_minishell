@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/01 01:22:19 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/02 15:17:12 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ typedef struct s_env_node
 	struct s_env_node	*next;
 }	t_env_node;
 
-typedef struct	s_env_list
+typedef struct s_env_list
 {
 	t_env_node	*head;
 	int			size;
@@ -139,8 +139,10 @@ typedef struct s_blackhole
 }	t_blackhole;
 
 t_deque				*create_deque(void);
-void				insert_front(t_deque *dq, char *str, t_token_type token_type);
-void				insert_rear(t_deque *dq, char *str, t_token_type token_type);
+void				insert_front(t_deque *dq, char *str,
+						t_token_type token_type);
+void				insert_rear(t_deque *dq, char *str,
+						t_token_type token_type);
 void				delete_front(t_deque *dq);
 void				delete_rear(t_deque *dq);
 
@@ -150,26 +152,30 @@ void				argc_err(void);
 int					check_env_add(char *env_key);
 int					is_valid_env_key(char c);
 
-int 				check_env_add(char *env_key);
+int					check_env_add(char *env_key);
 int					is_valid_env_key(char c);
 
 t_env_list			*create_env_list(void);
-int 				add_env(char *env, t_env_list *env_list);
+int					add_env(char *env, t_env_list *env_list);
 void				delete_env_node(char *str, t_env_list *env_list);
 void				free_env_list(t_env_list *env_list);
 
 t_deque				*tokenize(char *input, int *pipecnt);
 
-void				process_operator_out(char c, size_t *len, t_token_type *token_type);
-void				process_operator_in(char c, size_t *len, t_token_type *token_type);
+void				process_operator_out(char c, size_t *len,
+						t_token_type *token_type);
+void				process_operator_in(char c, size_t *len,
+						t_token_type *token_type);
 
 void				parsing(char *input, t_blackhole *blackhole);
 
 char				*apply_env(char *token_word, t_blackhole *blackhole);
 
-char				*rm_quote_ap_env(char *cmd, t_blackhole *blackhole, int is_heredoc);
+char				*rm_quote_ap_env(char *cmd,
+						t_blackhole *blackhole, int is_heredoc);
 void				free_parsed_input(t_block *parsed_input, int pipecnt);
-void				free_invalid(t_block *parsed_input, t_deque *tokens, int block_i);
+void				free_invalid(t_block *parsed_input,
+						t_deque *tokens, int block_i);
 
 char				*my_strndup(char *s, size_t n);
 int					my_strcmp(char *s1, char *s2);
@@ -177,7 +183,8 @@ char				*ft_strnjoin(char *result, char *str, size_t size);
 int					ft_isspace(char c);
 
 t_inner_block_list	*create_inner_block_list(void);
-void				add_inner_block(t_inner_block_list *lst, t_inner_block *new_node);
+void				add_inner_block(t_inner_block_list *lst,
+						t_inner_block *new_node);
 void				free_inner_block(t_inner_block_list *lst);
 
 void				signal_default(void);
@@ -193,12 +200,13 @@ int					ft_cd(t_blackhole *blackhole);
 int					ft_echo(t_blackhole *blackhole);
 int					ft_exit(t_blackhole *blackhole);
 
-void 				make_child(t_blackhole *blackhole);
+void				make_child(t_blackhole *blackhole);
 
 void				execute_command(t_blackhole *blackhole);
 int					check_cmd_type(t_inner_block *cur_cmd);
 void				execute_builtin(t_blackhole *blackhole, int cmd_type);
-int					execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list);
+int					execute_nbuiltin(t_inner_block_list *cmd_list,
+						t_env_list *env_list);
 
 char				*get_next_line(int fd);
 
@@ -206,14 +214,15 @@ char				*get_heredoc_input(char *delimeter);
 
 char				**make_argv(t_inner_block_list *cmd_list);
 char				**make_envp(t_env_list *envp_list);
-char				*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list);
-
+char				*make_cmd_path(t_inner_block_list *cmd_list,
+						t_env_list *env_list);
 
 int					parsing_error(t_deque *tokens, t_blackhole *blackhole);
 void				builtin_error(char *str, char *token);
 
 int					set_redir_no_fork(t_inner_block_list *redirect_list);
-int					set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util);
+int					set_child_redir(t_inner_block_list *redirect_list,
+						t_child_util *child_util);
 
 int					ft_heredoc(char *delimeter, int fd);
 
