@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 18:22:57 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/02 19:32:25 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	execute_builtin(t_blackhole *blackhole, int cmd_type)
 int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 {
 	char	**argv;
-	char	**envp = {NULL};
+	char	**envp;
 	char	*path;
 
 	argv = make_argv(cmd_list);
