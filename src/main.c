@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:31:39 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 17:58:10 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	init_env_list(char **env, t_env_list *env_list)
 	}
 }
 
-static char	*rl_gets(t_blackhole *blackhole)
+static int	rl_gets(t_blackhole *blackhole)
 {
 	char	*command;
 
@@ -40,15 +40,14 @@ static char	*rl_gets(t_blackhole *blackhole)
 			execute_command(blackhole);
 			free_parsed_input(blackhole->parsed_input, blackhole->pipe_cnt);
 		}
-		free(command);
 	}
-	else if (!command) // ctrl-d 입력 -> 널포인터
+	else if (!command)
 	{
 		printf("\033[uexit\n");
-		exit(0);
+		return (0);
 	}
-	//else enter입력
-	return (command);
+	free(command);
+	return (1);
 }
 
 int	main(int ac, char **av, char **env)

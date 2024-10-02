@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:47:46 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/30 14:32:15 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/02 17:58:21 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static void	parent_sigint_handle(int signum);
 
 void	signal_default(void)
 {
-	signal(SIGINT, parent_sigint_handle); //처음에는 개행하고 새로운 라인 그려주면 된다
-	signal(SIGQUIT, SIG_IGN); // sigquit이 입력되고 무시하고 계속실행
+	signal(SIGINT, parent_sigint_handle);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 static void	parent_sigint_handle(int signum)

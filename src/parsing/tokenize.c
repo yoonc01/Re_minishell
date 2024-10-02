@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 19:57:48 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 17:43:14 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static char	*process_quote(t_deque *tokens, char *start, char quote)
 		idx++;
 	if (*idx == '\0')
 	{
-		write(2, "Error unmatched quote\n", 23);
 		while (tokens->front != NULL)
 			delete_front(tokens);
 		free(tokens);
@@ -94,7 +93,7 @@ t_deque	*tokenize(char *input, int *pipecnt)
 		else
 			start = process_word(tokens, start);
 		if (start == 0)
-			return (0);
+			return (NULL);
 	}
 	return (tokens);
 }
