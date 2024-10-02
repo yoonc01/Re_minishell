@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:08:28 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 17:48:07 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,10 @@ void	parsing(char *input, t_blackhole *blackhole)
 	blackhole->pipe_cnt = 0;
 	tokens = tokenize(input, &blackhole->pipe_cnt);
 	if (tokens == NULL)
+	{
+		parsing_error(tokens, blackhole);
 		return ;
+	}
 	parsing_block(tokens, blackhole);
 	free(tokens);
 }
