@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 15:04:37 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 17:32:29 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 static void	execute_child(t_blackhole *blackhole, int pipe_i);
 static void	ft_handle_last_status(int last_status, t_blackhole *blackhole);
+static void	ft_parent_connect_pipe(t_child_util *child_u,
+				t_blackhole *blk, int pid);
 
 void	make_child(t_blackhole *blackhole)
 {
 	int				pid;
 	t_child_util	child_util;
-	int				redir_err;
+	int				heredoc_sigint;
 	int				status;
 
 	child_util.pipe_i = 0;
@@ -27,37 +29,35 @@ void	make_child(t_blackhole *blackhole)
 	child_util.prev_pipe = -1;
 	child_util.last_child_pid = -1;
 	child_util.last_child_status = -1;
-	// export 구조체에 환경변수
 	while (child_util.pipe_i <= blackhole->pipe_cnt)
 	{
 		pipe(child_util.pipefd);
 		child_util.childfd[0] = STDIN_FILENO;
 		child_util.childfd[1] = STDOUT_FILENO;
-		redir_err = set_child_redir(blackhole->parsed_input[child_util.pipe_i].redirection_list, &child_util);
-		if (redir_err == 1)
+		heredoc_sigint = set_child_redir(
+				blackhole->parsed_input[child_util.pipe_i].redirection_list,
+				&child_util);
+		if (heredoc_sigint == 1)
 		{
 			blackhole->exit_code = 1;
 			break ;
 		}
-		signal(SIGQUIT, ignore_signal); // 자식에서execve실행하면 시그널 핸들러 초기화된다
+		signal(SIGQUIT, ignore_signal);
 		pid = fork();
-		if (pid < 0)
-			exit(1);
-		else if (pid == 0) //자식
+		if (pid == 0)
 		{
-			close(child_util.pipefd[0]); // 부모가 pipefd 들고 있으므로 close해도 된다
+			close(child_util.pipefd[0]);
 			dup2(child_util.childfd[0], STDIN_FILENO);
 			dup2(child_util.childfd[1], STDOUT_FILENO);
-			close(child_util.pipefd[1]); // 리다이렉션 끝났으니까 닫아도 된다
-			// 아직 이전 자식의 출력이 끝나지 않았을 수 있으므로 prev_pipe는 닫지 않는다
+			close(child_util.pipefd[1]);
 			execute_child(blackhole, child_util.pipe_i);
 		}
-		else // 부모
+		else
 		{
 			if (child_util.pipe_i == blackhole->pipe_cnt)
 				child_util.last_child_pid = pid;
 			close(child_util.pipefd[1]);
-			if (child_util.pipe_i != 0) // 첫번째 block이 아닌 경우에는 저장해둔 prev_pipe삭제
+			if (child_util.pipe_i != 0)
 				close(child_util.prev_pipe);
 			if (child_util.pipe_i != blackhole->pipe_cnt)
 				child_util.prev_pipe = dup(child_util.pipefd[0]);
@@ -65,16 +65,30 @@ void	make_child(t_blackhole *blackhole)
 			child_util.pipe_i++;
 		}
 	}
-	set_terminal(1); // 시그널 입력 시 제어문자 표시
-	signal(SIGINT, ignore_signal); // 자식에서는 SIGINT 넣으면 종료되고 부모에서는 개행만 발생
+	set_terminal(1);
+	signal(SIGINT, ignore_signal);
 	pid = 0;
-	while (pid != -1) // 실행시킨 자식 수 만큼만 wait하기
+	while (pid != -1)
 	{
 		pid = waitpid(-1, &status, 0);
 		if (child_util.last_child_pid != -1 && pid == child_util.last_child_pid)
 			child_util.last_child_status = status;
 	}
 	ft_handle_last_status(child_util.last_child_status, blackhole);
+}
+
+static void	ft_parent_connect_pipe(t_child_util *child_u,
+			t_blackhole *blk, int pid)
+{
+	if (child_u->pipe_i == blk->pipe_cnt)
+		child_u->last_child_pid = pid;
+	close(child_u->pipefd[1]);
+	if (child_u->pipe_i != 0)
+		close(child_u->prev_pipe);
+	if (child_u->pipe_i != blk->pipe_cnt)
+		child_u->prev_pipe = dup(child_u->pipefd[0]);
+	close(child_u->pipefd[0]);
+	child_u->pipe_i++;
 }
 
 static void	ft_handle_last_status(int last_status, t_blackhole *blackhole)
@@ -87,24 +101,25 @@ static void	ft_handle_last_status(int last_status, t_blackhole *blackhole)
 	else if (status_signal != 0x7f)
 	{
 		if (status_signal == 3)
-			write(STDERR_FILENO, "Quit: 3\n", 8);
+			write(2, "Quit: 3\n", 8);
 		blackhole->exit_code = (status_signal + 128);
 	}
 }
 
 static void	execute_child(t_blackhole *blackhole, int pipe_i)
 {
-	const int	cmd_type = check_cmd_type(blackhole->parsed_input[pipe_i].cmd_list->head);
-	int			exit_code;
+	const int	cmd_type = check_cmd_type(
+			blackhole->parsed_input[pipe_i].cmd_list->head);
 
 	if (cmd_type <= 6)
 	{
 		execute_builtin(blackhole, cmd_type);
-		exit(EXIT_SUCCESS); //TODO exit코드 처리
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
-		exit_code = execute_nbuiltin(blackhole->parsed_input[pipe_i].cmd_list, blackhole->env_list);
-		exit(exit_code);
+		execute_nbuiltin(
+			blackhole->parsed_input[pipe_i].cmd_list, blackhole->env_list);
+		exit(EXIT_SUCCESS);
 	}
 }

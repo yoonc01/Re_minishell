@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_fork.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 15:06:53 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 16:57:19 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ static int	redir_input(t_inner_block_list *redirect_list,
 	fd = -1;
 	flag = 0;
 	cur_redir = redirect_list->head;
-	// TODO file open error
 	while (cur_redir)
 	{
 		if (cur_redir->type == WORD)
@@ -57,11 +56,10 @@ static int	redir_input(t_inner_block_list *redirect_list,
 					return (1);
 				}
 			}
-			else if (flag == HEREDOC) // TODO HEREDOC 출력 형식 앞에 > 붙여줘야 함
+			else if (flag == HEREDOC)
 			{
 				if (fd > 0)
 					close(fd);
-				// ft_heredoc(&fd, cur_redir->str);
 				fd = open("/var/tmp/tmp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 				heredoc_sigint = ft_heredoc(cur_redir->str, fd);
 				if (heredoc_sigint == 1)
@@ -122,6 +120,7 @@ static int	redir_output(t_inner_block_list *redirect_list,
 	}
 	if (fd >= 0)
 		child_util->childfd[1] = fd;
+	return (0);
 }
 
 static void	set_pipe(t_child_util *child_util)

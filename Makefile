@@ -1,6 +1,6 @@
 NAME = minishell
 cc = cc
-CFLAGS = -g
+CFLAGS = -g -Wall -Werror -Wextra
 RM = rm -rf
 
 LIB_DIR = ./lib/

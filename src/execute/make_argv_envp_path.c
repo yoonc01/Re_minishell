@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_argv_envp_path.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:37:25 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 15:02:08 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 16:48:39 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)
 	char	*slash_cmd;
 	int		path_i;
 	char	*join_path_cmd;
-	char	*cur_cmd;
 
 	path_i = 0;
 	path_env = get_env("PATH", env_list);
@@ -69,7 +68,7 @@ char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)
 	{
 		join_path_cmd = ft_strjoin(path_arr[path_i], slash_cmd);
 		free(path_arr[path_i]);
-		if (!access(join_path_cmd, X_OK)) // TODO: unset PATH 할 경우 고려
+		if (!access(join_path_cmd, X_OK))
 		{
 			free(slash_cmd);
 			return (join_path_cmd);
@@ -77,7 +76,5 @@ char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)
 		free(join_path_cmd);
 		path_i++;
 	}
-	cur_cmd = ft_strjoin(getcwd(NULL, 0), slash_cmd);
-	free(slash_cmd);
-	return (cur_cmd);
+	return (slash_cmd);
 }
