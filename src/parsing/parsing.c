@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 17:48:07 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 16:20:30 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static int	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 {
 	t_inner_block_list	*cmd_list;
 	t_inner_block		*new_node;
-	t_inner_block		*current_node;
 	char				*cmd;
 
 	cmd_list = blackhole->parsed_input[block_i].cmd_list;
@@ -36,7 +35,6 @@ static int	put_block_redirect(t_deque *tokens,
 	t_inner_block_list	*redirection_list;
 	t_inner_block		*new_node_redirection;
 	t_inner_block		*new_node_file;
-	t_inner_block		*current_node;
 
 	redirection_list = blackhole->parsed_input[block_i].redirection_list;
 	if (tokens->front->next == NULL || tokens->front->next->token_type != WORD)

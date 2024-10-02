@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 18:17:05 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:33:00 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 16:20:11 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	my_strcmp(char *s1, char *s2)
 
 char	*ft_strnjoin(char *dst, char *attach, size_t att_size)
 {
-	size_t	idx;
 	char	*new_dst;
 
 	new_dst = (char *)malloc(sizeof(char) * (ft_strlen(dst) + att_size + 1));
@@ -52,5 +51,5 @@ char	*ft_strnjoin(char *dst, char *attach, size_t att_size)
 
 int	ft_isspace(char c)
 {
-	return (9 <= c && c <= 13 || c == ' ');
+	return ((9 <= c && c <= 13) || c == ' ');
 }

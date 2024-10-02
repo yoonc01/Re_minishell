@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:28:46 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 14:58:05 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 17:01:31 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 static void	sigint_heredoc_parent(int signum);
 
-int	ft_heredoc(char *delimeter, int fd) // 여기서 fork 뜨고 자식이 heredoc받기
+int	ft_heredoc(char *delimeter, int fd)
 {
 	char	*heredoc_str;
 	int		pid;
-	int		h_exitcode;
 	int		status;
 
 	pid = fork();
@@ -44,9 +43,12 @@ int	ft_heredoc(char *delimeter, int fd) // 여기서 fork 뜨고 자식이 hered
 
 static void	sigint_heredoc_parent(int signum)
 {
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 1);
+	if (signum == SIGINT)
+	{
+		write(STDOUT_FILENO, "\n\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 1);
+	}
 }
 
 char	*get_heredoc_input(char *delimeter)

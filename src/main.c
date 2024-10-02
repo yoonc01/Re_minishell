@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 17:58:10 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 16:38:44 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ static int	rl_gets(t_blackhole *blackhole)
 	}
 	else if (!command)
 	{
-		printf("\033[uexit\n");
-		return (0);
+		printf("\033[u\033[1B\033[1Aexit\n");
+		exit(0);
 	}
 	free(command);
 	return (1);
@@ -54,7 +54,7 @@ int	main(int ac, char **av, char **env)
 {
 	t_blackhole	*blackhole;
 
-	if (ac != 1)
+	if (ac != 1 || av[1])
 		argc_err();
 	blackhole = (t_blackhole *)malloc(sizeof(t_blackhole));
 	if (blackhole == NULL)

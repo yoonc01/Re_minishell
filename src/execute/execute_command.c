@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 15:17:59 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 18:22:57 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	execute_command(t_blackhole *blackhole)
 	int		head_cmd_type;
 	int		tmp_std_in;
 	int		tmp_std_out;
-	int		redir_err;
+	int		red_err;
 
 	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
 	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 7)
 	{
-		tmp_std_in = dup(STDIN_FILENO);// save in out default fd
+		tmp_std_in = dup(STDIN_FILENO);
 		tmp_std_out = dup(STDOUT_FILENO);
-		redir_err = set_redir_no_fork(blackhole->parsed_input->redirection_list);
-		if (redir_err == 1)
+		red_err = set_redir_no_fork(blackhole->parsed_input->redirection_list);
+		if (red_err == 1)
 		{
 			blackhole->exit_code = 1;
 			return ;
@@ -34,7 +34,7 @@ void	execute_command(t_blackhole *blackhole)
 			blackhole->exit_code = 0;
 		else
 			execute_builtin(blackhole, head_cmd_type);
-		dup2(tmp_std_in, STDIN_FILENO);// restore in out default fd
+		dup2(tmp_std_in, STDIN_FILENO);
 		dup2(tmp_std_out, STDOUT_FILENO);
 	}
 	else
