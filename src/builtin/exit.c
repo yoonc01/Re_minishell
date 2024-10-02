@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 15:33:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:22:38 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 06:29:56 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static int	ft_alldigit(const char *str)
 {
+	if (*str == '+' || *str == '-')
+		str++;
 	while (*str != '\0')
 	{
 		if (!ft_isdigit(*str))
