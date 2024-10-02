@@ -6,14 +6,15 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 12:24:51 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 17:18:23 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/02 18:17:41 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	redir_in_nfork(t_inner_block *redirect_block, int flag);
-static int	redir_out_no_fork(t_inner_block *redirect_block, int flag);
+static int	redir_out_nfork(t_inner_block *redirect_block, int flag);
+static void	redir_out_nfork_util(t_inner_block **curr_redir, int *flag);
 
 int	set_redir_no_fork(t_inner_block_list *redirect_list)
 {
@@ -38,14 +39,17 @@ int	set_redir_no_fork(t_inner_block_list *redirect_list)
 	flag = 0;
 	curr_redir = redirect_list->head;
 	while (curr_redir)
-	{
-		if (curr_redir->type == WORD && flag >= 4)
-			redir_out_no_fork(curr_redir, flag);
-		else
-			flag = curr_redir->type;
-		curr_redir = curr_redir->next;
-	}
+		redir_out_nfork_util(&curr_redir, &flag);
 	return (0);
+}
+
+static void	redir_out_nfork_util(t_inner_block **curr_redir, int *flag)
+{
+	if ((*curr_redir)->type == WORD && *flag >= 4)
+		redir_out_nfork(*curr_redir, *flag);
+	else
+		*flag = (*curr_redir)->type;
+	*curr_redir = (*curr_redir)->next;
 }
 
 static int	redir_in_nfork(t_inner_block *redirect_block, int flag)
@@ -77,7 +81,7 @@ static int	redir_in_nfork(t_inner_block *redirect_block, int flag)
 	return (0);
 }
 
-static int	redir_out_no_fork(t_inner_block *redirect_block, int flag)
+static int	redir_out_nfork(t_inner_block *redirect_block, int flag)
 {
 	int	fd;
 

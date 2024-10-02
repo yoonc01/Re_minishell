@@ -48,12 +48,14 @@ BUILTIN_LIST = cd.c\
 
 EXECUTE_DIR = $(SRC_DIR)execute
 EXECUTE_LIST = make_child.c\
+			make_child_util.c\
 			execute_command.c\
 			make_argv_envp_path.c\
 			heredoc.c\
 			heredoc_utils.c\
 			redirect_no_fork.c\
 			redirect_fork.c\
+			redirect_fork_util.c\
 			err_exit.c
 
 SRCS = $(addprefix $(SRC_DIR), $(SRCS_LIST)) $(addprefix $(PARSING_DIR), $(PARSING_LIST)) $(addprefix $(BUILTIN_DIR), $(BUILTIN_LIST)) $(addprefix $(EXECUTE_DIR), $(EXECUTE_LIST))

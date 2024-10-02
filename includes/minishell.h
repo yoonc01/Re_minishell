@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 15:17:12 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/02 18:44:16 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,5 +227,10 @@ int					set_child_redir(t_inner_block_list *redirect_list,
 int					ft_heredoc(char *delimeter, int fd);
 
 void				err_exit(char *field1, char *field2);
+
+void				execute_child(t_blackhole *blackhole, int pipe_i);
+
+int					redir_out_fork_word(int *flag,
+						t_inner_block *cur_redir, int *fd);
 
 #endif
