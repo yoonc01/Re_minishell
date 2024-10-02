@@ -107,7 +107,10 @@ void	parsing(char *input, t_blackhole *blackhole)
 	blackhole->pipe_cnt = 0;
 	tokens = tokenize(input, &blackhole->pipe_cnt);
 	if (tokens == NULL)
+	{
+		parsing_error(tokens, blackhole);
 		return ;
+	}
 	parsing_block(tokens, blackhole);
 	free(tokens);
 }
