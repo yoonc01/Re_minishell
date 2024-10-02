@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 18:06:01 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/02 21:29:56 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ void	make_child(t_blackhole *blackhole)
 	child_util.last_child_status = -1;
 	while (child_util.pipe_i <= blackhole->pipe_cnt)
 	{
-		if (ft_redirect_fork(&child_util, blackhole))
-			break ;
+		ft_redirect_fork(&child_util, blackhole);
 	}
 	set_terminal(1);
 	signal(SIGINT, ignore_signal);
@@ -49,17 +48,16 @@ void	make_child(t_blackhole *blackhole)
 
 static int	ft_redirect_fork(t_child_util *child_util, t_blackhole *blackhole)
 {
-	int	redir_err;
 	int	pid;
 
 	pipe(child_util->pipefd);
 	child_util->childfd[0] = STDIN_FILENO;
 	child_util->childfd[1] = STDOUT_FILENO;
-	redir_err = set_child_redir(
+	if (set_child_redir(
 			blackhole->parsed_input[child_util->pipe_i].redirection_list,
-			child_util);
-	if (redir_err == 1)
+			child_util) == 1)
 	{
+		child_util->pipe_i++;
 		blackhole->exit_code = 1;
 		return (1);
 	}
