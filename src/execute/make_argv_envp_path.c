@@ -6,11 +6,11 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:37:25 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/01 01:29:38 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/02 15:02:08 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 char	**make_argv(t_inner_block_list *cmd_list)
 {
@@ -20,7 +20,7 @@ char	**make_argv(t_inner_block_list *cmd_list)
 
 	argv_i = 0;
 	cur_argv = cmd_list->head;
-	argv = (char **)malloc(sizeof(char *)*(cmd_list->size + 1));
+	argv = (char **)malloc(sizeof(char *) * (cmd_list->size + 1));
 	while (argv_i < cmd_list->size)
 	{
 		argv[argv_i] = ft_strdup(cur_argv->str);
@@ -28,7 +28,7 @@ char	**make_argv(t_inner_block_list *cmd_list)
 		cur_argv = cur_argv->next;
 	}
 	argv[argv_i] = NULL;
-	return(argv);
+	return (argv);
 }
 
 char	**make_envp(t_env_list *envp_list)
@@ -39,7 +39,7 @@ char	**make_envp(t_env_list *envp_list)
 	char		*tmp_str;
 
 	env_i = 0;
-	env_arr = (char **)malloc((envp_list->size+1) * sizeof(char *));
+	env_arr = (char **)malloc((envp_list->size + 1) * sizeof(char *));
 	cur_env = envp_list->head;
 	while (env_i < envp_list->size)
 	{
@@ -79,5 +79,5 @@ char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)
 	}
 	cur_cmd = ft_strjoin(getcwd(NULL, 0), slash_cmd);
 	free(slash_cmd);
-	return(cur_cmd);
+	return (cur_cmd);
 }

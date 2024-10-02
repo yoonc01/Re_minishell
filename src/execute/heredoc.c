@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:28:46 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/30 19:04:53 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/02 14:58:05 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,21 +57,21 @@ char	*get_heredoc_input(char *delimeter)
 	char	*input_tmp;
 
 	input = (char *)malloc(sizeof(char));
-	if (!input);
-		// malloc_err();
+	if (!input)
+		malloc_fail();
 	input[0] = 0;
 	while (1)
 	{
 		line = readline("> ");
 		if (!ft_strncmp(line, delimeter, ft_strlen(delimeter) + 1))
-			break;
+			break ;
 		line_nl = ft_strjoin(line, "\n");
 		input_tmp = ft_strjoin(input, line_nl);
 		free(input);
 		input = input_tmp;
 		free(line);
 		free(line_nl);
-		}
+	}
 	free(delimeter);
 	free(line);
 	return (input);

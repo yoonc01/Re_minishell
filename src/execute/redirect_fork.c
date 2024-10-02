@@ -6,7 +6,7 @@
 /*   By: youngho <youngho@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/01 00:35:27 by youngho          ###   ########.fr       */
+/*   Updated: 2024/10/02 15:06:53 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int	set_child_redir(t_inner_block_list *redirect_list, t_child_util *child_util)
 	return (0);
 }
 
-static int	redir_input(t_inner_block_list *redirect_list, t_child_util *child_util)
+static int	redir_input(t_inner_block_list *redirect_list,
+				t_child_util *child_util)
 {
 	int				fd;
 	int				flag;
@@ -41,7 +42,7 @@ static int	redir_input(t_inner_block_list *redirect_list, t_child_util *child_ut
 	flag = 0;
 	cur_redir = redirect_list->head;
 	// TODO file open error
-	while(cur_redir)
+	while (cur_redir)
 	{
 		if (cur_redir->type == WORD)
 		{
@@ -56,7 +57,7 @@ static int	redir_input(t_inner_block_list *redirect_list, t_child_util *child_ut
 					return (1);
 				}
 			}
-			else if (flag == HEREDOC)// TODO HEREDOC 출력 형식 앞에 > 붙여줘야 함
+			else if (flag == HEREDOC) // TODO HEREDOC 출력 형식 앞에 > 붙여줘야 함
 			{
 				if (fd > 0)
 					close(fd);
@@ -78,9 +79,8 @@ static int	redir_input(t_inner_block_list *redirect_list, t_child_util *child_ut
 	return (0);
 }
 
-
-
-static int	redir_output(t_inner_block_list *redirect_list, t_child_util *child_util)
+static int	redir_output(t_inner_block_list *redirect_list,
+				t_child_util *child_util)
 {
 	int				fd;
 	int				flag;
@@ -89,7 +89,7 @@ static int	redir_output(t_inner_block_list *redirect_list, t_child_util *child_u
 	flag = 0;
 	fd = -1;
 	cur_redir = redirect_list->head;
-	while(cur_redir)
+	while (cur_redir)
 	{
 		if (cur_redir->type == WORD)
 		{
