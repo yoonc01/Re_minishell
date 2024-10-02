@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 12:24:51 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 18:17:41 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 06:14:18 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,50 @@ static int	redir_in_nfork(t_inner_block *redirect_block, int flag);
 static int	redir_out_nfork(t_inner_block *redirect_block, int flag);
 static void	redir_out_nfork_util(t_inner_block **curr_redir, int *flag);
 
-int	set_redir_no_fork(t_inner_block_list *redirect_list)
+// int	set_redir_no_fork(t_inner_block_list *redirect_list)
+// {
+// 	int				flag;
+// 	t_inner_block	*curr_redir;
+// 	int				redir_err;
+
+// 	flag = 0;
+// 	curr_redir = redirect_list->head;
+// 	while (curr_redir)
+// 	{
+// 		printf("%s %d\n", curr_redir->str, curr_redir->type);
+// 		if (curr_redir->type == WORD && flag <= 3)
+// 		{
+// 			redir_err = redir_in_nfork(curr_redir, flag);
+// 			if (redir_err == 1)
+// 				return (1);
+// 		}
+// 		else
+// 			flag = curr_redir->type;
+// 		curr_redir = curr_redir->next;
+// 	}
+// 	flag = 0;
+// 	curr_redir = redirect_list->head;
+// 	while (curr_redir)
+// 		redir_out_nfork_util(&curr_redir, &flag);
+// 	return (0);
+// }
+
+int	set_redir_no_fork(t_inner_block_list *redir_list)
 {
 	int				flag;
 	t_inner_block	*curr_redir;
 	int				redir_err;
+	t_child_util	child_util;
 
 	flag = 0;
-	curr_redir = redirect_list->head;
-	while (curr_redir)
-	{
-		if (curr_redir->type == WORD && flag <= 3)
-		{
-			redir_err = redir_in_nfork(curr_redir, flag);
-			if (redir_err == 1)
-				return (1);
-		}
-		else
-			flag = curr_redir->type;
-		curr_redir = curr_redir->next;
-	}
-	flag = 0;
-	curr_redir = redirect_list->head;
-	while (curr_redir)
-		redir_out_nfork_util(&curr_redir, &flag);
+	child_util.pipe_i = 0;
+	child_util.pipecnt = 0;
+	child_util.childfd[0] = STDIN_FILENO;
+	child_util.childfd[1] = STDOUT_FILENO;
+	if (set_child_redir(redir_list, &child_util))
+		return (1);
+	dup2(child_util.childfd[0], STDIN_FILENO);
+	dup2(child_util.childfd[1], STDOUT_FILENO);
 	return (0);
 }
 

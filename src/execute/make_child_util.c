@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:04:20 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 18:39:10 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 00:54:14 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	execute_child(t_blackhole *blackhole, int pipe_i)
 
 	if (cmd_type <= 6)
 	{
-		execute_builtin(blackhole, cmd_type);
+		execute_builtin(blackhole, cmd_type, pipe_i);
 		exit(EXIT_SUCCESS);
 	}
 	else

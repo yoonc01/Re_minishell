@@ -3,29 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/02 19:32:25 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 05:53:29 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// void	execute_command(t_blackhole *blackhole)
+// {
+// 	int		head_cmd_type;
+// 	int		tmp_std_in;
+// 	int		tmp_std_out;
+// 	int		red_err;
+
+// 	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
+// 	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 7)
+// 	{
+// 		tmp_std_in = dup(STDIN_FILENO);
+// 		tmp_std_out = dup(STDOUT_FILENO);
+// 		red_err = set_redir_no_fork(blackhole->parsed_input->redirection_list);
+// 		if (red_err == 1)
+// 		{
+// 			blackhole->exit_code = 1;
+// 			return ;
+// 		}
+// 		if (head_cmd_type == B_NULL)
+// 			blackhole->exit_code = 0;
+// 		else
+// 			execute_builtin(blackhole, head_cmd_type, 0);
+// 		dup2(tmp_std_in, STDIN_FILENO);
+// 		dup2(tmp_std_out, STDOUT_FILENO);
+// 	}
+// 	else
+// 		make_child(blackhole);
+// }
 
 void	execute_command(t_blackhole *blackhole)
 {
 	int		head_cmd_type;
 	int		tmp_std_in;
 	int		tmp_std_out;
-	int		red_err;
 
 	head_cmd_type = check_cmd_type(blackhole->parsed_input->cmd_list->head);
 	if (blackhole->pipe_cnt == 0 && head_cmd_type <= 7)
 	{
 		tmp_std_in = dup(STDIN_FILENO);
 		tmp_std_out = dup(STDOUT_FILENO);
-		red_err = set_redir_no_fork(blackhole->parsed_input->redirection_list);
-		if (red_err == 1)
+		if (set_redir_no_fork(blackhole->parsed_input->redirection_list) == 1)
 		{
 			blackhole->exit_code = 1;
 			return ;
@@ -33,7 +60,7 @@ void	execute_command(t_blackhole *blackhole)
 		if (head_cmd_type == B_NULL)
 			blackhole->exit_code = 0;
 		else
-			execute_builtin(blackhole, head_cmd_type);
+			execute_builtin(blackhole, head_cmd_type, 0);
 		dup2(tmp_std_in, STDIN_FILENO);
 		dup2(tmp_std_out, STDOUT_FILENO);
 	}
@@ -66,10 +93,10 @@ int	check_cmd_type(t_inner_block *cur_cmd)
 	return (type);
 }
 
-void	execute_builtin(t_blackhole *blackhole, int cmd_type)
+void	execute_builtin(t_blackhole *blackhole, int cmd_type, int pipe_i)
 {
 	if (cmd_type == B_ECHO)
-		blackhole->exit_code = ft_echo(blackhole);
+		blackhole->exit_code = ft_echo(blackhole, pipe_i);
 	else if (cmd_type == B_CD)
 		blackhole->exit_code = ft_cd(blackhole);
 	else if (cmd_type == B_PWD)

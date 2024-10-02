@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:47:46 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:21:38 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 00:56:55 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ static int	check_no_new_line(const char *str)
 	return (0);
 }
 
-int	ft_echo(t_blackhole *blackhole)
+int	ft_echo(t_blackhole *blackhole, int pipe_i)
 {
 	char			*str;
 	int				new_line;
 	int				is_option;
 	t_inner_block	*current_node;
 
-	current_node = blackhole->parsed_input->cmd_list->head->next;
+	current_node = blackhole->parsed_input[pipe_i].cmd_list->head->next;
 	new_line = 1;
 	is_option = 1;
 	while (current_node != NULL)

@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 18:06:01 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 05:27:59 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static void	ft_parent_after_fork(t_child_util *child_u,
 				t_blackhole *blk, int pid);
 static void	ft_child_after_fork(t_child_util *child_u,
 				t_blackhole *blk);
-static int	ft_redirect_fork(t_child_util *child_util, t_blackhole *blackhole);
+static void	ft_redirect_fork(t_child_util *child_util, t_blackhole *blackhole);
+static void	ft_set_childfd_pipe(t_child_util *child_util);
 
 void	make_child(t_blackhole *blackhole)
 {
@@ -31,10 +32,7 @@ void	make_child(t_blackhole *blackhole)
 	child_util.last_child_pid = -1;
 	child_util.last_child_status = -1;
 	while (child_util.pipe_i <= blackhole->pipe_cnt)
-	{
-		if (ft_redirect_fork(&child_util, blackhole))
-			break ;
-	}
+		ft_redirect_fork(&child_util, blackhole);
 	set_terminal(1);
 	signal(SIGINT, ignore_signal);
 	pid = 0;
@@ -47,21 +45,25 @@ void	make_child(t_blackhole *blackhole)
 	ft_handle_last_status(child_util.last_child_status, blackhole);
 }
 
-static int	ft_redirect_fork(t_child_util *child_util, t_blackhole *blackhole)
+static void	ft_redirect_fork(t_child_util *child_util, t_blackhole *blackhole)
 {
-	int	redir_err;
 	int	pid;
 
-	pipe(child_util->pipefd);
-	child_util->childfd[0] = STDIN_FILENO;
-	child_util->childfd[1] = STDOUT_FILENO;
-	redir_err = set_child_redir(
+	ft_set_childfd_pipe(child_util);
+	if (set_child_redir(
 			blackhole->parsed_input[child_util->pipe_i].redirection_list,
-			child_util);
-	if (redir_err == 1)
+			child_util) == 1)
 	{
+		if (child_util->pipe_i != 0)
+			close(child_util->prev_pipe);
+		if (child_util->pipe_i != child_util->pipecnt)
+		{
+			close(child_util->pipefd[1]);
+			child_util->prev_pipe = child_util->pipefd[0];
+		}
+		child_util->pipe_i++;
 		blackhole->exit_code = 1;
-		return (1);
+		return ;
 	}
 	signal(SIGQUIT, ignore_signal);
 	pid = fork();
@@ -69,7 +71,17 @@ static int	ft_redirect_fork(t_child_util *child_util, t_blackhole *blackhole)
 		ft_child_after_fork(child_util, blackhole);
 	else
 		ft_parent_after_fork(child_util, blackhole, pid);
-	return (0);
+}
+
+static void	ft_set_childfd_pipe(t_child_util *child_util)
+{
+	pipe(child_util->pipefd);
+	child_util->childfd[0] = STDIN_FILENO;
+	child_util->childfd[1] = STDOUT_FILENO;
+	if (child_util->pipe_i != 0)
+		child_util->childfd[0] = child_util->prev_pipe;
+	if (child_util->pipe_i != child_util->pipecnt)
+		child_util->childfd[1] = child_util->pipefd[1];
 }
 
 static void	ft_parent_after_fork(t_child_util *child_u,

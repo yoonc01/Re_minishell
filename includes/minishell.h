@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 18:44:16 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 03:12:15 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,14 +197,15 @@ int					ft_env(t_blackhole *blackhole);
 int					ft_export(t_blackhole *blackhole);
 int					ft_pwd(void);
 int					ft_cd(t_blackhole *blackhole);
-int					ft_echo(t_blackhole *blackhole);
+int					ft_echo(t_blackhole *blackhole, int pipe_i);
 int					ft_exit(t_blackhole *blackhole);
 
 void				make_child(t_blackhole *blackhole);
 
 void				execute_command(t_blackhole *blackhole);
 int					check_cmd_type(t_inner_block *cur_cmd);
-void				execute_builtin(t_blackhole *blackhole, int cmd_type);
+void				execute_builtin(t_blackhole *blackhole,
+						int cmd_type, int pipe_i);
 int					execute_nbuiltin(t_inner_block_list *cmd_list,
 						t_env_list *env_list);
 
@@ -229,8 +230,5 @@ int					ft_heredoc(char *delimeter, int fd);
 void				err_exit(char *field1, char *field2);
 
 void				execute_child(t_blackhole *blackhole, int pipe_i);
-
-int					redir_out_fork_word(int *flag,
-						t_inner_block *cur_redir, int *fd);
 
 #endif
