@@ -6,11 +6,13 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 09:31:02 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 10:53:06 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	isdirectory(char *path);
 
 void	execute_command(t_blackhole *blackhole)
 {
@@ -88,8 +90,13 @@ int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 	char	**envp;
 	char	*path;
 
-	argv = make_argv(cmd_list);
+	if (isdirectory(cmd_list->head->str))
+	{
+		err_exit(cmd_list->head->str, "is a directory");
+		return (126);
+	}
 	envp = make_envp(env_list);
+	argv = make_argv(cmd_list);
 	path = make_cmd_path(cmd_list, env_list);
 	execve(path, argv, envp);
 	if (errno == ENOENT)
@@ -99,4 +106,12 @@ int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 	}
 	err_exit(argv[0], strerror(errno));
 	return (EXIT_FAILURE);
+}
+
+static int	isdirectory(char *path)
+{
+	struct stat	path_stat;
+
+	stat(path, &path_stat);
+	return ((path_stat.st_mode & 0170000) == 0040000);
 }
