@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 10:18:27 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 15:09:16 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,19 @@ static int	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 	char				*cmd;
 
 	cmd_list = blackhole->parsed_input[block_i].cmd_list;
-	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
 	cmd = process(tokens->front->str, blackhole, 0);
 	if (cmd == NULL)
 		return (0);
-	new_node->str = cmd;
-	new_node->type = tokens->front->token_type;
-	new_node->next = NULL;
-	add_inner_block(cmd_list, new_node);
+	if (!(my_strcmp(cmd, "") == 0 && ft_strchr(tokens->front->str, '$')))
+	{
+		new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
+		if (new_node == NULL)
+			malloc_fail();
+		new_node->str = cmd;
+		new_node->type = tokens->front->token_type;
+		new_node->next = NULL;
+		add_inner_block(cmd_list, new_node);
+	}
 	delete_front(tokens);
 	return (1);
 }
