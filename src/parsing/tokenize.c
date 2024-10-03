@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 10:56:19 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 15:15:37 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ static char	*process_operator(t_deque *tokens, char *start, int *pipecnt)
 		(*pipecnt)++;
 	}
 	tmp = (char *)malloc(sizeof(char) * (len + 1));
+	if (tmp == NULL)
+		malloc_fail();
 	ft_strlcpy(tmp, start, len + 1);
 	insert_rear(tokens, tmp, token_type);
 	return (start + len);
@@ -61,6 +63,8 @@ static char	*process_word(t_deque *tokens, char *start)
 		idx++;
 	}
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
+	if (tmp == NULL)
+		malloc_fail();
 	ft_strlcpy(tmp, start, idx - start + 1);
 	insert_rear(tokens, tmp, WORD);
 	return (idx);

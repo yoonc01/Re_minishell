@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 10:18:27 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 17:32:50 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,18 @@ static int	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 	char				*cmd;
 
 	cmd_list = blackhole->parsed_input[block_i].cmd_list;
-	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
 	cmd = process(tokens->front->str, blackhole, 0);
 	if (cmd == NULL)
 		return (0);
+	if ((my_strcmp(cmd, "") == 0 && ft_strchr(tokens->front->str, '$')))
+	{
+		delete_front(tokens);
+		free(cmd);
+		return (1);
+	}
+	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
+	if (new_node == NULL)
+		malloc_fail();
 	new_node->str = cmd;
 	new_node->type = tokens->front->token_type;
 	new_node->next = NULL;
@@ -42,7 +50,11 @@ static int	put_block_redirect(t_deque *tokens,
 	if (tokens->front->next == NULL || tokens->front->next->token_type != WORD)
 		return (parsing_error(tokens, blackhole));
 	new_node_redirection = (t_inner_block *)malloc(sizeof(t_inner_block));
+	if (new_node_redirection == NULL)
+		malloc_fail();
 	new_node_file = (t_inner_block *)malloc(sizeof(t_inner_block));
+	if (new_node_file == NULL)
+		malloc_fail();
 	new_node_redirection->str = ft_strdup(tokens->front->str);
 	new_node_redirection->type = tokens->front->token_type;
 	new_node_redirection->next = new_node_file;

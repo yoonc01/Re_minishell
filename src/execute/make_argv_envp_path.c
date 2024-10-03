@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_argv_envp_path.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:37:25 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 10:49:00 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 15:14:38 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ char	**make_argv(t_inner_block_list *cmd_list)
 	argv_i = 0;
 	cur_argv = cmd_list->head;
 	argv = (char **)malloc(sizeof(char *) * (cmd_list->size + 1));
+	if (argv == NULL)
+		malloc_fail();
 	while (argv_i < cmd_list->size)
 	{
 		argv[argv_i] = ft_strdup(cur_argv->str);
@@ -40,6 +42,8 @@ char	**make_envp(t_env_list *envp_list)
 
 	env_i = 0;
 	env_arr = (char **)malloc((envp_list->size + 1) * sizeof(char *));
+	if (env_arr == NULL)
+		malloc_fail();
 	cur_env = envp_list->head;
 	while (env_i < envp_list->size)
 	{

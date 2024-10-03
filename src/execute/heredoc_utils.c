@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 17:57:39 by ycho2             #+#    #+#             */
-/*   Updated: 2024/09/23 18:00:50 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 15:14:02 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	out = (char *)malloc(sizeof(char));
 	if (out == NULL)
-		return (NULL);
+		malloc_fail();
 	out[0] = 0;
 	while (1)
 	{
@@ -114,7 +114,7 @@ static char	*gnl_strjoin(char *out, t_buf *buf_case, int attach_len)
 	out_len = ft_strlen(out);
 	concat_str = (char *)malloc(sizeof(char) * (attach_len + out_len + 1));
 	if (!concat_str)
-		return (NULL);
+		malloc_fail();
 	concat_str[0] = 0;
 	ft_strlcat(concat_str, out, out_len + 1);
 	ft_strlcat(concat_str, buf_case->read_buf

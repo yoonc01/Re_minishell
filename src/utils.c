@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 18:17:05 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 16:20:11 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 15:13:28 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*ft_strnjoin(char *dst, char *attach, size_t att_size)
 	char	*new_dst;
 
 	new_dst = (char *)malloc(sizeof(char) * (ft_strlen(dst) + att_size + 1));
+	if (new_dst == NULL)
+		malloc_fail();
 	ft_strlcpy(new_dst, dst, ft_strlen(dst) + 1);
 	ft_strlcat(new_dst, attach, (ft_strlen(dst) + att_size + 1));
 	free(dst);

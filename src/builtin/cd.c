@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:05:39 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 11:50:23 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 12:57:04 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	cd_dir(char *dir)
 	ret = chdir(dir);
 	if (ret < 0)
 	{
-		builtin_error("cd: no such file or directory: ", dir);
+		builtin_error2("cd: ", dir, ": No such file or directory");
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);

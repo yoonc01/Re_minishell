@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 11:03:56 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 14:04:32 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,32 +86,32 @@ void	execute_builtin(t_blackhole *blackhole, int cmd_type, int pipe_i)
 
 int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 {
-	char	**argv;
-	char	**envp;
-	char	*path;
+	char		**argv;
+	char		**envp;
+	char		*path;
+	struct stat	path_stat;
 
 	if (isdirectory(cmd_list->head->str))
 	{
-		err_exit(cmd_list->head->str, "is a directory");
-		return (126);
+		if (stat(cmd_list->head->str, &path_stat) != 0)
+			return (err_exit(cmd_list->head->str,
+					"No such file or directory", 127));
+		if (!(path_stat.st_mode & S_IXUSR))
+			return (err_exit(cmd_list->head->str, "Permission denied", 126));
+		return (err_exit(cmd_list->head->str, "is a directory", 126));
 	}
 	envp = make_envp(env_list);
 	argv = make_argv(cmd_list);
 	path = make_cmd_path(cmd_list, env_list);
 	execve(path, argv, envp);
 	if (errno == ENOENT)
-	{
-		err_exit(argv[0], "command not found");
-		return (127);
-	}
-	err_exit(argv[0], strerror(errno));
-	return (EXIT_FAILURE);
+		return (err_exit(argv[0], "command not found", 127));
+	return (err_exit(argv[0], strerror(errno), EXIT_FAILURE));
 }
 
 static int	isdirectory(char *path)
 {
-	struct stat	path_stat;
-
-	stat(path, &path_stat);
-	return ((path_stat.st_mode & 0170000) == 0040000);
+	if (ft_strncmp(path, "./", 2) == 0 || ft_strncmp(path, "/", 1) == 0)
+		return (1);
+	return (0);
 }

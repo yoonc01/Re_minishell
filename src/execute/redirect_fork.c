@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_fork.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 09:42:16 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 14:04:59 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,7 @@ static int	ft_redir_append(int *fd_out, char *file_name)
 		close(*fd_out);
 	*fd_out = open(file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (*fd_out < 0)
-	{
-		err_exit(file_name, strerror(errno));
-		return (1);
-	}
+		return (err_exit(file_name, strerror(errno), 1));
 	else
 		return (0);
 }
@@ -94,10 +91,7 @@ static int	ft_redir_input(int *fd_in, char *file_name)
 		close(*fd_in);
 	*fd_in = open(file_name, O_RDONLY, 0);
 	if (*fd_in < 0)
-	{
-		err_exit(file_name, strerror(errno));
-		return (1);
-	}
+		return (err_exit(file_name, strerror(errno), 1));
 	else
 		return (0);
 }

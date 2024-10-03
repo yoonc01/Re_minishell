@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:38:59 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 12:01:05 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 12:54:41 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char	*extract_word(char **str)
 	return (result);
 }
 
-static char	*rm_quote_ap_env(char **cmd, t_blackhole *blackhole)
+static char	*rm_quote_ap_env(char **cmd, t_blackhole *blackhole, int is_heredoc)
 {
 	char	*temp;
 	char	*result;
@@ -57,11 +57,9 @@ static char	*rm_quote_ap_env(char **cmd, t_blackhole *blackhole)
 	{
 		temp = remove_quote(cmd, '\"');
 		if (temp == NULL)
-		{
-			write_error("quote");
-			blackhole->exit_code = 258;
 			return (NULL);
-		}
+		else if (is_heredoc)
+			return (temp);
 		result = apply_env(temp, blackhole);
 		free(temp);
 		return (result);
@@ -75,19 +73,23 @@ static char	*rm_quote_ap_env(char **cmd, t_blackhole *blackhole)
 	}
 }
 
+static char	*quote_error(void)
+{
+	write_error("quote");
+	return (NULL);
+}
+
 char	*process(char *cmd, t_blackhole *blackhole, int is_heredoc)
 {
 	char	*result;
 	char	*attach;
 
-	if (is_heredoc)
-		return (ft_strdup(cmd));
 	result = ft_strdup("");
 	while (*cmd != '\0')
 	{
-		attach = rm_quote_ap_env(&cmd, blackhole);
+		attach = rm_quote_ap_env(&cmd, blackhole, is_heredoc);
 		if (attach == NULL)
-			return (NULL);
+			return (quote_error());
 		result = ft_strnjoin(result, attach, ft_strlen(attach));
 		free(attach);
 	}
