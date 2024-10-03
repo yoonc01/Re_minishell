@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 19:10:33 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 05:36:57 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 09:42:16 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 static int	ft_redir_append(int *fd_out, char *file_name);
 static int	ft_redir_heredoc(int *fd_in, char *delimeter);
-static int	ft_redir_output(int *fd_out, char *file_name);
 static int	ft_redir_input(int *fd_in, char *file_name);
 static int	ft_set_child_redir_word(int *flag, int *fd_in,
 				int *fd_out, t_inner_block *cur_redir);
 
-int	set_child_redir(t_inner_block_list *redirect_list,
+int	set_cur_block_redir(t_inner_block_list *redirect_list,
 				t_child_util *child_util)
 {
 	int				fd_out;
@@ -112,18 +111,5 @@ static int	ft_redir_heredoc(int *fd_in, char *delimeter)
 		return (1);
 	close(*fd_in);
 	*fd_in = open("/var/tmp/tmp.txt", O_RDONLY);
-	return (0);
-}
-
-static int	ft_redir_output(int *fd_out, char *file_name)
-{
-	if (*fd_out > 0)
-		close(*fd_out);
-	*fd_out = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (*fd_out < 0)
-	{
-		err_exit(file_name, strerror(errno));
-		return (1);
-	}
 	return (0);
 }

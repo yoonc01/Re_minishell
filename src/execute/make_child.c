@@ -6,13 +6,12 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:39:07 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 05:27:59 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 09:42:16 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_handle_last_status(int last_status, t_blackhole *blackhole);
 static void	ft_parent_after_fork(t_child_util *child_u,
 				t_blackhole *blk, int pid);
 static void	ft_child_after_fork(t_child_util *child_u,
@@ -50,7 +49,7 @@ static void	ft_redirect_fork(t_child_util *child_util, t_blackhole *blackhole)
 	int	pid;
 
 	ft_set_childfd_pipe(child_util);
-	if (set_child_redir(
+	if (set_cur_block_redir(
 			blackhole->parsed_input[child_util->pipe_i].redirection_list,
 			child_util) == 1)
 	{
@@ -106,19 +105,4 @@ static void	ft_child_after_fork(t_child_util *child_u,
 	dup2(child_u->childfd[1], STDOUT_FILENO);
 	close(child_u->pipefd[1]);
 	execute_child(blk, child_u->pipe_i);
-}
-
-static void	ft_handle_last_status(int last_status, t_blackhole *blackhole)
-{
-	int	status_signal;
-
-	status_signal = last_status & 0x7f;
-	if (status_signal == 0)
-		blackhole->exit_code = (last_status >> 8) & 0x000000ff;
-	else if (status_signal != 0x7f)
-	{
-		if (status_signal == 3)
-			write(2, "Quit: 3\n", 8);
-		blackhole->exit_code = (status_signal + 128);
-	}
 }

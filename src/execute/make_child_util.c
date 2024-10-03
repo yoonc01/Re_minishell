@@ -6,7 +6,7 @@
 /*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:04:20 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 00:54:14 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 09:44:37 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,20 @@ void	execute_child(t_blackhole *blackhole, int pipe_i)
 		execute_nbuiltin(
 			blackhole->parsed_input[pipe_i].cmd_list, blackhole->env_list);
 		exit(EXIT_SUCCESS);
+	}
+}
+
+void	ft_handle_last_status(int last_status, t_blackhole *blackhole)
+{
+	int	status_signal;
+
+	status_signal = last_status & 0x7f;
+	if (status_signal == 0)
+		blackhole->exit_code = (last_status >> 8) & 0x000000ff;
+	else if (status_signal != 0x7f)
+	{
+		if (status_signal == 3)
+			write(2, "Quit: 3\n", 8);
+		blackhole->exit_code = (status_signal + 128);
 	}
 }
