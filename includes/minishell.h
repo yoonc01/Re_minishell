@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 10:36:05 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 13:27:42 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,7 @@ int					set_cur_block_redir(t_inner_block_list *redirect_list,
 
 int					ft_heredoc(char *delimeter, int fd);
 
-void				err_exit(char *field1, char *field2);
+int					err_exit(char *field1, char *field2, int return_value);
 
 void				execute_child(t_blackhole *blackhole, int pipe_i);
 void				ft_handle_last_status(
