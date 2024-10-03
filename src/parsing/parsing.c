@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 15:15:12 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 17:29:03 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static int	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 		new_node->next = NULL;
 		add_inner_block(cmd_list, new_node);
 	}
+	else
+		free(cmd);
 	delete_front(tokens);
 	return (1);
 }
