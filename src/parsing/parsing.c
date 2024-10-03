@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 15:09:16 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 15:15:12 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@ static int	put_block_redirect(t_deque *tokens,
 	if (tokens->front->next == NULL || tokens->front->next->token_type != WORD)
 		return (parsing_error(tokens, blackhole));
 	new_node_redirection = (t_inner_block *)malloc(sizeof(t_inner_block));
+	if (new_node_redirection == NULL)
+		malloc_fail();
 	new_node_file = (t_inner_block *)malloc(sizeof(t_inner_block));
+	if (new_node_file == NULL)
+		malloc_fail();
 	new_node_redirection->str = ft_strdup(tokens->front->str);
 	new_node_redirection->type = tokens->front->token_type;
 	new_node_redirection->next = new_node_file;
