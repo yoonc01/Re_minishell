@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:24:29 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 17:57:07 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 11:13:14 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ static char	*get_env_value(char *token_word, size_t *idx,
 	(*idx)++;
 	if (token_word[(*idx)++] == '?')
 		return (ft_itoa(blackhole->exit_code));
-	if (ft_isdigit(token_word[(*idx)++]))
+	if (ft_isdigit(token_word[(*idx)]))
 		return (ft_strdup(""));
 	while (is_valid_env_key(token_word[*idx]))
 		(*idx)++;
 	env_key = my_strndup(token_word + 1, *idx - 1);
 	temp = blackhole->env_list->head;
-	while (temp->next != NULL)
+	while (temp != NULL)
 	{
 		if (my_strcmp(env_key, temp->env_key) == 0)
 		{
