@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 15:33:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 06:29:56 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 11:37:13 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ int	ft_exit(t_blackhole *blackhole)
 	{
 		if (!ft_alldigit(current_node->str))
 		{
-			builtin_error("exit: numeric argument required: ",
-				current_node->str);
+			builtin_error2("minishell: exit: ",
+				current_node->str, ": numeric argument required");
 			exit(255);
 		}
 		if (current_node->next != NULL)
 		{
-			builtin_error("exit: too many arguments", NULL);
+			builtin_error("minishell: exit: too many arguments", NULL);
 			return (EXIT_FAILURE);
 		}
 		exit_code = my_atoi(current_node->str) % 256;

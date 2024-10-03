@@ -6,31 +6,15 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:50:50 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 17:43:14 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 10:56:19 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*process_quote(t_deque *tokens, char *start, char quote)
+static int	is_operator(char c)
 {
-	char	*idx;
-	char	*tmp;
-
-	idx = start + 1;
-	while (*idx != '\0' && *idx != quote)
-		idx++;
-	if (*idx == '\0')
-	{
-		while (tokens->front != NULL)
-			delete_front(tokens);
-		free(tokens);
-		return (0);
-	}
-	tmp = (char *)malloc(sizeof(char) * (idx - start + 2));
-	ft_strlcpy(tmp, start, idx - start + 2);
-	insert_rear(tokens, tmp, WORD);
-	return (idx + 1);
+	return (c == '|' || c == '>' || c == '<');
 }
 
 static char	*process_operator(t_deque *tokens, char *start, int *pipecnt)
@@ -59,12 +43,23 @@ static char	*process_word(t_deque *tokens, char *start)
 {
 	char	*idx;
 	char	*tmp;
+	int		is_single;
+	int		is_double;
 
 	idx = start;
-	while (*idx != '\0' && !ft_isspace(*idx)
-		&& *idx != '|' && *idx != '>' && *idx != '<'
-		&& *idx != '\'' && *idx != '\"')
+	is_single = 0;
+	is_double = 0;
+	while (*idx != '\0')
+	{
+		if (is_double == 0 && *idx == '\'')
+			is_single = !is_single;
+		else if (is_single == 0 && *idx == '\"')
+			is_double = !is_double;
+		else if ((is_single == 0 && is_double == 0))
+			if (ft_isspace(*idx) || is_operator(*idx))
+				break ;
 		idx++;
+	}
 	tmp = (char *)malloc(sizeof(char) * (idx - start + 1));
 	ft_strlcpy(tmp, start, idx - start + 1);
 	insert_rear(tokens, tmp, WORD);
@@ -84,11 +79,7 @@ t_deque	*tokenize(char *input, int *pipecnt)
 			start++;
 		if (*start == '\0')
 			break ;
-		if (*start == '\'')
-			start = process_quote(tokens, start, '\'');
-		else if (*start == '\"')
-			start = process_quote(tokens, start, '\"');
-		else if (*start == '|' || *start == '>' || *start == '<')
+		else if (is_operator(*start))
 			start = process_operator(tokens, start, pipecnt);
 		else
 			start = process_word(tokens, start);

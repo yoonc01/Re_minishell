@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 16:47:34 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:23:00 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 11:37:28 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ int	ft_export(t_blackhole *blackhole)
 	{
 		if (add_env(current_node->str, blackhole->env_list) == 0)
 		{
-			builtin_error("export : not an identifier: ", current_node->str);
+			builtin_error2("minishell: ",
+				current_node->str, ": export : not a valid identifier");
 			return (EXIT_FAILURE);
 		}
 		current_node = current_node->next;
