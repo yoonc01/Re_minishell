@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 17:29:03 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 17:32:50 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,19 @@ static int	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 	cmd = process(tokens->front->str, blackhole, 0);
 	if (cmd == NULL)
 		return (0);
-	if (!(my_strcmp(cmd, "") == 0 && ft_strchr(tokens->front->str, '$')))
+	if ((my_strcmp(cmd, "") == 0 && ft_strchr(tokens->front->str, '$')))
 	{
-		new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
-		if (new_node == NULL)
-			malloc_fail();
-		new_node->str = cmd;
-		new_node->type = tokens->front->token_type;
-		new_node->next = NULL;
-		add_inner_block(cmd_list, new_node);
-	}
-	else
+		delete_front(tokens);
 		free(cmd);
+		return (1);
+	}
+	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
+	if (new_node == NULL)
+		malloc_fail();
+	new_node->str = cmd;
+	new_node->type = tokens->front->token_type;
+	new_node->next = NULL;
+	add_inner_block(cmd_list, new_node);
 	delete_front(tokens);
 	return (1);
 }
