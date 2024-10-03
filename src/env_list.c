@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 12:47:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/09/30 20:27:14 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/03 11:35:17 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	add_env(char *env, t_env_list *env_list)
 	char	*env_value;
 
 	splited_env = ft_split(env, '=');
+	if (splited_env[0] == NULL)
+		return (0);
 	if (check_env_add(splited_env[0]) == 0)
 	{
 		split_free(splited_env);

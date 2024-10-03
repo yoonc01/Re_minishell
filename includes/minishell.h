@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
 /*   Updated: 2024/10/03 10:36:05 by ycho2            ###   ########.fr       */
@@ -172,8 +172,7 @@ void				parsing(char *input, t_blackhole *blackhole);
 
 char				*apply_env(char *token_word, t_blackhole *blackhole);
 
-char				*rm_quote_ap_env(char *cmd,
-						t_blackhole *blackhole, int is_heredoc);
+char				*process(char *cmd, t_blackhole *blackhole, int is_heredoc);
 void				free_parsed_input(t_block *parsed_input, int pipecnt);
 void				free_invalid(t_block *parsed_input,
 						t_deque *tokens, int block_i);
@@ -220,7 +219,9 @@ char				*make_cmd_path(t_inner_block_list *cmd_list,
 						t_env_list *env_list);
 
 int					parsing_error(t_deque *tokens, t_blackhole *blackhole);
+void				write_error(char *type);
 void				builtin_error(char *str, char *token);
+void				builtin_error2(char *str, char *token, char *str2);
 
 int					set_redir_no_fork(t_inner_block_list *redirect_list);
 int					set_cur_block_redir(t_inner_block_list *redirect_list,

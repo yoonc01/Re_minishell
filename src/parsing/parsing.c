@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:48:56 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 16:20:30 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/03 10:18:27 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ static int	put_block_cmd(t_deque *tokens, int block_i, t_blackhole *blackhole)
 
 	cmd_list = blackhole->parsed_input[block_i].cmd_list;
 	new_node = (t_inner_block *)malloc(sizeof(t_inner_block));
-	cmd = rm_quote_ap_env(tokens->front->str, blackhole, 0);
+	cmd = process(tokens->front->str, blackhole, 0);
+	if (cmd == NULL)
+		return (0);
 	new_node->str = cmd;
 	new_node->type = tokens->front->token_type;
 	new_node->next = NULL;
@@ -44,7 +46,7 @@ static int	put_block_redirect(t_deque *tokens,
 	new_node_redirection->str = ft_strdup(tokens->front->str);
 	new_node_redirection->type = tokens->front->token_type;
 	new_node_redirection->next = new_node_file;
-	new_node_file->str = rm_quote_ap_env(tokens->front->next->str,
+	new_node_file->str = process(tokens->front->next->str,
 			blackhole, tokens->front->token_type == HEREDOC);
 	new_node_file->next = NULL;
 	new_node_file->type = tokens->front->next->token_type;
