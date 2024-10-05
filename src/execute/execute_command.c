@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 14:04:32 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/05 11:31:59 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	execute_builtin(t_blackhole *blackhole, int cmd_type, int pipe_i)
 	else if (cmd_type == B_CD)
 		blackhole->exit_code = ft_cd(blackhole);
 	else if (cmd_type == B_PWD)
-		blackhole->exit_code = ft_pwd();
+		blackhole->exit_code = ft_pwd(blackhole);
 	else if (cmd_type == B_EXPORT)
 		blackhole->exit_code = ft_export(blackhole);
 	else if (cmd_type == B_UNSET)

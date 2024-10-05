@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:05:39 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 12:57:04 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/05 12:23:43 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	ft_update_pwd_oldpwd(char *oldpwd,
 				char *pwd, t_blackhole *blackhole);
 static int	cd_dir(char *dir);
 static int	cd_home(t_blackhole *blackhole);
-static int	cd_fail(char *oldpwd);
 
 int	ft_cd(t_blackhole *blackhole)
 {
@@ -25,28 +24,22 @@ int	ft_cd(t_blackhole *blackhole)
 	char			*pwd;
 
 	current_node = blackhole->parsed_input->cmd_list->head->next;
-	oldpwd = getcwd(NULL, 0);
+	oldpwd = get_env("PWD", blackhole->env_list);
 	if (current_node != NULL)
 	{
 		if (cd_dir(current_node->str) == EXIT_FAILURE)
-			return (cd_fail(oldpwd));
+			return (EXIT_FAILURE);
 	}
-	else
-	{
-		if (cd_home(blackhole) == EXIT_FAILURE)
-			return (cd_fail(oldpwd));
-	}
+	else if (cd_home(blackhole) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	pwd = getcwd(NULL, 0);
+	if (pwd == NULL && errno == ENOENT)
+		write(STDERR_FILENO,
+			"cd: error retrieving current directory: getcwd: "
+			"cannot access parent directories: No such file or directory\n",
+			108);
 	ft_update_pwd_oldpwd(oldpwd, pwd, blackhole);
-	free(oldpwd);
-	free(pwd);
 	return (EXIT_SUCCESS);
-}
-
-static int	cd_fail(char *oldpwd)
-{
-	free(oldpwd);
-	return (EXIT_FAILURE);
 }
 
 static int	cd_dir(char *dir)
@@ -79,13 +72,24 @@ static int	cd_home(t_blackhole *blackhole)
 static void	ft_update_pwd_oldpwd(char *oldpwd,
 				char *pwd, t_blackhole *blackhole)
 {
-	char	*addpwd;
-	char	*addoldpwd;
+	char			*temp;
+	char			*addpwd;
+	char			*addoldpwd;
+	t_inner_block	*current_node;
 
+	current_node = blackhole->parsed_input->cmd_list->head->next;
+	if (pwd == NULL && errno == ENOENT)
+	{
+		temp = ft_strjoin(oldpwd, "/");
+		pwd = ft_strjoin(temp, current_node->str);
+		free(temp);
+	}
 	addpwd = ft_strjoin("PWD=", pwd);
 	addoldpwd = ft_strjoin("OLDPWD=", oldpwd);
 	add_env(addpwd, blackhole->env_list);
 	add_env(addoldpwd, blackhole->env_list);
 	free(addpwd);
 	free(addoldpwd);
+	free(pwd);
+	free(oldpwd);
 }
