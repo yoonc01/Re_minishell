@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ycho2 <ycho2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:33:13 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/02 16:38:44 by ycho2            ###   ########.fr       */
+/*   Updated: 2024/10/05 14:56:03 by ycho2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	rl_gets(t_blackhole *blackhole)
 
 	set_terminal(0);
 	signal_default();
-	command = readline("minishell$ \033[s");
+	command = readline("minishell$ ");
 	if (command && *command)
 	{
 		add_history(command);
@@ -43,7 +43,7 @@ static int	rl_gets(t_blackhole *blackhole)
 	}
 	else if (!command)
 	{
-		printf("\033[u\033[1B\033[1Aexit\n");
+		printf("\033[1Bexit\n");
 		exit(0);
 	}
 	free(command);
