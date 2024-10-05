@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:38:59 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 12:54:41 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/05 13:54:06 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,10 @@ static char	*rm_quote_ap_env(char **cmd, t_blackhole *blackhole, int is_heredoc)
 	}
 }
 
-static char	*quote_error(void)
+static char	*quote_error(t_blackhole *blackhole)
 {
 	write_error("quote");
+	blackhole->exit_code = 258;
 	return (NULL);
 }
 
@@ -89,7 +90,7 @@ char	*process(char *cmd, t_blackhole *blackhole, int is_heredoc)
 	{
 		attach = rm_quote_ap_env(&cmd, blackhole, is_heredoc);
 		if (attach == NULL)
-			return (quote_error());
+			return (quote_error(blackhole));
 		result = ft_strnjoin(result, attach, ft_strlen(attach));
 		free(attach);
 	}
