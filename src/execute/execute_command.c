@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/05 13:59:28 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/05 14:11:17 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,8 @@ int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 		execve(cmd_list->head->str, argv, envp);
 	}
 	path = make_cmd_path(cmd_list, env_list);
-	if (!access(path, X_OK) && stat(path, &path_stat) == 0 && S_ISREG(path_stat.st_mode))
+	if (!access(path, X_OK) && \
+		stat(path, &path_stat) == 0 && S_ISREG(path_stat.st_mode))
 		execve(path, argv, envp);
 	else if (errno == ENOENT)
 		return (err_exit(argv[0], "command not found", 127));
