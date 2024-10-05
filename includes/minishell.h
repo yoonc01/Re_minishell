@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 14:17:28 by hyoyoon           #+#    #+#             */
-/*   Updated: 2024/10/03 13:27:42 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/05 11:32:20 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ char				*get_env(char *key, t_env_list *env_list);
 int					ft_unset(t_blackhole *blackhole);
 int					ft_env(t_blackhole *blackhole);
 int					ft_export(t_blackhole *blackhole);
-int					ft_pwd(void);
+int					ft_pwd(t_blackhole *blackhole);
 int					ft_cd(t_blackhole *blackhole);
 int					ft_echo(t_blackhole *blackhole, int pipe_i);
 int					ft_exit(t_blackhole *blackhole);
