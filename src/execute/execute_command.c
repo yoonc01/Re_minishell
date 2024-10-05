@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:54:32 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/05 11:31:59 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/05 13:59:28 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 	char		*path;
 	struct stat	path_stat;
 
+	envp = make_envp(env_list);
+	argv = make_argv(cmd_list);
 	if (isdirectory(cmd_list->head->str))
 	{
 		if (stat(cmd_list->head->str, &path_stat) != 0)
@@ -98,13 +100,14 @@ int	execute_nbuiltin(t_inner_block_list *cmd_list, t_env_list *env_list)
 					"No such file or directory", 127));
 		if (!(path_stat.st_mode & S_IXUSR))
 			return (err_exit(cmd_list->head->str, "Permission denied", 126));
-		return (err_exit(cmd_list->head->str, "is a directory", 126));
+		if ((path_stat.st_mode & 0170000) == 0040000)
+			return (err_exit(cmd_list->head->str, "is a directory", 126));
+		execve(cmd_list->head->str, argv, envp);
 	}
-	envp = make_envp(env_list);
-	argv = make_argv(cmd_list);
 	path = make_cmd_path(cmd_list, env_list);
-	execve(path, argv, envp);
-	if (errno == ENOENT)
+	if (!access(path, X_OK) && stat(path, &path_stat) == 0 && S_ISREG(path_stat.st_mode))
+		execve(path, argv, envp);
+	else if (errno == ENOENT)
 		return (err_exit(argv[0], "command not found", 127));
 	return (err_exit(argv[0], strerror(errno), EXIT_FAILURE));
 }

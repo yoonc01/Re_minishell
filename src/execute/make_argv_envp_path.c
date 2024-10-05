@@ -6,7 +6,7 @@
 /*   By: hyoyoon <hyoyoon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:37:25 by ycho2             #+#    #+#             */
-/*   Updated: 2024/10/03 15:14:38 by hyoyoon          ###   ########.fr       */
+/*   Updated: 2024/10/05 13:44:56 by hyoyoon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,7 @@ char	*make_cmd_path(t_inner_block_list *cmd_list, t_env_list *env_list)
 		free(join_path_cmd);
 		path_i++;
 	}
-	return (slash_cmd);
+	join_path_cmd = ft_strjoin(".", slash_cmd);
+	free(slash_cmd);
+	return (join_path_cmd);
 }
