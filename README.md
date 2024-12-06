@@ -5,7 +5,7 @@
 <tbody>
     <td align="center">
         <a href="https://github.com/bigeaglesman">
-            <img src="[https://avatars.githubusercontent.com/u/55149395?v=4](https://avatars.githubusercontent.com/u/147134885?v=4)" width="200px;" height="200px;" alt="조영호"/>
+            <img src="https://avatars.githubusercontent.com/bigeaglesman" width="200px;" height="200px;" alt="조영호"/>
             <h3><b>조영호</b></h3>
             <h3><b>실행부</b></h3>
         </a>
