@@ -1,20 +1,19 @@
 # Minishell
 
 ## Contributors
+>**피어코딩으로 같이 작성**
 <table align="center">
 <tbody>
     <td align="center">
         <a href="https://github.com/bigeaglesman">
             <img src="https://avatars.githubusercontent.com/bigeaglesman" width="200px;" height="200px;" alt="조영호"/>
             <h3><b>조영호</b></h3>
-            <h3><b>실행부</b></h3>
         </a>
     </td>
     <td align="center">
         <a href="https://github.com/yoonc01">
             <img src="https://avatars.githubusercontent.com/u/143938662?v=4" width="200px;" height="200px;" alt="윤효준"/>
-            <h3><b>윤효준</b></h3>          
-            <h3><b>파싱부</b></h3>
+            <h3><b>윤효준</b></h3>
         </a>
     </td>
 </tbody>
