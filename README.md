@@ -1,7 +1,7 @@
 # Minishell
 
 ## Contributors
->**피어코딩으로 같이 작성**
+>**피어코딩으로 작성**
 <table align="center">
 <tbody>
     <td align="center">
